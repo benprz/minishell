@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/10/26 18:13:36 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/10/27 15:55:47 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,13 @@
 // tgoto, tputs
 
 #include <readline/readline.h>
+#include <readline/history.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-typedef struct s_history
-{
-	char				*command_line;
-	struct s_history	*next;
-	struct s_history	*prev;
-}	t_history;
-
-typedef struct s_shell
-{
-	t_history	*commands_history;
-}	t_shell;
-
 int	main(void)
 {
-	t_shell	shell;
 	char	*prompt;
 
 	while (1)
