@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/10/27 15:55:47 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/27 18:03:34 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,18 @@
 // tcgetattr, tgetent, tgetflag, tgetnum, tgetstr,
 // tgoto, tputs
 
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "minishell.h"
 
-int	main(void)
+int	main(int argc, char **argv, char **env)
 {
-	char	*prompt;
+	t_shell	shell;
 
 	while (1)
 	{
-		prompt = readline("minishell> ");
-		add_history(prompt);
-		free(prompt);
+		shell.prompt = readline("minishell> ");
+		add_history(shell.prompt);
+		parse_command(&shell, env);
+		free(shell.prompt);
 	}
 	return (0);
 }

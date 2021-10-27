@@ -4,24 +4,31 @@ NAME = minishell
 CC = gcc
 CFLAGS = -g3 -lreadline
 INC_DIR = includes/
-INC =
+INC = minishell.h
 
 SRC_DIR = src/
-SRC =	main.c
+SRC =	main.c \
+		ft_parse.c \
+		ft_pwd.c \
+		utils/ft_split.c \
+		utils/ft_strcmp.c \
+		utils/ft_strjoin.c \
+		utils/ft_strlen.c \
+		utils/ft_get_path.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
 
 .PHONY : all clean fclean re exec
 
-all: $(NAME) exec
+all: $(NAME) #exec
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -I $(INC_DIR) -lm
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(addprefix $(INC_DIR),$(INC))
 	mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) -I $(INC_DIR) -c $< -o $@
 
 exec:
 	./$(NAME)
