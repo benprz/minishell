@@ -1,31 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_path.c                                      :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/27 17:38:18 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/28 17:30:38 by ngeschwi         ###   ########.fr       */
+/*   Created: 2021/10/28 16:19:54 by ngeschwi          #+#    #+#             */
+/*   Updated: 2021/10/28 16:21:12 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_get_path(t_shell *shell)
+char	*ft_strdup(char *src)
 {
+	char	*copy;
+	int		size_src;
 	int		i;
-	char	*save;
 
 	i = 0;
-	while (shell->all_path[i])
+	size_src = ft_strlen(src);
+	copy = malloc(sizeof(char) * (size_src + 1));
+	if (copy == NULL)
+		return (NULL);
+	if (size_src == 0)
 	{
-		save = ft_strjoin(shell->all_path[i], "/");
-		save = ft_strjoin(save, shell->sp_prompt[shell->save_position]);
-		if (access(save, X_OK) == 0)
-			return (save);
-		free(save);
+		copy[0] = '\0';
+		return (copy);
+	}
+	while (src[i] != '\0')
+	{
+		copy[i] = src[i];
 		i++;
 	}
-	return (NULL);
+	if (size_src != 0)
+		copy[i] = '\0';
+	return (copy);
 }

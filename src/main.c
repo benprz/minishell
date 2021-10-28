@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/10/27 18:03:34 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/28 17:18:07 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,44 @@
 
 #include "minishell.h"
 
+static void	ft_free_prompt(t_shell *shell)
+{
+	int	i;
+
+	i = 0;
+	free(shell->prompt);
+	while (shell->sp_prompt[i])
+	{
+		free(shell->sp_prompt[i]);
+		i++;
+	}
+}
+
+static void	ft_init_struct(t_shell *shell)
+{
+	shell->position = 0;
+	shell->pipe = 0;
+	shell->redirection = 0;
+	shell->all_path = ft_split(getenv("PATH"), ':');
+	shell->pipe_fd[0] = 0;
+	shell->pipe_fd[1] = 0;
+	if (pipe(shell->pipe_fd) == -1)
+		perror("Pipe");
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_shell	shell;
 
+	shell.env = env;
 	while (1)
 	{
+		ft_init_struct(&shell);
 		shell.prompt = readline("minishell> ");
 		add_history(shell.prompt);
-		parse_command(&shell, env);
-		free(shell.prompt);
+		shell.sp_prompt = ft_split(shell.prompt, ' ');
+		parse_command(&shell);
+		ft_free_prompt(&shell);
 	}
 	return (0);
 }
