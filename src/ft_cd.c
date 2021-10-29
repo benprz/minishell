@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/28 12:24:48 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/29 15:18:35 by ngeschwi         ###   ########.fr       */
+/*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
+/*   Updated: 2021/10/29 15:12:29 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(t_shell *shell)
+int	ft_cd(t_shell *shell)
 {
 	pid_t	pid;
 	int		status;
@@ -26,14 +26,17 @@ int	ft_echo(t_shell *shell)
 	else if (pid == 0)
 	{
 		if (shell->save_position != 0)
+		{
 			if (dup2(shell->pipe_fd[0], 0) == -1)
 				perror("Error dup2 echo");
+		}
 		if (shell->sp_prompt[shell->position] != NULL)
+		{
 			if (dup2(shell->pipe_fd[1], 1) == -1)
 				perror("Error dup2 echo");
+		}
 		if (close(shell->pipe_fd[0]) == -1)
 			perror("Error close echo");
-		//write dans le pipe s'il faut
 		if (execve(ft_get_path(shell), arg, shell->env) == -1) 
 			perror("Error execve echo");
 	}

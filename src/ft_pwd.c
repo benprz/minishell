@@ -6,47 +6,50 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 18:01:39 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/28 12:42:01 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/29 14:27:24 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_fils(t_shell *shell)
-{
-	char	*prompt_pwd[2];
-	char	*path_prompt;
-
-	prompt_pwd[0] = shell->sp_prompt[0];
-	prompt_pwd[1] = NULL;
-	path_prompt = ft_get_path(shell);
-	close(shell->pipe_fd[0]);
-	dup2(shell->pipe_fd[1], 1);
-	execve(path_prompt, prompt_pwd, shell->env);
-}
-
 int	ft_pwd(t_shell *shell)
 {
-	char	buf[1024];
-	int		ret;
-	int		status;
 	pid_t	pid;
-
-	if (pipe(shell->pipe_fd) == -1)
-		return (ERROR);
+	int		status;
+	char	**arg;
+	
+	shell->save_position = shell->position;
+	arg = ft_get_arg(shell);
+	arg[1] = NULL;
 	pid = fork();
-	if (pid == 0)
-		ft_fils(shell);
+	if (pid == -1)
+		perror("Error fork pwd");
+	else if (pid == 0)
+	{
+		if (shell->save_position != 0)
+		{
+			if (dup2(shell->pipe_fd[0], 0) == -1)
+				perror("Error dup2 pwd");
+		}
+		if (shell->sp_prompt[shell->position] != NULL)
+		{
+			if (dup2(shell->pipe_fd[1], 1) == -1)
+				perror("Error dup2 pwd");
+		}
+		if (close(shell->pipe_fd[0]) == -1)
+			perror("Error close pwd");
+		if (execve(ft_get_path(shell), arg, shell->env) == -1) 
+			perror("Error execve echo");
+	}
 	else
 	{
 		wait(&status);
-		close(shell->pipe_fd[1]);
-		ret = read(shell->pipe_fd[0], buf, 1024);
-		while (ret)
+		ft_free_tab(&arg);
+		if (shell->sp_prompt[shell->position] != NULL)
 		{
-			buf[ret] = 0;
-			printf("%s", buf);
-			ret = read(shell->pipe_fd[0], buf, 1024);
+			shell->position++;
+			if (parse_command(shell) == ERROR)
+				perror("Error command not found");
 		}
 	}
 	return (SUCCESS);

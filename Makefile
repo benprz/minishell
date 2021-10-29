@@ -11,12 +11,17 @@ SRC =	main.c \
 		ft_parse.c \
 		ft_pwd.c \
 		ft_echo.c \
+		ft_cd.c \
+		ft_env.c \
+		ft_export.c \
+		ft_unset.c \
 		utils/ft_split.c \
 		utils/ft_strcmp.c \
 		utils/ft_strjoin.c \
 		utils/ft_strlen.c \
 		utils/ft_get_path.c \
-		utils/ft_strdup.c
+		utils/ft_strdup.c \
+		utils/ft_free.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)

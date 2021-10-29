@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/28 12:24:48 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/29 15:18:35 by ngeschwi         ###   ########.fr       */
+/*   Created: 2021/10/29 15:10:56 by ngeschwi          #+#    #+#             */
+/*   Updated: 2021/10/29 15:22:23 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(t_shell *shell)
+int	ft_env(t_shell *shell)
 {
 	pid_t	pid;
 	int		status;
@@ -20,22 +20,22 @@ int	ft_echo(t_shell *shell)
 
 	shell->save_position = shell->position;
 	arg = ft_get_arg(shell);
+	arg[1] = NULL;
 	pid = fork();
 	if (pid == -1)
-		perror("Error fork echo");
+		perror("Error fork env");
 	else if (pid == 0)
 	{
 		if (shell->save_position != 0)
 			if (dup2(shell->pipe_fd[0], 0) == -1)
-				perror("Error dup2 echo");
+				perror("Error dup2 env");
 		if (shell->sp_prompt[shell->position] != NULL)
 			if (dup2(shell->pipe_fd[1], 1) == -1)
-				perror("Error dup2 echo");
+				perror("Error dup2 env");
 		if (close(shell->pipe_fd[0]) == -1)
-			perror("Error close echo");
-		//write dans le pipe s'il faut
+			perror("Error close ecenvho");
 		if (execve(ft_get_path(shell), arg, shell->env) == -1) 
-			perror("Error execve echo");
+			perror("Error execve env");
 	}
 	else
 	{

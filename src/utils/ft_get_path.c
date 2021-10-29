@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 17:38:18 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/28 17:30:38 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/29 15:20:15 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,50 @@ char	*ft_get_path(t_shell *shell)
 		i++;
 	}
 	return (NULL);
+}
+
+char	*ft_get_arg_2(t_shell *shell)
+{
+	char 	*str;
+
+	str = NULL;
+	while (shell->sp_prompt[shell->position] && parse_redi_pipe(shell) == ERROR)
+	{
+		str = ft_strjoin(str, shell->sp_prompt[shell->position]);
+		shell->position++;
+	}
+	return (str);
+}
+
+char	**ft_get_arg(t_shell *shell)
+{
+	char	**arg;
+	int		size;
+
+	size = 1;
+	if (ft_check_options(shell) == SUCCESS)
+	{
+		arg = malloc(sizeof(char *) * 4);
+		arg[0] = ft_strdup(shell->sp_prompt[shell->position]);
+		shell->position++;
+		arg[1] = ft_strdup(shell->sp_prompt[shell->position]);
+		shell->position++;
+		if (shell->sp_prompt[shell->position])
+			arg[2] = ft_get_arg_2(shell);
+		else
+			arg[2] = "";
+		arg[3] = NULL;
+	}
+	else
+	{
+		arg = malloc(sizeof(char *) * 3);
+		arg[0] = ft_strdup(shell->sp_prompt[shell->position]);
+		shell->position++;
+		if (shell->sp_prompt[shell->position])
+			arg[1] = ft_get_arg_2(shell);
+		else
+			arg[1] = "";
+		arg[2] = NULL;
+	}
+	return (arg);
 }

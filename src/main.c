@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/10/28 17:18:07 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/29 15:23:01 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,13 @@ static void	ft_free_prompt(t_shell *shell)
 	int	i;
 
 	i = 0;
-	free(shell->prompt);
 	while (shell->sp_prompt[i])
 	{
 		free(shell->sp_prompt[i]);
 		i++;
 	}
+	free(shell->sp_prompt);
+	free(shell->prompt);
 }
 
 static void	ft_init_struct(t_shell *shell)
@@ -59,7 +60,8 @@ int	main(int argc, char **argv, char **env)
 		shell.prompt = readline("minishell> ");
 		add_history(shell.prompt);
 		shell.sp_prompt = ft_split(shell.prompt, ' ');
-		parse_command(&shell);
+		if (parse_command(&shell) == ERROR)
+			perror("Error command not found");
 		ft_free_prompt(&shell);
 	}
 	return (0);
