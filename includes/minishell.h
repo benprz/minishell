@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/30 17:51:42 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/30 19:15:10 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strjoin(const char *s1, const char *s2);
 int		ft_strlen(const char *str);
 char	*ft_strdup(char *src);
-void	ft_free_tab(char ***tab);
+void	ft_free_tab(t_shell *shell);
+int		ft_error(t_shell *shell, char *str);
 
 #endif

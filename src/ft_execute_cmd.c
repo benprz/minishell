@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 17:06:33 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/30 17:52:39 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/30 19:27:41 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,13 @@ int	ft_execute_cmd(t_shell *shell)
 				perror("Error execve cmd");
 				return (ERROR);
 			}
-		}
+		else
+			exit(EXIT_SUCCESS);
 	}
 	else
 	{
 		wait(&status);
-		ft_free_tab(&(shell->arg));
+		ft_free_tab(shell);
 		if (shell->sp_prompt[shell->position] != NULL)
 		{
 			shell->position++;

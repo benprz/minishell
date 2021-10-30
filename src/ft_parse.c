@@ -6,11 +6,24 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:05:43 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/30 17:56:02 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/30 19:28:28 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	check_redi_in(t_shell *shell)
+{
+	if (!ft_strcmp(shell->sp_prompt[shell->position], "<"))
+	{
+		shell->redi_in = 1;
+		shell->position++;
+		shell->fd_in = open(shell->sp_prompt[shell->position], O_RDWR);
+		if (shell->fd_in == -1)
+			perror("Error infile doesn't exist");
+	}
+	ft_execute_cmd(shell);
+}
 
 int	parse_redi_pipe(t_shell *shell)
 {
@@ -27,22 +40,6 @@ int	parse_redi_pipe(t_shell *shell)
 	else
 		return (ERROR);
 	return (SUCCESS);
-}
-
-void	check_redi_in(t_shell *shell)
-{
-	if (!ft_strcmp(shell->sp_prompt[shell->position], "<"))
-	{
-		shell->redi_in = 1;
-		shell->position++;
-		shell->fd_in = open(shell->sp_prompt[shell->position], O_RDWR);
-		if (shell->fd_in == -1)
-		{
-			perror("Error infile doesn't exist");
-			return ;
-		}
-	}
-	ft_execute_cmd(shell);
 }
 
 int	parse_command(t_shell *shell)
@@ -68,7 +65,8 @@ int	parse_command(t_shell *shell)
 int	ft_check_options(t_shell *shell)
 {
 	if (!ft_strcmp(shell->sp_prompt[shell->position], "echo"))
-		if (!ft_strcmp(shell->sp_prompt[shell->position + 1], "-n"))
+		if (shell->sp_prompt[shell->position + 1] &&
+			!ft_strcmp(shell->sp_prompt[shell->position + 1], "-n"))
 			return (SUCCESS);
 	return (ERROR);
 }
