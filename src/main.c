@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/10/29 15:23:01 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:32:43 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,10 @@ static void	ft_init_struct()
 {
 	g_shell.position = 0;
 	g_shell.pipe = 0;
-	g_shell.redirection = 0;
+	g_shell.redi_in = 0;
+	g_shell.redi_out = 0;
+	g_shell.fd_out = 0;
+	g_shell.fd_in = 0;
 	g_shell.all_path = ft_split(getenv("PATH"), ':');
 	g_shell.pipe_fd[0] = 0;
 	g_shell.pipe_fd[1] = 0;
@@ -94,8 +97,7 @@ void	launch_shell()
 		if (g_shell.prompt == NULL || !strcmp(g_shell.prompt, "exit"))
 			exit_shell();
 		add_history(g_shell.prompt);
-		if (parse_command(&g_shell) == ERROR)
-			perror("Error command not found");
+		check_redi_in(&g_shell);
 		ft_free_prompt(&g_shell);
 	}
 }

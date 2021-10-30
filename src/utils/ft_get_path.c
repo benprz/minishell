@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 17:38:18 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/29 15:20:15 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:08:29 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ char	*ft_get_arg_2(t_shell *shell)
 	{
 		str = ft_strjoin(str, shell->sp_prompt[shell->position]);
 		shell->position++;
+		if (shell->sp_prompt[shell->position])
+			str = ft_strjoin(str, " ");
 	}
 	return (str);
 }

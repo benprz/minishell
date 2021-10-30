@@ -9,12 +9,14 @@ INC = minishell.h
 SRC_DIR = src/
 SRC =	main.c \
 		ft_parse.c \
+		ft_execute_cmd.c \
 		ft_pwd.c \
 		ft_echo.c \
 		ft_cd.c \
 		ft_env.c \
 		ft_export.c \
 		ft_unset.c \
+		ft_exit.c \
 		utils/ft_split.c \
 		utils/ft_strcmp.c \
 		utils/ft_strjoin.c \

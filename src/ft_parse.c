@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:05:43 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/29 15:15:41 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:56:02 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,36 +17,50 @@ int	parse_redi_pipe(t_shell *shell)
 	if (!ft_strcmp(shell->sp_prompt[shell->position], "|"))
 		shell->pipe = 1;
 	else if (!ft_strcmp(shell->sp_prompt[shell->position], ">"))
-		shell->redirection = 1;
-	else if (!ft_strcmp(shell->sp_prompt[shell->position], ">>"))
-		shell->redirection = 1;
+		shell->redi_out = 1;
 	else if (!ft_strcmp(shell->sp_prompt[shell->position], "<"))
-		shell->redirection = 1;
-	else if (!ft_strcmp(shell->sp_prompt[shell->position], "<<"))
-		shell->redirection = 1;
+		shell->redi_in = 1;
+	// else if (!ft_strcmp(shell->sp_prompt[shell->position], ">>"))
+	// 	shell->redirection = 1;
+	// else if (!ft_strcmp(shell->sp_prompt[shell->position], "<<"))
+	// 	shell->redirection = 1;
 	else
 		return (ERROR);
 	return (SUCCESS);
 }
 
+void	check_redi_in(t_shell *shell)
+{
+	if (!ft_strcmp(shell->sp_prompt[shell->position], "<"))
+	{
+		shell->redi_in = 1;
+		shell->position++;
+		shell->fd_in = open(shell->sp_prompt[shell->position], O_RDWR);
+		if (shell->fd_in == -1)
+		{
+			perror("Error infile doesn't exist");
+			return ;
+		}
+	}
+	ft_execute_cmd(shell);
+}
+
 int	parse_command(t_shell *shell)
 {
-	if (!ft_strcmp(shell->sp_prompt[shell->position], "pwd"))
+	if (!ft_strcmp(shell->sp_prompt[shell->save_position], "pwd"))
 		return(ft_pwd(shell));
-	if (!ft_strcmp(shell->sp_prompt[shell->position], "echo"))
+	else if (!ft_strcmp(shell->sp_prompt[shell->save_position], "echo"))
 		return(ft_echo(shell));
-	if (!ft_strcmp(shell->sp_prompt[shell->position], "cd"))
+	else if (!ft_strcmp(shell->sp_prompt[shell->save_position], "cd"))
 		return(ft_cd(shell));
-	if (!ft_strcmp(shell->sp_prompt[shell->position], "export"))
+	else if (!ft_strcmp(shell->sp_prompt[shell->save_position], "export"))
 		return(ft_export(shell));
-	if (!ft_strcmp(shell->sp_prompt[shell->position], "unset"))
+	else if (!ft_strcmp(shell->sp_prompt[shell->save_position], "unset"))
 		return(ft_unset(shell));
-	if (!ft_strcmp(shell->sp_prompt[shell->position], "env"))
+	else if (!ft_strcmp(shell->sp_prompt[shell->save_position], "env"))
 		return(ft_env(shell));
-	// if (!ft_strcmp(shell->sp_prompt[shell->position], "exit"))
+	// if (!ft_strcmp(shell->sp_prompt[shell->save_position], "exit"))
 	// 	return(ft_exit(shell));
-	if (shell->sp_prompt[shell->position] == NULL)
-		return (SUCCESS);
 	else
 		return (ERROR);
 }

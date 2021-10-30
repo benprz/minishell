@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/29 15:13:43 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:51:42 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 # include <string.h>
 
 typedef struct s_shell
@@ -28,9 +31,13 @@ typedef struct s_shell
 	int		position;
 	int		save_position;
 	int		pipe;
-	int		redirection;
+	int		redi_in;
+	int		fd_in;
+	int		redi_out;
+	int		fd_out;
 	char	**all_path;
 	int		pipe_fd[2];
+	char	**arg;
 	char	**env;
 }				t_shell;
 
@@ -40,6 +47,8 @@ typedef struct s_shell
 int		parse_command(t_shell *shell);
 int		parse_redi_pipe(t_shell *shell);
 int		ft_check_options(t_shell *shell);
+void	check_redi_in(t_shell *shell);
+int		ft_execute_cmd(t_shell *shell);
 int		ft_pwd(t_shell *shell);
 int		ft_echo(t_shell *shell);
 int		ft_cd(t_shell *shell);
