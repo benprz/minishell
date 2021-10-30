@@ -18,9 +18,11 @@
 # include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <string.h>
 
 typedef struct s_shell
 {
+	int		launched;
 	char	*prompt;
 	char	**sp_prompt;
 	int		position;
