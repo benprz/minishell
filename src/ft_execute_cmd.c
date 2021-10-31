@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute_cmd.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 17:06:33 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/30 19:27:41 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/31 19:04:48 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,11 @@ int	ft_execute_cmd(t_shell *shell)
 					return (ERROR);
 				}
 			}
-			else
-				if (dup2(shell->pipe_fd[1], 1) == -1)
-				{
-					perror("Error dup2 cmd");
-					return (ERROR);
-				}
+			else if (dup2(shell->pipe_fd[1], 1) == -1)
+			{
+				perror("Error dup2 cmd");
+				return (ERROR);
+			}
 		}
 		if (close(shell->pipe_fd[0]) == -1)
 		{
@@ -79,6 +78,7 @@ int	ft_execute_cmd(t_shell *shell)
 				perror("Error execve cmd");
 				return (ERROR);
 			}
+		}
 		else
 			exit(EXIT_SUCCESS);
 	}

@@ -3,17 +3,72 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:05:43 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/30 19:28:28 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/31 22:54:57 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+char	*add_spaces_to_pipes(char *command)
+{
+	int new_command_length;
+	char	*new_command;
+	int	i;
+	int j;
+
+	new_command_length = ft_strlen(command);
+	i = 0;
+	while (command[i])
+	{
+		if (command[i] == '|')
+			new_command_length += 2;
+		i++;
+	}
+	new_command = malloc(sizeof(char) * new_command_length + 1);
+	i = 0;
+	j = 0;
+	while (command[i])
+	{
+		if (command[i] == '|')
+		{
+			new_command[j] = ' ';
+			new_command[j + 1] = '|';
+			new_command[j + 2] = ' ';
+			j += 2;
+		}
+		else
+			new_command[j] = command[i];
+		i++;
+		j++;
+	}
+	new_command[new_command_length] = '\0';
+	free(command);
+	return (new_command);
+}
+
+void	print_prompt(t_shell *shell)
+{
+	//printf("prompt = '%s'\n", shell->prompt);
+	for (int i = 0; shell->sp_prompt[i]; i++)
+	{
+		printf("sp_prompt[%d] = %s\n", i, shell->sp_prompt[i]);
+	}
+}
+
+char	*interpret_command(char *command)
+{
+	command = add_spaces_to_pipes(command);
+	return (command);
+}
+
 void	check_redi_in(t_shell *shell)
 {
+	shell->prompt = interpret_command(shell->prompt);
+	shell->sp_prompt = ft_split(shell->prompt, ' ');
+	print_prompt(shell);
 	if (!ft_strcmp(shell->sp_prompt[shell->position], "<"))
 	{
 		shell->redi_in = 1;

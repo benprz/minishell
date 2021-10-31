@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/10/30 19:22:52 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/10/31 22:45:06 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,34 @@
 
 t_shell	g_shell;
 
+void	handle_program_signals(int signal)
+{
+}
+
+void	init_program_signals(void)
+{
+	int i = 0;
+	
+	while (++i <= 31)
+	{
+		signal(i, handle_program_signals);
+	}
+}
+
 void	exit_shell(void)
 {
-	g_shell.launched = 0;
-	write(1, "exit\n", 5);
+	write(1, "exit\n", 6);
 	exit(EXIT_SUCCESS);
 }
 
 void	break_current_loops(void)
 {
-	//write(1, "\n", 1);
-	// rl_on_new_line();
-	// rl_replace_line("", 0);
-	// rl_redisplay();
+	/*
+	write(0, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	*/
 }
 
 void	handle_shell_signals(int signal)
@@ -49,11 +64,7 @@ void	handle_shell_signals(int signal)
 void	init_shell_signals(void)
 {
 	signal(SIGINT, handle_shell_signals);
-}
-
-void	init_program_signals(void)
-{
-	signal(SIGINT, NULL);
+	signal(SIGQUIT, handle_shell_signals);
 }
 
 static void	ft_free_prompt(t_shell *shell)
@@ -61,43 +72,40 @@ static void	ft_free_prompt(t_shell *shell)
 	int	i;
 
 	i = 0;
-	while (shell->sp_prompt[i])
+	if (shell->sp_prompt)
 	{
-		free(shell->sp_prompt[i]);
-		i++;
+		while (shell->sp_prompt[i])
+		{
+			free(shell->sp_prompt[i]);
+			i++;
+		}
+		free(shell->sp_prompt);
 	}
-	free(shell->sp_prompt);
 	free(shell->prompt);
 }
 
-static void	ft_init_struct()
+static void	init_shell_data()
 {
-	g_shell.position = 0;
-	g_shell.pipe = 0;
-	g_shell.redi_in = 0;
-	g_shell.redi_out = 0;
-	g_shell.fd_out = 0;
-	g_shell.fd_in = 0;
-	g_shell.all_path = ft_split(getenv("PATH"), ':');
-	g_shell.pipe_fd[0] = 0;
-	g_shell.pipe_fd[1] = 0;
 	if (pipe(g_shell.pipe_fd) == -1)
 		perror("Pipe");
-	g_shell.sp_prompt = ft_split(g_shell.prompt, ' ');
+	g_shell.all_path = ft_split(getenv("PATH"), ':');
 }
 
 void	launch_shell()
 {
-	g_shell.launched = 1;
+	bzero(&g_shell, sizeof(g_shell));
+	init_shell_data();
 	init_shell_signals();
 	while (1)
 	{
 		g_shell.prompt = readline("minishell> ");
-		ft_init_struct();
 		if (g_shell.prompt == NULL || !strcmp(g_shell.prompt, "exit"))
 			exit_shell();
-		add_history(g_shell.prompt);
-		check_redi_in(&g_shell);
+		if (ft_strlen(g_shell.prompt) != 0)
+		{
+			add_history(g_shell.prompt);
+			check_redi_in(&g_shell);
+		}
 		ft_free_prompt(&g_shell);
 	}
 }
@@ -107,12 +115,14 @@ int	main(int argc, char **argv, char **env)
 	pid_t	shell_pid;
 	int		shell_status;
 
-	g_shell.env = env;
 	shell_pid = fork();
 	if (shell_pid == -1)
 		printf("Error making shell's process\n");
 	else if (shell_pid == 0)
+	{
+		g_shell.env = env;
 		launch_shell();
+	}
 	else
 	{
 		init_program_signals();
