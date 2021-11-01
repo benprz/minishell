@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 17:06:33 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/01 19:37:58 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/01 19:41:39 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,10 @@ int	ft_execute_cmd(t_shell *shell)
 				else
 					exit(EXIT_FAILURE);
 			}
-<<<<<<< HEAD
-			else
-			{
-				if (dup2(shell->pipe_fd[1], 1) == -1)
-				{
-					perror("Error dup2 cmd");
-					exit(EXIT_FAILURE);
-				}
-=======
 			else if (dup2(shell->pipe_fd[1], 1) == -1)
 			{
 				perror("Error dup2 cmd");
-				return (ERROR);
->>>>>>> 68e1dfaa38c6761de6f6dfbf7c22508ac56a2ce0
+				exit(EXIT_FAILURE);
 			}
 		}
 		if (close(shell->pipe_fd[0]) == -1)
