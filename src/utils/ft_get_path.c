@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 17:38:18 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/30 19:09:33 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/01 19:20:20 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	**ft_get_arg(t_shell *shell)
 		if (shell->sp_prompt[shell->position])
 			arg[2] = ft_get_arg_2(shell);
 		else
-			arg[2] = "";
+			arg[2] = NULL;
 		arg[3] = NULL;
 	}
 	else
@@ -72,7 +72,7 @@ char	**ft_get_arg(t_shell *shell)
 		if (shell->sp_prompt[shell->position])
 			arg[1] = ft_get_arg_2(shell);
 		else
-			arg[1] = "";
+			arg[1] = NULL;
 		arg[2] = NULL;
 	}
 	return (arg);

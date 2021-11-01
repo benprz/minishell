@@ -16,7 +16,6 @@ SRC =	main.c \
 		ft_env.c \
 		ft_export.c \
 		ft_unset.c \
-		ft_exit.c \
 		utils/ft_split.c \
 		utils/ft_strcmp.c \
 		utils/ft_strjoin.c \

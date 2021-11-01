@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/30 19:15:10 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/01 19:11:12 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct s_shell
 int		parse_command(t_shell *shell);
 int		parse_redi_pipe(t_shell *shell);
 int		ft_check_options(t_shell *shell);
-void	check_redi_in(t_shell *shell);
+int		check_redi_in(t_shell *shell);
 int		ft_execute_cmd(t_shell *shell);
 int		ft_pwd(t_shell *shell);
 int		ft_echo(t_shell *shell);
@@ -65,6 +65,5 @@ char	*ft_strjoin(const char *s1, const char *s2);
 int		ft_strlen(const char *str);
 char	*ft_strdup(char *src);
 void	ft_free_tab(t_shell *shell);
-int		ft_error(t_shell *shell, char *str);
 
 #endif

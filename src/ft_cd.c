@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/30 19:29:51 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/01 19:24:40 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,15 @@
 int	ft_cd(t_shell *shell)
 {
 	int	cd;
-	
-	if (!shell->sp_prompt[shell->position])
-	{
-		if (dup2(1, shell->pipe_fd[0]) == -1)
-			perror("Error dup2 cmd");
-	}
+
 	if (shell->arg[1][0] == '/')
 	{
 		cd = chdir(shell->arg[1]);
 		if (cd == -1)
+		{
 			perror("Error No such file or directory");
+			exit(EXIT_FAILURE);
+		}
 	}
 	else
 	{
@@ -33,7 +31,10 @@ int	ft_cd(t_shell *shell)
 		shell->arg[1] = ft_strjoin(getenv("PWD"), shell->arg[1]);
 		cd = chdir(shell->arg[1]);
 		if (cd == -1)
+		{
 			perror("Error No such file or directory");
+			exit(EXIT_FAILURE);
+		}
 	}
 	return (SUCCESS);
 }
