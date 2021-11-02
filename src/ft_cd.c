@@ -6,11 +6,13 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/01 19:24:40 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/02 16:09:59 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// cd .. || cd ../dir
 
 int	ft_cd(t_shell *shell)
 {
@@ -20,10 +22,7 @@ int	ft_cd(t_shell *shell)
 	{
 		cd = chdir(shell->arg[1]);
 		if (cd == -1)
-		{
-			perror("Error No such file or directory");
-			exit(EXIT_FAILURE);
-		}
+			ft_error(shell, "Error No such file or directory");
 	}
 	else
 	{
@@ -31,10 +30,7 @@ int	ft_cd(t_shell *shell)
 		shell->arg[1] = ft_strjoin(getenv("PWD"), shell->arg[1]);
 		cd = chdir(shell->arg[1]);
 		if (cd == -1)
-		{
-			perror("Error No such file or directory");
-			exit(EXIT_FAILURE);
-		}
+			ft_error(shell, "Error No such file or directory");
 	}
 	return (SUCCESS);
 }

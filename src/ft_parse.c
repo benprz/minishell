@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:05:43 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/01 19:37:52 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/02 16:39:06 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	check_redi_in(t_shell *shell)
 {
 	shell->prompt = interpret_command(shell->prompt);
 	shell->sp_prompt = ft_split(shell->prompt, ' ');
-	print_prompt(shell);
+	// print_prompt(shell);
 	if (!ft_strcmp(shell->sp_prompt[shell->position], "<"))
 	{
 		shell->redi_in = 1;

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/01 19:36:02 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/02 16:38:52 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,10 @@ void	exit_shell(void)
 
 void	break_current_loops(void)
 {
-	/*
-	write(0, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-	*/
+	// write(0, "\n", 1);
+	// rl_on_new_line();
+	// rl_replace_line("", 0);
+	// rl_redisplay();
 }
 
 void	handle_shell_signals(int signal)
@@ -84,20 +82,21 @@ static void	ft_free_prompt(t_shell *shell)
 	free(shell->prompt);
 }
 
-static void	init_shell_data()
+static void	init_shell_data(char **env)
 {
 	if (pipe(g_shell.pipe_fd) == -1)
 		perror("Pipe");
 	g_shell.all_path = ft_split(getenv("PATH"), ':');
+	g_shell.env = env;
 }
 
-void	launch_shell()
+void	launch_shell(char **env)
 {
-	bzero(&g_shell, sizeof(g_shell));
-	init_shell_data();
 	init_shell_signals();
 	while (1)
 	{
+		bzero(&g_shell, sizeof(g_shell));
+		init_shell_data(env);
 		g_shell.prompt = readline("minishell> ");
 		if (g_shell.prompt == NULL || !strcmp(g_shell.prompt, "exit"))
 			exit_shell();
@@ -119,10 +118,7 @@ int	main(int argc, char **argv, char **env)
 	if (shell_pid == -1)
 		printf("Error making shell's process\n");
 	else if (shell_pid == 0)
-	{
-		g_shell.env = env;
-		launch_shell();
-	}
+		launch_shell(env);
 	else
 	{
 		init_program_signals();

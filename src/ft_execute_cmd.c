@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 17:06:33 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/01 19:41:39 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/02 16:28:18 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,11 @@ int	ft_execute_cmd(t_shell *shell)
 			if (shell->redi_in == 1)
 			{
 				if (dup2(shell->fd_in, 0) == -1)
-				{
-					perror("Error dup2 cmd");
-					exit(EXIT_FAILURE);
-				}
+					ft_error(shell, "Error dup2 cmd");
 			}
 			else
-			{
 				if (dup2(shell->pipe_fd[0], 0) == -1)
-				{
-					perror("Error dup2 cmd");
-					exit(EXIT_FAILURE);
-				}
-			}
+					ft_error(shell, "Error dup2 cmd");
 		}
 		if (shell->sp_prompt[shell->position] != NULL)
 		{
@@ -56,37 +48,22 @@ int	ft_execute_cmd(t_shell *shell)
 				{
 					shell->fd_out = open(shell->sp_prompt[shell->position + 1], O_CREAT | O_RDWR, S_IRWXU);
 					if (shell->fd_out == -1)
-					{
-						perror("Error open fd_out");
-						exit(EXIT_FAILURE);
-					}
+						ft_error(shell, "Error open fd_out");
 					if (dup2(shell->fd_out, 1) == -1)
-					{
-						perror("Error dup2 cmd");
-						exit(EXIT_FAILURE);
-					}
+						ft_error(shell, "Error dup2 cmd");
 				}
 				else
 					exit(EXIT_FAILURE);
 			}
 			else if (dup2(shell->pipe_fd[1], 1) == -1)
-			{
-				perror("Error dup2 cmd");
-				exit(EXIT_FAILURE);
-			}
+				ft_error(shell, "Error dup2 cmd");
 		}
 		if (close(shell->pipe_fd[0]) == -1)
-		{
-			perror("Error close cmd");
-			exit(EXIT_FAILURE);
-		}
+			ft_error(shell, "Error close cmd");
 		if (parse_command(shell) == ERROR)
 		{
 			if (execve(ft_get_path(shell), shell->arg, shell->env) == -1) 
-			{
-				perror("Error execve cmd");
-				exit(EXIT_FAILURE);
-			}
+				ft_error(shell, "Error command not found");
 		}
 		else
 			exit(EXIT_SUCCESS);

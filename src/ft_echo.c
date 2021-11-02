@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 12:24:48 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/01 19:24:08 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/02 16:10:18 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,7 @@ int	ft_echo(t_shell *shell)
 	if (!shell->sp_prompt[shell->position])
 	{
 		if (dup2(1, shell->pipe_fd[0]) == -1)
-		{
-			perror("Error dup2 cmd");
-			exit(EXIT_FAILURE);
-		}
+			ft_error(shell, "Error dup2 cmd");
 	}
 	if (shell->arg[1] == NULL || ft_strcmp(shell->arg[1], "-n"))
 	{
