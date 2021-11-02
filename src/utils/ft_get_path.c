@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 17:38:18 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/01 19:20:20 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/02 17:12:13 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ char	*ft_get_path(t_shell *shell)
 	return (NULL);
 }
 
-char	*ft_get_arg_2(t_shell *shell)
+static char	*ft_get_arg_2(t_shell *shell)
 {
-	char 	*str;
+	char	*str;
 
 	str = NULL;
 	while (shell->sp_prompt[shell->position] && parse_redi_pipe(shell) == ERROR)
@@ -45,12 +45,25 @@ char	*ft_get_arg_2(t_shell *shell)
 	return (str);
 }
 
+static char	**ft_get_arg_3(t_shell *shell)
+{
+	char	**arg;
+
+	arg = malloc(sizeof(char *) * 3);
+	arg[0] = ft_strdup(shell->sp_prompt[shell->position]);
+	shell->position++;
+	if (shell->sp_prompt[shell->position])
+		arg[1] = ft_get_arg_2(shell);
+	else
+		arg[1] = NULL;
+	arg[2] = NULL;
+	return (arg);
+}
+
 char	**ft_get_arg(t_shell *shell)
 {
 	char	**arg;
-	int		size;
 
-	size = 1;
 	if (ft_check_options(shell) == SUCCESS)
 	{
 		arg = malloc(sizeof(char *) * 4);
@@ -65,15 +78,6 @@ char	**ft_get_arg(t_shell *shell)
 		arg[3] = NULL;
 	}
 	else
-	{
-		arg = malloc(sizeof(char *) * 3);
-		arg[0] = ft_strdup(shell->sp_prompt[shell->position]);
-		shell->position++;
-		if (shell->sp_prompt[shell->position])
-			arg[1] = ft_get_arg_2(shell);
-		else
-			arg[1] = NULL;
-		arg[2] = NULL;
-	}
+		arg = ft_get_arg_3(shell);
 	return (arg);
 }

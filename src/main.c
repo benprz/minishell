@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/02 16:38:52 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/02 17:13:16 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ void	handle_program_signals(int signal)
 
 void	init_program_signals(void)
 {
-	int i = 0;
-	
+	int	i;
+
+	i = 0;
 	while (++i <= 31)
 	{
 		signal(i, handle_program_signals);

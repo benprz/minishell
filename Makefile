@@ -9,6 +9,7 @@ INC = minishell.h
 SRC_DIR = src/
 SRC =	main.c \
 		ft_parse.c \
+		ft_parse_2.c \
 		ft_execute_cmd.c \
 		ft_pwd.c \
 		ft_echo.c \

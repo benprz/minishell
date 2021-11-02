@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 18:01:39 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/02 16:09:15 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/02 17:05:57 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 int	ft_pwd(t_shell *shell)
 {
-	char	*str = NULL;
+	char	*str;
 	size_t	i;
 
 	i = 1;
+	str = NULL;
 	if (!shell->sp_prompt[shell->position])
 	{
 		if (dup2(1, shell->pipe_fd[0]) == -1)

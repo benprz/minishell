@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/02 16:34:14 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/02 17:20:47 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int		parse_command(t_shell *shell);
 int		parse_redi_pipe(t_shell *shell);
 int		ft_check_options(t_shell *shell);
 int		check_redi_in(t_shell *shell);
+char	*add_spaces_to_pipes(char *command);
 int		ft_execute_cmd(t_shell *shell);
 int		ft_pwd(t_shell *shell);
 int		ft_echo(t_shell *shell);
@@ -57,7 +58,6 @@ int		ft_export(t_shell *shell);
 int		ft_unset(t_shell *shell);
 char	*ft_get_path(t_shell *shell);
 char	**ft_get_arg(t_shell *shell);
-char	*ft_get_arg_2(t_shell *shell);
 
 char	**ft_split(char const *s, char c);
 int		ft_strcmp(const char *s1, const char *s2);

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:10:56 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/02 16:25:55 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/02 17:04:42 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 int	ft_env(t_shell *shell)
 {
 	int		i;
-	char	*str = NULL;
+	char	*str;
 
 	i = 0;
+	str = NULL;
 	if (!shell->sp_prompt[shell->position])
 		if (dup2(1, shell->pipe_fd[0]) == -1)
 			ft_error(shell, "Error dup2 cmd");

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 17:06:33 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/02 16:28:18 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/02 17:14:46 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ int	ft_execute_cmd(t_shell *shell)
 			{
 				if (shell->sp_prompt[shell->position + 1])
 				{
-					shell->fd_out = open(shell->sp_prompt[shell->position + 1], O_CREAT | O_RDWR, S_IRWXU);
+					shell->fd_out = open(shell->sp_prompt[shell->position + 1],
+							O_CREAT | O_RDWR, S_IRWXU);
 					if (shell->fd_out == -1)
 						ft_error(shell, "Error open fd_out");
 					if (dup2(shell->fd_out, 1) == -1)
@@ -62,7 +63,7 @@ int	ft_execute_cmd(t_shell *shell)
 			ft_error(shell, "Error close cmd");
 		if (parse_command(shell) == ERROR)
 		{
-			if (execve(ft_get_path(shell), shell->arg, shell->env) == -1) 
+			if (execve(ft_get_path(shell), shell->arg, shell->env) == -1)
 				ft_error(shell, "Error command not found");
 		}
 		else
@@ -71,7 +72,6 @@ int	ft_execute_cmd(t_shell *shell)
 	else
 	{
 		wait(&status);
-		
 		if (shell->redi_out == 1)
 			shell->position++;
 		shell->redi_in = 0;
