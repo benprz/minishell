@@ -6,21 +6,22 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 17:20:06 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/02 17:28:52 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/03 17:58:59 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	get_length_new_cmd(char *cmd)
+static int	get_length_new_cmd(char *command)
 {
 	int	i;
 	int	new_command_length;
 
 	i = 0;
-	while (cmd[i])
+	new_command_length = ft_strlen(command);
+	while (command[i])
 	{
-		if (cmd[i] == '|')
+		if (command[i] == '|')
 			new_command_length += 2;
 		i++;
 	}
@@ -36,9 +37,9 @@ char	*add_spaces_to_pipes(char *command)
 
 	new_command_length = get_length_new_cmd(command);
 	new_command = malloc(sizeof(char) * new_command_length + 1);
-	i = 0;
+	i = -1;
 	j = 0;
-	while (command[i++])
+	while (command[++i])
 	{
 		if (command[i] == '|')
 		{

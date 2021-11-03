@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/02 17:13:16 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/03 17:59:51 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	main(int argc, char **argv, char **env)
 
 	shell_pid = fork();
 	if (shell_pid == -1)
-		printf("Error making shell's process\n");
+		perror("Error making shell's process\n");
 	else if (shell_pid == 0)
 		launch_shell(env);
 	else

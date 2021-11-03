@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:41:13 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/02 17:02:56 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/03 18:20:04 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	i = -1;
 	if (s1 == NULL)
 		return (ft_strdup((char *)s2));
+	if (s2 == NULL)
+		return (ft_strdup((char *)s1));
 	size_s1 = ft_strlen(s1);
 	size_s2 = ft_strlen(s2);
 	strcat = malloc(sizeof(char) * (size_s1 + size_s2 + 1));

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:10:56 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/02 17:04:42 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/03 17:59:38 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	ft_env(t_shell *shell)
 		str = ft_strjoin(str, "\n");
 		i++;
 	}
-	printf("test\n");
 	write(shell->pipe_fd[0], str, ft_strlen(str));
 	return (SUCCESS);
 }
