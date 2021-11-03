@@ -2,7 +2,7 @@
 
 NAME = minishell
 CC = gcc
-CFLAGS = -g3 -lreadline
+CFLAGS = -g3 -lreadline -Werror -Wextra -Wall
 INC_DIR = includes/
 INC = minishell.h
 
@@ -10,6 +10,7 @@ SRC_DIR = src/
 SRC =	main.c \
 		ft_parse.c \
 		ft_parse_2.c \
+		ft_parse_3.c \
 		ft_execute_cmd.c \
 		ft_pwd.c \
 		ft_echo.c \

@@ -6,13 +6,11 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/03 19:37:29 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/03 20:14:26 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// cd .. || cd ../dir || cd ../../../dir
 
 static char	*get_path_cd(t_shell *shell, char *save)
 {

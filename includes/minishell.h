@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/02 17:20:47 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/03 20:22:20 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int		parse_redi_pipe(t_shell *shell);
 int		ft_check_options(t_shell *shell);
 int		check_redi_in(t_shell *shell);
 char	*add_spaces_to_pipes(char *command);
+void	rm_quotes_on_cmd(t_shell *shell);
 int		ft_execute_cmd(t_shell *shell);
 int		ft_pwd(t_shell *shell);
 int		ft_echo(t_shell *shell);

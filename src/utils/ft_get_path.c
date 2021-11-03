@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 17:38:18 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/02 17:12:13 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/03 21:40:50 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,12 @@ static char	*ft_get_arg_2(t_shell *shell)
 	str = NULL;
 	while (shell->sp_prompt[shell->position] && parse_redi_pipe(shell) == ERROR)
 	{
-		str = ft_strjoin(str, shell->sp_prompt[shell->position]);
+		if (!ft_strcmp(shell->sp_prompt[shell->position], "'|'"))
+			str = ft_strjoin(str, "|");
+		else if (!ft_strcmp(shell->sp_prompt[shell->position], "'>'"))
+			str = ft_strjoin(str, ">");
+		else
+			str = ft_strjoin(str, shell->sp_prompt[shell->position]);
 		shell->position++;
 		if (shell->sp_prompt[shell->position])
 			str = ft_strjoin(str, " ");
@@ -45,7 +50,7 @@ static char	*ft_get_arg_2(t_shell *shell)
 	return (str);
 }
 
-static char	**ft_get_arg_3(t_shell *shell)
+static char	**get_arg_no_option(t_shell *shell)
 {
 	char	**arg;
 
@@ -78,6 +83,7 @@ char	**ft_get_arg(t_shell *shell)
 		arg[3] = NULL;
 	}
 	else
-		arg = ft_get_arg_3(shell);
+		arg = get_arg_no_option(shell);
+	printf("%s\n", arg[1]);
 	return (arg);
 }

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:05:43 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/03 17:55:26 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/03 21:43:29 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	check_redi_in(t_shell *shell)
 {
 	shell->prompt = add_spaces_to_pipes(shell->prompt);
+	rm_quotes_on_cmd(shell);
 	shell->sp_prompt = ft_split(shell->prompt, ' ');
 	if (!ft_strcmp(shell->sp_prompt[shell->position], "<"))
 	{
