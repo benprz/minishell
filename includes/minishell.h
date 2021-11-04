@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/03 20:22:20 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/04 03:27:30 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,12 @@ int		ft_unset(t_shell *shell);
 char	*ft_get_path(t_shell *shell);
 char	**ft_get_arg(t_shell *shell);
 
+void	*ft_tmp(void *a, void *b);
+size_t	ft_strclen(const char *str, const char c);
+void	ft_bzero(void *s, size_t n);
+void	*ft_calloc(const size_t count, const size_t size);
+void	*ft_memset(void *ptr, const unsigned int c, size_t len);
+char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	**ft_split(char const *s, char c);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strjoin(const char *s1, const char *s2);

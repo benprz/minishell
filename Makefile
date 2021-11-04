@@ -24,7 +24,13 @@ SRC =	main.c \
 		utils/ft_strlen.c \
 		utils/ft_get_path.c \
 		utils/ft_strdup.c \
-		utils/ft_free.c
+		utils/ft_free.c \
+		utils/ft_substr.c \
+		utils/ft_bzero.c \
+		utils/ft_calloc.c \
+		utils/ft_memset.c \
+		utils/ft_strclen.c \
+		utils/ft_tmp.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
