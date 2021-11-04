@@ -12,48 +12,55 @@
 
 #include "minishell.h"
 
-char	*interpret_env_variables(char *command)
+int	expand_env_variables(t_shell *shell, char *command, int i)
 {
-	int	i;
 	char	*var;
 	size_t	var_name_length;
 	char	*new_command;
 
-	i = 0;
-	var = NULL;
-	while (command[i])
+	var_name_length = ft_strclen(command + i + 1, ' ');
+	var = ft_substr(command, i + 1, var_name_length);
+	var = ft_tmp(var, getenv(var));
+	if (var == NULL) 
 	{
-		if (command[i] == '$')
-		{
-			var_name_length = ft_strclen(command + i + 1, ' ');
-			var = ft_substr(command, i + 1, var_name_length);
-			var = ft_tmp(var, getenv(var));
-			command[i] = '\0';
-			new_command = ft_strjoin(command, var);
-			new_command = ft_tmp(new_command, ft_strjoin(new_command, \
-							command + i + var_name_length + 1));
-			free(command);
-			command = new_command;
-			i += ft_strlen(var) - 1;
-		}
-		i++;
-	}
-	return (command);
+		var_name_length = ft_strclen(command + i + 1, '"');
+		var = ft_substr(command, i + 1, var_name_length);
+		var = ft_tmp(var, getenv(var));
+	}	
+	command[i] = '\0';
+	new_command = ft_strjoin(command, var);
+	new_command = ft_tmp(new_command, ft_strjoin(new_command, \
+					command + i + var_name_length + 1));
+	free(command);
+	shell->prompt = new_command;
+	return (ft_strlen(var));
 }
 
-char	*interpret_command(char *command)
+void	interpret_command(t_shell *shell)
 {
-	command = add_spaces_to_pipes(command);
-	command = interpret_env_variables(command);
-	// command = interpret_single_quotes(command);
-	// command = interpret_double_quotes(command);
-	return (command);
+	int	i;
+	int	double_quotes;
+	int	single_quotes;
+
+	i = 0;
+	double_quotes = 0;
+	single_quotes = 0;
+	while (shell->prompt[i])
+	{
+		if (shell->prompt[i] == '\'' && double_quotes == 0)
+			single_quotes = 1;
+		else if (shell->prompt[i] == '"' && single_quotes == 0)
+			double_quotes = 1;
+		if (shell->prompt[i] == '$' && single_quotes == 0)
+			i += expand_env_variables(shell, shell->prompt, i) - 1;
+		i++;
+	}
 }
 
 int	check_redi_in(t_shell *shell)
 {
-	shell->prompt = interpret_command(shell->prompt);
-	rm_quotes_on_cmd(shell);
+	interpret_command(shell);
+	//rm_quotes_on_cmd(shell);
 	shell->sp_prompt = ft_split(shell->prompt, ' ');
 	if (!ft_strcmp(shell->sp_prompt[shell->position], "<"))
 	{
