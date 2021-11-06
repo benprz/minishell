@@ -6,7 +6,7 @@
 /*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:05:43 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/04 04:07:37 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/06 05:03:26 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,32 @@ int	expand_env_variables(t_shell *shell, char *command, int i)
 	return (ft_strlen(var));
 }
 
+void	add_spaces_to_redirection_chars(t_shell *shell, char *command, int i)
+{
+	char	*new_command;
+	int		j;
+	int		k;
+
+	new_command = malloc(sizeof(char) * (ft_strlen(command) + 2 + 1));
+	j = 0;
+	k = 0;
+	while (command[j])
+	{
+		new_command[k] = command[j];
+		if (j == i)
+		{
+			new_command[k] = ' ';
+			new_command[k + 1] = command[i];
+			new_command[k + 2] = ' ';
+			k += 2;
+		}
+		j++;
+		k++;
+	}
+	new_command[k] = '\0';
+	ft_tmp(shell->prompt, new_command);
+}
+
 void	interpret_command(t_shell *shell)
 {
 	int	i;
@@ -53,6 +79,11 @@ void	interpret_command(t_shell *shell)
 			double_quotes = 1;
 		if (shell->prompt[i] == '$' && single_quotes == 0)
 			i += expand_env_variables(shell, shell->prompt, i) - 1;
+		else if ((shell->prompt[i] == '|' || shell->prompt[i] == '<' || shell->prompt[i] == '>') && single_quotes == 0 && double_quotes == 0)
+		{
+			add_spaces_to_redirection_chars(shell, shell->prompt, i);
+			i += 2;
+		}
 		i++;
 	}
 }
@@ -89,7 +120,7 @@ int	parse_redi_pipe(t_shell *shell)
 	return (SUCCESS);
 }
 
-int	parse_command(t_shell *shell)
+int	parse_program(t_shell *shell)
 {
 	if (!ft_strcmp(shell->sp_prompt[shell->save_position], "pwd"))
 		return (ft_pwd(shell));

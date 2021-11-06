@@ -6,7 +6,7 @@
 /*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/04 03:27:30 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/06 05:19:24 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,19 @@
 # include <fcntl.h>
 # include <string.h>
 
+typedef struct s_command
+{
+	char	*program_name;
+	char	*parameters;
+	int		exit_status;
+	struct s_command	*prev;
+	struct s_command	*next;
+}	t_command;
+
+
 typedef struct s_shell
 {
-	int		launched;
+	t_command	*current_command;
 	char	*prompt;
 	char	**sp_prompt;
 	int		position;
@@ -44,7 +54,9 @@ typedef struct s_shell
 # define ERROR 1
 # define SUCCESS 0
 
-int		parse_command(t_shell *shell);
+int	parse_prompt(t_shell *shell, char *prompt);
+
+int		parse_program(t_shell *shell);
 int		parse_redi_pipe(t_shell *shell);
 int		ft_check_options(t_shell *shell);
 int		check_redi_in(t_shell *shell);
@@ -72,5 +84,7 @@ char	*ft_strjoin(const char *s1, const char *s2);
 int		ft_strlen(const char *str);
 char	*ft_strdup(char *src);
 void	ft_error(t_shell *shell, char *str);
+char	*ft_strtrim(const char *s1, const char *set);
+char	*ft_strndup(const char *s1, size_t len);
 
 #endif

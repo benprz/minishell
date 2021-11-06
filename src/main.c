@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/03 17:59:51 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/06 05:33:00 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void	launch_shell(char **env)
 		g_shell.prompt = readline("minishell> ");
 		if (g_shell.prompt == NULL || !strcmp(g_shell.prompt, "exit"))
 			exit_shell();
+		ft_tmp(g_shell.prompt, ft_strtrim(g_shell.prompt, " "));
 		if (ft_strlen(g_shell.prompt) != 0)
 		{
 			add_history(g_shell.prompt);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute_cmd.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 17:06:33 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/03 20:52:04 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/06 05:02:49 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	ft_execute_cmd(t_shell *shell)
 		}
 		if (close(shell->pipe_fd[0]) == -1)
 			ft_error(shell, "Error close cmd");
-		if (parse_command(shell) == ERROR)
+		if (parse_program(shell) == ERROR)
 		{
 			if (execve(ft_get_path(shell), shell->arg, shell->env) == -1)
 				ft_error(shell, "Error command not found");

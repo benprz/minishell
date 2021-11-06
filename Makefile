@@ -8,6 +8,7 @@ INC = minishell.h
 
 SRC_DIR = src/
 SRC =	main.c \
+		parse_prompt.c \
 		ft_parse.c \
 		ft_parse_2.c \
 		ft_parse_3.c \
@@ -30,7 +31,9 @@ SRC =	main.c \
 		utils/ft_calloc.c \
 		utils/ft_memset.c \
 		utils/ft_strclen.c \
-		utils/ft_tmp.c
+		utils/ft_tmp.c \
+		utils/ft_strtrim.c \
+		utils/ft_strndup.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
