@@ -6,7 +6,7 @@
 /*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/06 05:31:57 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/07 05:52:11 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ int	parse_command(t_command *current_command, char *command)
 
 int	add_command(t_shell *shell, char *command)
 {
+	printf("command = '%s'\n", command);
+	return (SUCCESS);
+	/*
 	t_command	*current_command;
 	
 	current_command = malloc(sizeof(t_command));
@@ -54,6 +57,7 @@ int	add_command(t_shell *shell, char *command)
 	}
 	free(command);
 	return (ERROR);
+	*/
 }
 
 int	parse_prompt(t_shell *shell, char *prompt)
@@ -69,7 +73,7 @@ int	parse_prompt(t_shell *shell, char *prompt)
 		quote = 0;
 		double_quote = 0;
 		prompt_length = ft_strlen(prompt);
-		while (i <= prompt_length)
+		while (prompt_length-- >= 0)
 		{
 			if (prompt[i] == '"' && quote == 0)
 			{
@@ -90,7 +94,7 @@ int	parse_prompt(t_shell *shell, char *prompt)
 				if (add_command(shell, ft_substr(prompt, 0, i)) == ERROR)
 					return (ERROR);
 				prompt += i;
-				i = 0;
+				i = -1;
 			}
 			i++;
 		}

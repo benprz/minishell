@@ -6,7 +6,7 @@
 /*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/06 05:33:00 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/07 05:53:36 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	exit_shell(void)
 
 void	break_current_loops(void)
 {
+	exit_shell();
 	// write(0, "\n", 1);
 	// rl_on_new_line();
 	// rl_replace_line("", 0);
@@ -105,9 +106,9 @@ void	launch_shell(char **env)
 		if (ft_strlen(g_shell.prompt) != 0)
 		{
 			add_history(g_shell.prompt);
-			check_redi_in(&g_shell);
+			parse_prompt(&g_shell, g_shell.prompt);
 		}
-		ft_free_prompt(&g_shell);
+		//ft_free_prompt(&g_shell);
 	}
 }
 
