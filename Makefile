@@ -33,7 +33,9 @@ SRC =	main.c \
 		utils/ft_strclen.c \
 		utils/ft_tmp.c \
 		utils/ft_strtrim.c \
-		utils/ft_strndup.c
+		utils/ft_strndup.c \
+		utils/ft_free_2d.c \
+		utils/ft_strlen_2d.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)

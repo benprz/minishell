@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
+/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/07 05:53:36 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/08 00:35:58by neben            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,19 +67,23 @@ void	init_shell_signals(void)
 	signal(SIGQUIT, handle_shell_signals);
 }
 
-static void	ft_free_prompt(t_shell *shell)
+static void	free_prompt(t_shell *shell)
 {
-	int	i;
-
-	i = 0;
-	if (shell->sp_prompt)
+	shell->command_list = goto_first_command(shell->command_list);
+	while (shell->command_list)
 	{
-		while (shell->sp_prompt[i])
+		if (shell->command_list->next)
 		{
-			free(shell->sp_prompt[i]);
-			i++;
+			shell->command_list = shell->command_list->next;
+			//printf("free(%p)\n", shell->command_list->prev);
+			free(shell->command_list->prev);
 		}
-		free(shell->sp_prompt);
+		else
+		{
+			//printf("(end) free(%p)\n", shell->command_list);
+			free(shell->command_list);
+			shell->command_list = NULL;
+		}
 	}
 	free(shell->prompt);
 }
@@ -97,18 +101,18 @@ void	launch_shell(char **env)
 	init_shell_signals();
 	while (1)
 	{
-		bzero(&g_shell, sizeof(g_shell));
-		init_shell_data(env);
+		ft_bzero(&g_shell, sizeof(g_shell));
+		//init_shell_data(env);
 		g_shell.prompt = readline("minishell> ");
 		if (g_shell.prompt == NULL || !strcmp(g_shell.prompt, "exit"))
 			exit_shell();
-		ft_tmp(g_shell.prompt, ft_strtrim(g_shell.prompt, " "));
-		if (ft_strlen(g_shell.prompt) != 0)
+		g_shell.prompt = ft_tmp(g_shell.prompt, ft_strtrim(g_shell.prompt));
+		if (g_shell.prompt)
 		{
 			add_history(g_shell.prompt);
 			parse_prompt(&g_shell, g_shell.prompt);
 		}
-		//ft_free_prompt(&g_shell);
+		free_prompt(&g_shell);
 	}
 }
 
@@ -129,3 +133,17 @@ int	main(int argc, char **argv, char **env)
 	}
 	return (shell_status);
 }
+
+/*
+int main(void)
+{
+	char	*prompt;
+
+	while (1)
+	{
+		prompt = readline("minishell> ");
+		free(prompt);
+	}
+	return (0);
+}
+*/
