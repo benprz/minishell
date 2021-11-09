@@ -96,6 +96,28 @@ int get_variable_name_length(char *command, int i)
 	return (var_name_length);
 }
 
+int	expand_tilde(char **split_command, int i)
+{
+	char	*var;
+	char	*new_command;
+
+	var = getenv("HOME");
+	new_command = ft_substr(*split_command, 0, i);
+	new_command = ft_tmp(new_command, ft_strjoin(new_command, var));
+	var = ft_substr(*split_command, i + 1, ft_strlen(*split_command + i + 1));
+	if (var)
+	{
+		new_command = ft_tmp(new_command, ft_strjoin(new_command, var));
+		if (new_command)
+		{
+			free(*split_command);
+			*split_command = new_command;
+			return (SUCCESS);
+		}
+	}
+	return (ERROR);
+}
+
 int	expand_env_variable(char **split_command, int i)
 {
 	char	*var;
@@ -125,17 +147,60 @@ int	expand_env_variable(char **split_command, int i)
 	return (ERROR);
 }
 
-/*
-void	remove_interpreted_quotes(char *split_command)
+int	interpret_the_rest(char **split_command, int i, int *quote)
 {
-	int	i;
-	int	quote;
-	int	double_quote;
-
-	quote = 0;
-	double_quote = 0;
+	if ((*split_command)[i] == '$' && *quote == 0)
+	{
+		if (expand_env_variable(split_command, i + 1) == ERROR)
+			return (ERROR);
+	}
+	else if ((*split_command)[i] == '~' && *quote == 0)
+	{
+		if ((i == 0 || (*split_command)[i - 1] == ' ') && \
+			((*split_command)[i + 1] == '\0' || (*split_command)[i + 1] == ' '))
+		{
+			if (expand_tilde(split_command, i) == ERROR)
+				return (ERROR);
+		}
+	}
+	return (SUCCESS);
 }
-*/
+
+char	*remove_char(char *str, int i)
+{
+	char	*new_str;
+	int		new_length;
+	int		j;
+
+	new_length = ft_strlen(str) - 1;
+	new_str = malloc(sizeof(char) * (new_length + 1));
+	if (new_str)
+	{
+		j = new_length + 1;
+		new_str[new_length] = '\0';
+		while (new_length--)
+		{
+			j--;
+			if (j == i)
+				j--;
+			new_str[new_length] = str[j];
+		}
+	}
+	return (new_str);
+}
+
+int	interpret_quotes(char **split_command, int i, int *quote, int *double_quote)
+{
+	check_quotes((*split_command)[i], quote, double_quote);
+	if (((*split_command)[i] == '"' && *quote == 0) || \
+		((*split_command)[i] == '\'' && double_quote == 0))
+	{
+		*split_command = ft_tmp(*split_command, remove_char(*split_command, i));
+		if (*split_command == NULL)
+			return (ERROR);
+	}	
+	return (SUCCESS);
+}
 
 int	parse_argv(t_command *current_command, char **split_command)
 {
@@ -150,16 +215,15 @@ int	parse_argv(t_command *current_command, char **split_command)
 		i = 0;
 		while ((*split_command)[i])
 		{
-			check_quotes((*split_command)[i], &quote, &double_quote);
-			if ((*split_command)[i] == '$' && quote == 0)
+			if (interpret_quotes(split_command, i, &quote, &double_quote))
+				return (ERROR);
+			if ((*split_command)[i])
 			{
-				if (expand_env_variable(split_command, i + 1) == ERROR)
+				if (interpret_the_rest(split_command, i, &quote) == ERROR)
 					return (ERROR);
+				i++;
 			}
-			i++;
 		}
-		remove_interpreted_quotes(*split_command);
-		printf("%s\n", *split_command);
 		split_command++;
 	}
 	return (SUCCESS);
@@ -175,12 +239,13 @@ int	parse_command(t_command *current_command, char *command)
 	split_command = ft_split(command, 1);
 	if (split_command)
 	{
+		current_command->argc = ft_strlen_2d(split_command);
 		if (parse_argv(current_command, split_command) == SUCCESS)
 		{
 			current_command->argv = split_command;
 			return (SUCCESS);
 		}
-		ft_free_2d((void **)split_command, ft_strlen_2d(split_command));
+		ft_free_2d((void **)split_command, current_command->argc);
 	}
 	return (ERROR);
 }

@@ -25,6 +25,7 @@
 
 typedef struct s_command
 {
+	int					argc;
 	char				**argv;
 	char				*program_path;
 	int					redirection;
@@ -44,10 +45,10 @@ typedef struct s_shell
 
 # define ERROR 1
 # define SUCCESS 0
-# define REDIRECTION_INPUT 0
-# define REDIRECTION_OUTPUT 1
-# define REDIRECTION_DINPUT 2
-# define REDIRECTION_DOUTPUT 3
+# define REDIRECTION_INPUT 1
+# define REDIRECTION_OUTPUT 2
+# define REDIRECTION_DINPUT 3
+# define REDIRECTION_DOUTPUT 4
 
 int	parse_prompt(t_shell *shell, char *prompt);
 t_command	*goto_first_command(t_command *current);

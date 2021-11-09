@@ -73,6 +73,8 @@ void	free_prompt(t_shell *shell, char *prompt)
 	shell->command_list = goto_first_command(shell->command_list);
 	while (shell->command_list)
 	{
+		ft_free_2d((void **)shell->command_list->argv, \
+					shell->command_list->argc);
 		if (shell->command_list->next)
 		{
 			shell->command_list = shell->command_list->next;
@@ -113,7 +115,7 @@ void	launch_shell()
 			if (parse_prompt(&g_shell, prompt) == SUCCESS)
 			{
 				g_shell.command_list = goto_first_command(g_shell.command_list);
-				execute_command(&g_shell);
+				//execute_command(&g_shell);
 			}
 			free_prompt(&g_shell, prompt);
 		}
