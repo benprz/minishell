@@ -158,8 +158,8 @@ int	parse_argv(t_command *current_command, char **split_command)
 			}
 			i++;
 		}
-		//remove_interpreted_quotes(*split_command);
-		//printf("%s\n", *split_command);
+		remove_interpreted_quotes(*split_command);
+		printf("%s\n", *split_command);
 		split_command++;
 	}
 	return (SUCCESS);
