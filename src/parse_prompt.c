@@ -254,7 +254,6 @@ int	add_command(t_shell *shell, char *command)
 {
 	t_command	*current_command;
 	
-	//printf("command = %s\n", command);
 	current_command = malloc(sizeof(t_command));
 	if (current_command)
 	{
