@@ -19,7 +19,7 @@ int	ft_pwd(t_shell *shell)
 
 	i = 1;
 	str = NULL;
-	if (!shell->sp_prompt[shell->position])
+	if (shell->command_list->next)
 	{
 		if (dup2(1, shell->pipe_fd[0]) == -1)
 			ft_error(shell, "Error dup2 cmd");

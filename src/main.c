@@ -27,6 +27,7 @@ t_shell	g_shell;
 
 void	handle_program_signals(int signal)
 {
+	(void)signal;
 }
 
 void	init_program_signals(void)
@@ -67,7 +68,7 @@ void	init_shell_signals(void)
 	signal(SIGQUIT, handle_shell_signals);
 }
 
-static void	free_prompt(t_shell *shell)
+void	free_prompt(t_shell *shell, char *prompt)
 {
 	shell->command_list = goto_first_command(shell->command_list);
 	while (shell->command_list)
@@ -85,7 +86,7 @@ static void	free_prompt(t_shell *shell)
 			shell->command_list = NULL;
 		}
 	}
-	free(shell->prompt);
+	free(prompt);
 }
 
 static void	init_shell_data(char **env)
@@ -96,28 +97,26 @@ static void	init_shell_data(char **env)
 	g_shell.env = env;
 }
 
-
-void	launch_shell(char **env)
+void	launch_shell()
 {
-	init_shell_signals();
+	char	*prompt;
+
 	while (1)
 	{
-		ft_bzero(&g_shell, sizeof(g_shell));
-		init_shell_data(env);
-		g_shell.prompt = readline("minishell> ");
-		if (g_shell.prompt == NULL || !strcmp(g_shell.prompt, "exit"))
+		prompt = readline("minishell> ");
+		if (prompt == NULL || !strcmp(prompt, "exit"))
 			exit_shell();
-		g_shell.prompt = ft_tmp(g_shell.prompt, ft_strtrim(g_shell.prompt));
-		if (g_shell.prompt)
+		prompt = ft_tmp(prompt, ft_strtrim(prompt));
+		if (prompt)
 		{
-			add_history(g_shell.prompt);
-			if (parse_prompt(&g_shell, g_shell.prompt) == SUCCESS)
+			add_history(prompt);
+			if (parse_prompt(&g_shell, prompt) == SUCCESS)
 			{
 				g_shell.command_list = goto_first_command(g_shell.command_list);
 				execute_command(&g_shell);
 			}
+			free_prompt(&g_shell, prompt);
 		}
-		//free_prompt(&g_shell);
 	}
 }
 
@@ -126,11 +125,18 @@ int	main(int argc, char **argv, char **env)
 	pid_t	shell_pid;
 	int		shell_status;
 
+	(void)argc;
+	(void)argv;
+	shell_status = 0;
 	shell_pid = fork();
 	if (shell_pid == -1)
 		perror("Error making shell's process\n");
 	else if (shell_pid == 0)
-		launch_shell(env);
+	{
+		init_shell_signals();
+		init_shell_data(env);
+		launch_shell();
+	}
 	else
 	{
 		init_program_signals();
@@ -138,11 +144,31 @@ int	main(int argc, char **argv, char **env)
 	}
 	return (shell_status);
 }
-
 /*
-int main(void)
+int main(int argc, char **argv, char **env)
 {
-	parse_prompt(&g_shell, "echo world");
+	pid_t	pid;
+	int		status;
+	char	c;
+
+	init_shell_data(env);
+	g_shell.arg = argv + 1;
+	pid = fork();
+	if (pid == 0)
+	{
+		g_shell.fd_in = open("a", O_RDWR);
+		dup2(1, g_shell.fd_in);
+		execve(ft_get_path(&g_shell), g_shell.arg, env);
+	}
+	else
+	{
+		wait(&status);
+		while (read(g_shell.fd_in, &c, 1) == 1)
+		{
+			printf("%c\n", c);
+		}
+		close(g_shell.fd_in);
+	}
 	return (0);
 }
 */

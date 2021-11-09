@@ -19,19 +19,28 @@
 
 t_command	*goto_first_command(t_command *current)
 {
-	while (current->prev)
-		current = current->prev;
+	if (current)
+		while (current->prev)
+			current = current->prev;
 	return (current);
 }
 
 void	print_commands(t_shell *shell)
 {
 	t_command *current;
+	int	i;
 
 	current = goto_first_command(shell->command_list);
 	while (current)
 	{
 		printf("\ncurrent = %p\ncurrent->prev = %p\ncurrent->next = %p\n", current, current->prev, current->next);
+		i = 0;
+		while (current->argv[i])
+		{
+			printf("current->argv[%d] = %s\n", i, current->argv[i]);
+			i++;
+		}
+		printf("current->argv[%d] = %s\n", i, current->argv[i]);
 		current = current->next;
 	}
 }
@@ -73,26 +82,60 @@ void	replace_split_spaces(char *command)
 	}
 }
 
-/*
+int get_variable_name_length(char *command, int i)
+{
+	int	var_name_length;
+
+	var_name_length = 0;
+	while (command[i + var_name_length])
+	{
+		if (!ft_isalnum(command[i + var_name_length]))
+			break ;
+		var_name_length++;
+	}
+	return (var_name_length);
+}
+
 int	expand_env_variable(char **split_command, int i)
 {
 	char	*var;
-	size_t	var_name_length;
+	int		var_name_length;
 	char	*new_command;
 
-
-	var_name_length = ft_strclen(*split_command + i + 1, '"');
-	var = ft_substr(*split_command, i + 1, var_name_length);
+	var_name_length = get_variable_name_length(*split_command, i);
+	var = ft_substr(*split_command, i, var_name_length);
 	if (var)
 	{
-		var = ft_tmp(var, getenv(NULL));
-		new_command = ft_substr(*split_command, 0, i);
-		new_command = ft_tmp(ft_strjoin()
-		printf("var = %s | new_command = '%s'\n", var, new_command);
+		var = ft_tmp(var, getenv(var));
+		new_command = ft_substr(*split_command, 0, i - 1);
+		new_command = ft_tmp(new_command, ft_strjoin(new_command, var));
+		i += var_name_length;
+		var = ft_substr(*split_command, i, ft_strlen(*split_command + i));
+		if (var)
+		{
+			new_command = ft_tmp(new_command, ft_strjoin(new_command, var));
+			if (new_command)
+			{
+				free(*split_command);
+				*split_command = new_command;
+				return (SUCCESS);
+			}
+		}
 	}
 	return (ERROR);
-	// return (ft_strlen(var));
 }
+
+/*
+void	remove_interpreted_quotes(char *split_command)
+{
+	int	i;
+	int	quote;
+	int	double_quote;
+
+	quote = 0;
+	double_quote = 0;
+}
+*/
 
 int	parse_argv(t_command *current_command, char **split_command)
 {
@@ -104,25 +147,27 @@ int	parse_argv(t_command *current_command, char **split_command)
 	double_quote = 0;
 	while (*split_command)
 	{
-		printf("%s\n", *split_command);
 		i = 0;
 		while ((*split_command)[i])
 		{
 			check_quotes((*split_command)[i], &quote, &double_quote);
 			if ((*split_command)[i] == '$' && quote == 0)
-				expand_env_variable(split_command, i);
+			{
+				if (expand_env_variable(split_command, i + 1) == ERROR)
+					return (ERROR);
+			}
 			i++;
 		}
+		//remove_interpreted_quotes(*split_command);
+		//printf("%s\n", *split_command);
 		split_command++;
 	}
 	return (SUCCESS);
 }
-*/
 
 int	parse_command(t_command *current_command, char *command)
 {
 	char	**split_command;
-	int		i;
 
 	while (*command == ' ')
 		command++;
@@ -130,11 +175,11 @@ int	parse_command(t_command *current_command, char *command)
 	split_command = ft_split(command, 1);
 	if (split_command)
 	{
-		//if (parse_argv(current_command, split_command) == SUCCESS)
-		//{
+		if (parse_argv(current_command, split_command) == SUCCESS)
+		{
 			current_command->argv = split_command;
 			return (SUCCESS);
-		//}
+		}
 		ft_free_2d((void **)split_command, ft_strlen_2d(split_command));
 	}
 	return (ERROR);

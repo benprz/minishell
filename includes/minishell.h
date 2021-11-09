@@ -37,19 +37,9 @@ typedef struct s_command
 typedef struct s_shell
 {
 	t_command	*command_list;
-	char	*prompt;
-	char	**sp_prompt;
-	int		position;
-	int		save_position;
-	int		pipe;
-	int		redi_in;
-	int		fd_in;
-	int		redi_out;
-	int		fd_out;
+	char	**env;
 	char	**all_path;
 	int		pipe_fd[2];
-	char	**arg;
-	char	**env;
 }				t_shell;
 
 # define ERROR 1
@@ -64,6 +54,7 @@ t_command	*goto_first_command(t_command *current);
 
 int		parse_program(t_shell *shell);
 void	execute_command(t_shell *shell);
+void	free_prompt(t_shell *shell, char *prompt);
 int		parse_redi_pipe(t_shell *shell);
 int		ft_check_options(t_shell *shell);
 int		check_redi_in(t_shell *shell);
@@ -90,10 +81,13 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strjoin(const char *s1, const char *s2);
 int		ft_strlen(const char *str);
 char	*ft_strdup(char *src);
-void	ft_error(t_shell *shell, char *str);
+void	ft_error(char *str);
 char	*ft_strtrim(const char *s1);
 char	*ft_strndup(const char *s1, size_t len);
 void	ft_free_2d(void **array, size_t size);
 size_t	ft_strlen_2d(char **array);
+int		ft_isalnum(const int c);
+int		ft_isalpha(const int c);
+int		ft_isdigit(const int c);
 
 #endif

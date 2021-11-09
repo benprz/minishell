@@ -12,17 +12,8 @@
 
 #include "minishell.h"
 
-void	ft_error(t_shell *shell, char *str)
+void	ft_error(char *str)
 {
-	int	i;
-
-	i = 0;
 	perror(str);
-	while (shell->arg[i])
-	{
-		free(shell->arg[i]);
-		i++;
-	}
-	free(shell->arg);
 	exit(EXIT_FAILURE);
 }

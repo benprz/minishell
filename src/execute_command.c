@@ -12,10 +12,22 @@
 
 #include "minishell.h"
 
-void	truc(t_shell *shell)
+void	execute_program(t_shell *shell)
 {
+	if (shell->command_list->prev)
+	{
+		if (dup2(shell->pipe_fd[0], STDIN_FILENO) == -1)
+			ft_error("Error, dup2");
+	}
+	if (shell->command_list->next)
+	{
+		if (dup2(shell->pipe_fd[1], STDOUT_FILENO) == -1)
+			ft_error("Error, dup2");
+	}
 	if (execve(ft_get_path(shell), shell->command_list->argv, shell->env) == -1)
-		ft_error(shell, "Error command not found");
+	{
+		ft_error("Error command not found");
+	}
 }
 
 void	execute_command(t_shell *shell)
@@ -26,13 +38,11 @@ void	execute_command(t_shell *shell)
 	pid = fork();
 	if (pid == -1)
 	{
-		perror("Error fork cmd");
+		perror("Error fork execute_command");
 		exit(EXIT_FAILURE);
 	}
 	else if (pid == 0)
-	{
-		truc(shell);
-	}
+		execute_program(shell);
 	else
 	{
 		wait(&status);
@@ -44,6 +54,7 @@ void	execute_command(t_shell *shell)
 	}
 }
 
+/*
 int	ft_execute_cmd(t_shell *shell)
 {
 	pid_t	pid;
@@ -116,3 +127,4 @@ int	ft_execute_cmd(t_shell *shell)
 	}
 	return (SUCCESS);
 }
+*/
