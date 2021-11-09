@@ -193,7 +193,7 @@ int	interpret_quotes(char **split_command, int i, int *quote, int *double_quote)
 {
 	check_quotes((*split_command)[i], quote, double_quote);
 	if (((*split_command)[i] == '"' && *quote == 0) || \
-		((*split_command)[i] == '\'' && double_quote == 0))
+		((*split_command)[i] == '\'' && *double_quote == 0))
 	{
 		*split_command = ft_tmp(*split_command, remove_char(*split_command, i));
 		if (*split_command == NULL)
