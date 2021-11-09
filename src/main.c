@@ -137,13 +137,7 @@ int	main(int argc, char **argv, char **env)
 /*
 int main(void)
 {
-	char	*prompt;
-
-	while (1)
-	{
-		prompt = readline("minishell> ");
-		free(prompt);
-	}
+	parse_prompt(&g_shell, "echo world");
 	return (0);
 }
 */

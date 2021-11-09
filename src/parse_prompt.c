@@ -73,8 +73,25 @@ void	replace_split_spaces(char *command)
 	}
 }
 
-void	expand_env_variable()
-{}
+int	expand_env_variable(char **split_command, int i)
+{
+	char	*var;
+	size_t	var_name_length;
+	char	*new_command;
+
+
+	var_name_length = ft_strclen(*split_command + i + 1, '"');
+	var = ft_substr(*split_command, i + 1, var_name_length);
+	if (var)
+	{
+		var = ft_tmp(var, getenv(NULL));
+		new_command = ft_substr(*split_command, 0, i);
+		new_command = ft_tmp(ft_strjoin()
+		printf("var = %s | new_command = '%s'\n", var, new_command);
+	}
+	return (ERROR);
+	// return (ft_strlen(var));
+}
 
 int	parse_argv(t_command *current_command, char **split_command)
 {
@@ -86,14 +103,13 @@ int	parse_argv(t_command *current_command, char **split_command)
 	double_quote = 0;
 	while (*split_command)
 	{
+		printf("%s\n", *split_command);
 		i = 0;
-		while (*split_command[i])
+		while ((*split_command)[i])
 		{
-			check_quotes(*split_command[i], &quote, &double_quote);
-			if (*split_command[i] == '$' && double_quote == 1)
-			{
-				expand_env_variable();
-			}
+			check_quotes((*split_command)[i], &quote, &double_quote);
+			if ((*split_command)[i] == '$' && quote == 0)
+				expand_env_variable(split_command, i);
 			i++;
 		}
 		split_command++;
@@ -112,12 +128,12 @@ int	parse_command(t_command *current_command, char *command)
 	split_command = ft_split(command, 1);
 	if (split_command)
 	{
-		//if (parse_argv(current_command, split_command) == SUCCESS)
-		//{
+		if (parse_argv(current_command, split_command) == SUCCESS)
+		{
 			current_command->argv = split_command;
 			return (SUCCESS);
-		//}
-		//ft_free_2d((void **)split_command, ft_strlen_2d(split_command));
+		}
+		ft_free_2d((void **)split_command, ft_strlen_2d(split_command));
 	}
 	return (ERROR);
 }

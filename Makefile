@@ -49,7 +49,7 @@ $(NAME): $(OBJ)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(addprefix $(INC_DIR),$(INC))
 	mkdir -p $(@D)
-	$(CC) -I $(INC_DIR) -c $< -o $@
+	$(CC) -g3 -I $(INC_DIR) -c $< -o $@
 
 exec:
 	./$(NAME)
