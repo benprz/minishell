@@ -6,13 +6,41 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/03 20:14:26 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/09 19:59:47 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_path_cd(t_shell *shell, char *save)
+static void	change_env(t_shell *shell)
+{
+	int		i;
+	char	*save_pwd;
+
+	i = 0;
+	while (shell->env[i])
+	{
+		if (shell->env[i][0] == 'P' && shell->env[i][1] == 'W')
+			break ;
+		i++;
+	}
+	save_pwd = ft_strdup(shell->env[i]);
+	shell->env[i] = NULL;
+	shell->env[i] = ft_strjoin(shell->env[i], "PWD=");
+	shell->env[i] = ft_strjoin(shell->env[i], shell->command_list->argv[1]);
+	i = 0;
+	while (shell->env[i])
+	{
+		if (shell->env[i][0] == 'O' && shell->env[i][1] == 'L')
+			break ;
+		i++;
+	}
+	shell->env[i] = NULL;
+	shell->env[i] = ft_strdup(save_pwd);
+	free(save_pwd); 
+}
+
+static char	*get_path_cd(char *save)
 {
 	char	*path;
 	int		i;
@@ -42,47 +70,52 @@ static void	get_arg_cd(t_shell *shell)
 	int		j;
 
 	path = getenv("PWD");
-	while (shell->arg[1][1] && shell->arg[1][0] == '.')
+	while (shell->command_list->argv[1][1] && shell->command_list->argv[1][0] == '.')
 	{
 		i = 3;
 		j = 0;
-		save = ft_strdup(shell->arg[1]);
-		free(shell->arg[1]);
-		shell->arg[1] = NULL;
-		shell->arg[1] = malloc(sizeof(char) * (ft_strlen(save) - 2));
+		save = ft_strdup(shell->command_list->argv[1]);
+		free(shell->command_list->argv[1]);
+		shell->command_list->argv[1] = NULL;
+		shell->command_list->argv[1] = malloc(sizeof(char) * (ft_strlen(save) - 2));
 		while (save[i])
 		{
-			shell->arg[1][j] = save[i];
+			shell->command_list->argv[1][j] = save[i];
 			i++;
 			j++;
 		}
-		shell->arg[1][j] = '\0';
+		shell->command_list->argv[1][j] = '\0';
 		free(save);
-		path = get_path_cd(shell, path);
+		path = get_path_cd(path);
 	}
-	if (shell->arg[1][0] != '\0')
+	if (shell->command_list->argv[1][0] != '\0')
 		path = ft_strjoin(path, "/");
-	shell->arg[1] = ft_strjoin(path, shell->arg[1]);
+	shell->command_list->argv[1] = ft_strjoin(path, shell->command_list->argv[1]);
 }
 
 int	ft_cd(t_shell *shell)
 {
 	int	cd;
 
-	if (shell->arg[1][0] == '.')
+	if (shell->command_list->argv[1][0] == '.')
 	{
-		if (shell->arg[1][1] == '.' && shell->arg[1][2] == '/')
+		if (shell->command_list->argv[1][1] == '.'
+			&& (shell->command_list->argv[1][2] == '/'
+				|| !shell->command_list->argv[1][2]))
 			get_arg_cd(shell);
 		else
-			ft_error(shell, "Error No such file or directory");
+			ft_error("Error No such file or directory");
 	}
-	else if (shell->arg[1][0] != '/')
+	else if (shell->command_list->argv[1][0] != '/')
 	{
-		shell->arg[1] = ft_strjoin("/", shell->arg[1]);
-		shell->arg[1] = ft_strjoin(getenv("PWD"), shell->arg[1]);
+		shell->command_list->argv[1] = ft_strjoin("/",
+				shell->command_list->argv[1]);
+		shell->command_list->argv[1] = ft_strjoin(getenv("PWD"),
+				shell->command_list->argv[1]);
 	}
-	cd = chdir(shell->arg[1]);
-		if (cd == -1)
-			ft_error(shell, "Error No such file or directory");
+	cd = chdir(shell->command_list->argv[1]);
+	if (cd == -1)
+		ft_error("Error No such file or directory");
+	change_env(shell);
 	return (SUCCESS);
 }

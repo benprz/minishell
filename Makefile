@@ -2,7 +2,7 @@
 
 NAME = minishell
 CC = gcc
-CFLAGS = -g3  -fsanitize=address -Wextra -Wall #-Werror
+CFLAGS = -g3  #-fsanitize=address -Wextra -Wall #-Werror
 INC_DIR = includes/
 INC = minishell.h
 
@@ -10,6 +10,13 @@ SRC_DIR = src/
 SRC =	main.c \
 		parse_prompt.c \
 		execute_command.c \
+		ft_parse.c \
+		ft_echo.c \
+		ft_cd.c \
+		ft_export.c \
+		ft_unset.c \
+		ft_pwd.c \
+		ft_env.c \
 		utils/ft_split.c \
 		utils/ft_strcmp.c \
 		utils/ft_strjoin.c \
