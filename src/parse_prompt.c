@@ -147,21 +147,26 @@ int	expand_env_variable(char **split_command, int i)
 	return (ERROR);
 }
 
-int	interpret_the_rest(char **split_command, int i, int *quote)
+int	interpret_the_rest(t_command *cmd, char **split_cmd, int i, int *quote)
 {
-	if ((*split_command)[i] == '$' && *quote == 0)
+	if ((*split_cmd)[i] == '$' && *quote == 0)
 	{
-		if (expand_env_variable(split_command, i + 1) == ERROR)
+		if (expand_env_variable(split_cmd, i + 1) == ERROR)
 			return (ERROR);
 	}
-	else if ((*split_command)[i] == '~' && *quote == 0)
+	else if ((*split_cmd)[i] == '~' && *quote == 0)
 	{
-		if ((i == 0 || (*split_command)[i - 1] == ' ') && \
-			((*split_command)[i + 1] == '\0' || (*split_command)[i + 1] == ' '))
+		if ((i == 0 || (*split_cmd)[i - 1] == ' ') && \
+			((*split_cmd)[i + 1] == '\0' || (*split_cmd)[i + 1] == ' '))
 		{
-			if (expand_tilde(split_command, i) == ERROR)
+			if (expand_tilde(split_cmd, i) == ERROR)
 				return (ERROR);
 		}
+	}
+	else if ((*split_cmd[i]) == '<' || (*split_cmd[i]) == '>' || \
+			(*split_cmd[i]) == '<<' || (*split_cmd[i]) == '>>')
+	{
+		if (find_redirection_fd(cmd))
 	}
 	return (SUCCESS);
 }
@@ -189,11 +194,11 @@ char	*remove_char(char *str, int i)
 	return (new_str);
 }
 
-int	interpret_quotes(char **split_command, int i, int *quote, int *double_quote)
+int	interpret_quotes(t_shell *shell, char **split_command, int i, int *quote, int *dq)
 {
-	check_quotes((*split_command)[i], quote, double_quote);
+	check_quotes((*split_command)[i], quote, dq);
 	if (((*split_command)[i] == '"' && *quote == 0) || \
-		((*split_command)[i] == '\'' && double_quote == 0))
+		((*split_command)[i] == '\'' && *dq == 0))
 	{
 		*split_command = ft_tmp(*split_command, remove_char(*split_command, i));
 		if (*split_command == NULL)
@@ -219,7 +224,7 @@ int	parse_argv(t_command *current_command, char **split_command)
 				return (ERROR);
 			if ((*split_command)[i])
 			{
-				if (interpret_the_rest(split_command, i, &quote) == ERROR)
+				if (interpret_the_rest(current_command, split_command, i, &quote) == ERROR)
 					return (ERROR);
 				i++;
 			}
