@@ -26,7 +26,6 @@
 typedef struct s_command
 {
 	char				**argv;
-	int					exit_status;
 	int					redirection;
 	int					fd;
 	struct s_command	*prev;
