@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_prompt.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/08 04:40:15 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/09 17:50:55 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ int	parse_argv(t_command *current_command, char **split_command)
 			}
 			i++;
 		}
-		remove_interpreted_quotes(*split_command);
+		// remove_interpreted_quotes(*split_command);
 		printf("%s\n", *split_command);
 		split_command++;
 	}
