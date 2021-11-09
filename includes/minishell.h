@@ -26,6 +26,7 @@
 typedef struct s_command
 {
 	char				**argv;
+	char				*program_path;
 	int					redirection;
 	int					fd;
 	struct s_command	*prev;
@@ -62,6 +63,7 @@ int	parse_prompt(t_shell *shell, char *prompt);
 t_command	*goto_first_command(t_command *current);
 
 int		parse_program(t_shell *shell);
+void	execute_command(t_shell *shell);
 int		parse_redi_pipe(t_shell *shell);
 int		ft_check_options(t_shell *shell);
 int		check_redi_in(t_shell *shell);

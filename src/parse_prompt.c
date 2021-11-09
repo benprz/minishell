@@ -73,6 +73,7 @@ void	replace_split_spaces(char *command)
 	}
 }
 
+/*
 int	expand_env_variable(char **split_command, int i)
 {
 	char	*var;
@@ -116,6 +117,7 @@ int	parse_argv(t_command *current_command, char **split_command)
 	}
 	return (SUCCESS);
 }
+*/
 
 int	parse_command(t_command *current_command, char *command)
 {
@@ -128,11 +130,11 @@ int	parse_command(t_command *current_command, char *command)
 	split_command = ft_split(command, 1);
 	if (split_command)
 	{
-		if (parse_argv(current_command, split_command) == SUCCESS)
-		{
+		//if (parse_argv(current_command, split_command) == SUCCESS)
+		//{
 			current_command->argv = split_command;
 			return (SUCCESS);
-		}
+		//}
 		ft_free_2d((void **)split_command, ft_strlen_2d(split_command));
 	}
 	return (ERROR);
@@ -142,7 +144,7 @@ int	add_command(t_shell *shell, char *command)
 {
 	t_command	*current_command;
 	
-	printf("command = %s\n", command);
+	//printf("command = %s\n", command);
 	current_command = malloc(sizeof(t_command));
 	if (current_command)
 	{
@@ -188,7 +190,7 @@ int	parse_prompt(t_shell *shell, char *prompt)
 			}
 			i++;
 		}
-		print_commands(shell);
+		//print_commands(shell);
 	}
 	return (SUCCESS);
 }

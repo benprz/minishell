@@ -96,13 +96,14 @@ static void	init_shell_data(char **env)
 	g_shell.env = env;
 }
 
+
 void	launch_shell(char **env)
 {
 	init_shell_signals();
 	while (1)
 	{
 		ft_bzero(&g_shell, sizeof(g_shell));
-		//init_shell_data(env);
+		init_shell_data(env);
 		g_shell.prompt = readline("minishell> ");
 		if (g_shell.prompt == NULL || !strcmp(g_shell.prompt, "exit"))
 			exit_shell();
@@ -110,9 +111,13 @@ void	launch_shell(char **env)
 		if (g_shell.prompt)
 		{
 			add_history(g_shell.prompt);
-			parse_prompt(&g_shell, g_shell.prompt);
+			if (parse_prompt(&g_shell, g_shell.prompt) == SUCCESS)
+			{
+				g_shell.command_list = goto_first_command(g_shell.command_list);
+				execute_command(&g_shell);
+			}
 		}
-		free_prompt(&g_shell);
+		//free_prompt(&g_shell);
 	}
 }
 

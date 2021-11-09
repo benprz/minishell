@@ -21,7 +21,7 @@ char	*ft_get_path(t_shell *shell)
 	while (shell->all_path[i])
 	{
 		save = ft_strjoin(shell->all_path[i], "/");
-		save = ft_strjoin(save, shell->sp_prompt[shell->save_position]);
+		save = ft_strjoin(save, shell->command_list->argv[0]);
 		if (access(save, X_OK) == 0)
 			return (save);
 		free(save);
