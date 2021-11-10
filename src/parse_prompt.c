@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_prompt.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/08 04:40:15 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/10 01:14:35 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,11 @@ int	expand_env_variable(char **split_command, int i)
 	return (ERROR);
 }
 
+int	find_redirection_fd(t_command *cmd, char **split_cmd, int i)
+{
+	return (ERROR);
+}
+
 int	interpret_the_rest(t_command *cmd, char **split_cmd, int i, int *quote)
 {
 	if ((*split_cmd)[i] == '$' && *quote == 0)
@@ -163,10 +168,10 @@ int	interpret_the_rest(t_command *cmd, char **split_cmd, int i, int *quote)
 				return (ERROR);
 		}
 	}
-	else if ((*split_cmd[i]) == '<' || (*split_cmd[i]) == '>' || \
-			(*split_cmd[i]) == '<<' || (*split_cmd[i]) == '>>')
+	else if (((*split_cmd)[i] == '<' || (*split_cmd)[i] == '>') && *quote == 0)
 	{
-		if (find_redirection_fd(cmd))
+		if (find_redirection_fd(cmd, split_cmd, i) == ERROR)
+			return (ERROR);
 	}
 	return (SUCCESS);
 }
@@ -194,7 +199,7 @@ char	*remove_char(char *str, int i)
 	return (new_str);
 }
 
-int	interpret_quotes(t_shell *shell, char **split_command, int i, int *quote, int *dq)
+int	interpret_quotes(char **split_command, int i, int *quote, int *dq)
 {
 	check_quotes((*split_command)[i], quote, dq);
 	if (((*split_command)[i] == '"' && *quote == 0) || \
