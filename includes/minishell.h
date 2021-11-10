@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/08 03:12:31 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/10 12:37:16 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,10 @@ t_command	*goto_first_command(t_command *current);
 int		parse_program(t_shell *shell);
 void	execute_command(t_shell *shell);
 void	free_prompt(t_shell *shell, char *prompt);
-int		parse_redi_pipe(t_shell *shell);
-int		ft_check_options(t_shell *shell);
-int		check_redi_in(t_shell *shell);
+int		check_commad_1(t_shell *shell);
+int		check_commad_2(t_shell *shell);
 char	*add_spaces_to_pipes(char *command);
 void	rm_quotes_on_cmd(t_shell *shell);
-int		ft_execute_cmd(t_shell *shell);
 int		ft_pwd(t_shell *shell);
 int		ft_echo(t_shell *shell);
 int		ft_cd(t_shell *shell);
@@ -83,6 +81,7 @@ char	*ft_strjoin(const char *s1, const char *s2);
 int		ft_strlen(const char *str);
 char	*ft_strdup(char *src);
 void	ft_error(char *str);
+void	free_tab(char **tab);
 char	*ft_strtrim(const char *s1);
 char	*ft_strndup(const char *s1, size_t len);
 void	ft_free_2d(void **array, size_t size);

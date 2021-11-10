@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:12:00 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/02 17:06:08 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/09 19:47:26 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,6 @@
 
 int	ft_unset(t_shell *shell)
 {
+	(void)shell;
 	return (SUCCESS);
 }

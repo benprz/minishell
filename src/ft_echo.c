@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 12:24:48 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/02 16:10:18 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/10 12:48:52 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,23 @@
 
 int	ft_echo(t_shell *shell)
 {
-	if (!shell->sp_prompt[shell->position])
-	{
+	int	i;
+	int	check;
+
+	i = 1;
+	check = 0;
+	if (!shell->command_list->next)
 		if (dup2(1, shell->pipe_fd[0]) == -1)
-			ft_error(shell, "Error dup2 cmd");
-	}
-	if (shell->arg[1] == NULL || ft_strcmp(shell->arg[1], "-n"))
+			ft_error("Error dup2 cmd");
+	while (shell->command_list->argv[i])
 	{
-		shell->arg[1] = ft_strjoin(shell->arg[1], "\n");
-		write(shell->pipe_fd[0], shell->arg[1], ft_strlen(shell->arg[1]));
+		if (ft_strcmp(shell->command_list->argv[i], "-n"))
+			check++;
+		write(shell->pipe_fd[0], shell->command_list->argv[i],
+			ft_strlen(shell->command_list->argv[i]));
+		i++;
 	}
-	else
-		write(shell->pipe_fd[0], shell->arg[2], ft_strlen(shell->arg[2]));
+	if (check != 0)
+		printf("\n");
 	return (SUCCESS);
 }

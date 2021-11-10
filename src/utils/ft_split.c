@@ -6,13 +6,13 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:15:26 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/27 18:05:27 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/09 19:42:40 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	*free_tab(char **tab, int i)
+static void	*free_tab_split(char **tab, int i)
 {
 	while (i--)
 		free(tab[i]);
@@ -70,7 +70,7 @@ char	**ft_split(char const *s, char c)
 		k = 0;
 		tab[j] = malloc(sizeof(char) * (size_word(s, c, i) + 1));
 		if (tab[j] == NULL)
-			return ((char **)free_tab(tab, j));
+			return ((char **)free_tab_split(tab, j));
 		while (s[i] && s[i] == c)
 			i++;
 		while (s[i] && s[i] != c)
