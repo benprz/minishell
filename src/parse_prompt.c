@@ -6,7 +6,7 @@
 /*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/10 15:07:43 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/10 15:55:06by neben            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ t_command	*goto_first_command(t_command *current)
 
 void	print_commands(t_shell *shell)
 {
-	t_command *current;
-	int	i;
+	t_command	*current;
+	int			i;
 
 	current = goto_first_command(shell->command_list);
 	while (current)
@@ -67,7 +67,7 @@ void	replace_split_spaces(char *command)
 {
 	int		quote;
 	int		double_quote;	
-	
+
 	quote = 0;
 	double_quote = 0;
 	while (*command)
@@ -147,19 +147,40 @@ int	expand_env_variable(char **split_command, int i)
 	return (ERROR);
 }
 
+void	get_redirection_type(t_command *cmd, char **split_cmd, int i)
+{
+	int	check_redirection;
+	
+	if ((*split_cmd)[i] == '<')
+	{
+		cmd->redirection = REDIRECTION_INPUT;
+		check_redirection = strncmp(*split_cmd + i, "<<", 2);
+		if (check_redirection == 0)
+			cmd->redirection = REDIRECTION_DINPUT;
+	}
+	else if ((*split_cmd)[i] == '>')
+	{
+		cmd->redirection = REDIRECTION_OUTPUT;
+		check_redirection = strncmp(*split_cmd + i, ">>", 2);
+		if (check_redirection == 0)
+			cmd->redirection = REDIRECTION_DOUTPUT;
+	}
+}
+
 int	find_redirection_fd(t_command *cmd, char **split_cmd, int i)
 {
+	get_redirection_type(cmd, split_cmd, i);
 	return (ERROR);
 }
 
-int	interpret_the_rest(t_command *cmd, char **split_cmd, int i, int *quote)
+int	interpret_the_rest(t_command *cmd, char **split_cmd, int i, int *dq)
 {
-	if ((*split_cmd)[i] == '$' && *quote == 0)
+	if ((*split_cmd)[i] == '$')
 	{
 		if (expand_env_variable(split_cmd, i + 1) == ERROR)
 			return (ERROR);
 	}
-	else if ((*split_cmd)[i] == '~' && *quote == 0)
+	else if ((*split_cmd)[i] == '~')
 	{
 		if ((i == 0 || (*split_cmd)[i - 1] == ' ') && \
 			((*split_cmd)[i + 1] == '\0' || (*split_cmd)[i + 1] == ' '))
@@ -168,7 +189,7 @@ int	interpret_the_rest(t_command *cmd, char **split_cmd, int i, int *quote)
 				return (ERROR);
 		}
 	}
-	else if (((*split_cmd)[i] == '<' || (*split_cmd)[i] == '>') && *quote == 0)
+	else if (((*split_cmd)[i] == '<' || (*split_cmd)[i] == '>') && *dq == 0)
 	{
 		if (find_redirection_fd(cmd, split_cmd, i) == ERROR)
 			return (ERROR);
@@ -229,7 +250,8 @@ int	parse_argv(t_command *current_command, char **split_command)
 				return (ERROR);
 			if ((*split_command)[i])
 			{
-				if (interpret_the_rest(current_command, split_command, i, &quote) == ERROR)
+				if (quote == 0 && interpret_the_rest(current_command, \
+						split_command, i, &double_quote) == ERROR)
 					return (ERROR);
 				i++;
 			}
