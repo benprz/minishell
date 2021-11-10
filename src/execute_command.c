@@ -6,13 +6,13 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 17:06:33 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/09 19:49:38 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/10 13:18:34 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_program(t_shell *shell)
+void	do_redirection(t_shell *shell)
 {
 	if (shell->command_list->prev)
 		if (dup2(shell->pipe_fd[0], STDIN_FILENO) == -1)
@@ -20,13 +20,6 @@ void	execute_program(t_shell *shell)
 	if (shell->command_list->next)
 		if (dup2(shell->pipe_fd[1], STDOUT_FILENO) == -1)
 			ft_error("Error, dup2");
-	if (parse_cmmd(shell) == ERROR)
-	{
-		if (execve(ft_get_path(shell), shell->command_list->argv, shell->env) == -1)
-			ft_error("Error command not found");
-	}
-	else
-		exit(EXIT_SUCCESS);
 }
 
 void	execute_command(t_shell *shell)
@@ -34,22 +27,29 @@ void	execute_command(t_shell *shell)
 	pid_t	pid;
 	int		status;
 
-	pid = fork();
-	if (pid == -1)
+	if (check_commad_1(shell) == ERROR)
 	{
-		perror("Error fork execute_command");
-		exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-		execute_program(shell);
-	else
-	{
-		wait(&status);
-		if (shell->command_list->next)
+		pid = fork();
+		if (pid == -1)
+			ft_error("Error fork execute_command");
+		else if (pid == 0)
 		{
-			shell->command_list = shell->command_list->next;
-			execute_command(shell);
+			do_redirection(shell);
+			if (check_commad_2(shell) == ERROR)
+			{
+				if (execve(ft_get_path(shell), shell->command_list->argv, shell->env) == -1)
+					ft_error("Error command not found");
+			}
+			else
+				exit(EXIT_SUCCESS);
 		}
+		else
+			wait(&status);
+	}
+	if (shell->command_list->next)
+	{
+		shell->command_list = shell->command_list->next;
+		execute_command(shell);
 	}
 }
 

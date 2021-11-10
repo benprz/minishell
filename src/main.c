@@ -93,10 +93,22 @@ void	free_prompt(t_shell *shell, char *prompt)
 
 static void	init_shell_data(char **env)
 {
+	int	i;
+
+	i = 0;
 	if (pipe(g_shell.pipe_fd) == -1)
 		perror("Pipe");
 	g_shell.all_path = ft_split(getenv("PATH"), ':');
-	g_shell.env = env;
+	while (env[i])
+		i++;
+	g_shell.env = malloc(sizeof(char*) * (i + 1));
+	i = 0;
+	while (env[i])
+	{
+		g_shell.env[i] = ft_strdup(env[i]);
+		i++;
+	}
+	g_shell.env[i] = NULL;
 }
 
 void	launch_shell()

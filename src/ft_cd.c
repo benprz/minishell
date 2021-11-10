@@ -6,11 +6,13 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/09 19:59:47 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/10 13:31:07 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// mieux gerer .. (tout refaire ?)
 
 static void	change_env(t_shell *shell)
 {
@@ -25,6 +27,7 @@ static void	change_env(t_shell *shell)
 		i++;
 	}
 	save_pwd = ft_strdup(shell->env[i]);
+	free(shell->env[i]);
 	shell->env[i] = NULL;
 	shell->env[i] = ft_strjoin(shell->env[i], "PWD=");
 	shell->env[i] = ft_strjoin(shell->env[i], shell->command_list->argv[1]);
@@ -35,9 +38,11 @@ static void	change_env(t_shell *shell)
 			break ;
 		i++;
 	}
+	free(shell->env[i]);
 	shell->env[i] = NULL;
-	shell->env[i] = ft_strdup(save_pwd);
-	free(save_pwd); 
+	shell->env[i] = ft_strjoin(shell->env[i], "OLD");
+	shell->env[i] = ft_strjoin(shell->env[i], save_pwd);
+	free(save_pwd);
 }
 
 static char	*get_path_cd(char *save)
@@ -97,6 +102,8 @@ int	ft_cd(t_shell *shell)
 {
 	int	cd;
 
+	if (shell->command_list->next)
+		return (SUCCESS);
 	if (shell->command_list->argv[1][0] == '.')
 	{
 		if (shell->command_list->argv[1][1] == '.'
@@ -104,7 +111,10 @@ int	ft_cd(t_shell *shell)
 				|| !shell->command_list->argv[1][2]))
 			get_arg_cd(shell);
 		else
-			ft_error("Error No such file or directory");
+		{
+			perror("Error No such file or directory");
+			return (SUCCESS);
+		}
 	}
 	else if (shell->command_list->argv[1][0] != '/')
 	{
@@ -115,7 +125,10 @@ int	ft_cd(t_shell *shell)
 	}
 	cd = chdir(shell->command_list->argv[1]);
 	if (cd == -1)
-		ft_error("Error No such file or directory");
+	{
+		perror("Error No such file or directory");
+		return (SUCCESS);	
+	}
 	change_env(shell);
 	return (SUCCESS);
 }
