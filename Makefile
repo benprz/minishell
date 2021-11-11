@@ -2,7 +2,7 @@
 
 NAME = minishell
 CC = gcc
-CFLAGS = -g3  #-fsanitize=address -Wextra -Wall #-Werror
+CFLAGS = -g3 -fsanitize=address #-Wextra -Wall #-Werror
 INC_DIR = includes/
 INC = minishell.h
 
