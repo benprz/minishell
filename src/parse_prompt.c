@@ -6,7 +6,7 @@
 /*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/11 11:08:59 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/11 11:25:06 by neben            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_commands(t_shell *shell)
 	while (current)
 	{
 		printf("\ncurrent = %p\ncurrent->prev = %p\ncurrent->next = %p\n", current, current->prev, current->next);
-		printf("current->argc = %d\ncurrent->redirection = %d\ncurrent->fd = %d\n", current->argc, current->redirection, current->fd);
+		printf("current->argc = %d\ncurrent->redirection = %d\ncurrent->fd = %d\ncurrent->delimiter = %s\n", current->argc, current->redirection, current->fd, current->delimiter);
 		i = 0;
 		while (current->argv[i])
 		{
@@ -173,9 +173,10 @@ int	get_redirection_argument(t_command *cmd, char **split_cmd, int i)
 	int	j;
 
 	cmd->fd = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
+	cmd->delimiter = *(split_cmd + 1);
 	j = 0;
 	free(*split_cmd);
-	free(*(split_cmd + 1));
+	//free(*(split_cmd + 1));
 	while (split_cmd[j + 2])
 	{
 		split_cmd[j] = split_cmd[j + 2];
