@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_prompt.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/11 11:25:06 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/12 00:41:00 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	replace_split_spaces(char *command)
 	}
 }
 
-int get_variable_name_length(char *command, int i)
+int	get_variable_name_length(char *command, int i)
 {
 	int	var_name_length;
 
@@ -151,7 +151,7 @@ int	expand_env_variable(char **split_command, int i)
 void	get_redirection_type(t_command *cmd, char **split_cmd, int i)
 {
 	int	check_redirection;
-	
+
 	if ((*split_cmd)[i] == '<')
 	{
 		cmd->redirection = REDIRECTION_INPUT;
@@ -168,11 +168,35 @@ void	get_redirection_type(t_command *cmd, char **split_cmd, int i)
 	}
 }
 
+int	get_redirection_fd(t_command *cmd, char **split_cmd)
+{
+	if (cmd->redirection == 1)
+	{
+		cmd->fd = open(*(split_cmd + 1), O_RDWR);
+		if (cmd->fd == -1)
+			return (ft_error("Error no such file or directory", ERROR));
+	}
+	else if (cmd->redirection == 2)
+	{
+		cmd->fd = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
+		if (cmd->fd == -1)
+			return (ft_error("Error no such file or directory", ERROR));
+	}
+	else if (cmd->redirection == 4)
+	{
+		cmd->fd = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
+		if (cmd->fd == -1)
+			return (ft_error("Error no such file or directory", ERROR));
+	}
+	return (SUCCESS);
+}
+
 int	get_redirection_argument(t_command *cmd, char **split_cmd, int i)
 {
 	int	j;
 
-	cmd->fd = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
+	if (get_redirection_fd(cmd, split_cmd) == ERROR)
+		return (ERROR);
 	cmd->delimiter = *(split_cmd + 1);
 	j = 0;
 	free(*split_cmd);
@@ -312,7 +336,7 @@ int	parse_command(t_command *current_command, char *command)
 int	add_command(t_shell *shell, char *command)
 {
 	t_command	*current_command;
-	
+
 	current_command = malloc(sizeof(t_command));
 	if (current_command)
 	{
@@ -358,7 +382,7 @@ int	parse_prompt(t_shell *shell, char *prompt)
 			}
 			i++;
 		}
-		//print_commands(shell);
+		// print_commands(shell);
 	}
 	return (SUCCESS);
 }

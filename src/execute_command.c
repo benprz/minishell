@@ -6,20 +6,95 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 17:06:33 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/10 13:18:34 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/12 01:48:31 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	do_redirection(t_shell *shell)
+int	check_same_delimiter(t_shell *shell, char *buf)
 {
-	if (shell->command_list->prev)
-		if (dup2(shell->pipe_fd[0], STDIN_FILENO) == -1)
-			ft_error("Error, dup2");
-	if (shell->command_list->next)
+	int	i;
+
+	while (buf[i] && buf[i] != '\n')
+	{
+		if (buf[i] != shell->command_list->delimiter[i])
+			return (ERROR);
+		i++;
+	}
+	if (shell->command_list->delimiter[i] == '\0')
+		return (SUCCESS);
+	return (ERROR);
+}
+
+void	get_std_in(t_shell *shell)
+{
+	int		ret;
+	char	buf[1024 + 1];
+	char	*str;
+
+	str = NULL;
+	ret = read(0, buf, 1024);
+	buf[ret] = '\0';
+	while (check_same_delimiter(shell, buf))
+	{
+		str = ft_strjoin(str, buf);
+		ret = read(0, buf, 1024);
+		buf[ret] = '\0';
+	}
+	write(shell->pipe_fd_redi_din[1], str, ft_strlen(str));
+	close(shell->pipe_fd_redi_din[0]);
+	close(shell->pipe_fd_redi_din[1]);
+	free(str);
+}
+
+void	do_redirection_out(t_shell *shell)
+{
+	if (shell->command_list->redirection == 2
+		|| shell->command_list->redirection == 4)
+	{
+		close(shell->pipe_fd[0]);
+		if (dup2(shell->command_list->fd, STDOUT_FILENO) == -1)
+			ft_error_fork("Error, Bad file descriptor");
+	}
+	else if (shell->command_list->next)
+	{
+		close(shell->pipe_fd[0]);
 		if (dup2(shell->pipe_fd[1], STDOUT_FILENO) == -1)
-			ft_error("Error, dup2");
+			ft_error_fork("Error, Bad file descriptor");
+	}
+	if (check_commad_2(shell) == ERROR)
+	{
+		close(shell->pipe_fd[0]);
+		if (execve(ft_get_path(shell),
+				shell->command_list->argv, shell->env) == -1)
+			ft_error_fork("Error command not found");
+	}
+	else
+		exit(EXIT_SUCCESS);
+}
+
+void	do_redirection_in(t_shell *shell)
+{
+	if (shell->command_list->redirection == 1)
+	{
+		close(shell->pipe_fd[1]);
+		if (dup2(shell->command_list->fd, STDIN_FILENO) == -1)
+			ft_error_fork("Error, Bad file descriptor");
+	}
+	if (shell->command_list->redirection == 3)
+	{
+		close(shell->pipe_fd[1]);
+		if (dup2(shell->pipe_fd_redi_din[0], STDIN_FILENO) == -1)
+			ft_error_fork("Error, Bad file descriptor");
+	}
+	else if (shell->command_list->prev)
+	{
+		close(shell->pipe_fd[1]);
+		if (dup2(shell->pipe_fd[0], STDIN_FILENO) == -1)
+			ft_error_fork("Error, Bad file descriptor");
+	}
+	do_redirection_out(shell);
 }
 
 void	execute_command(t_shell *shell)
@@ -27,22 +102,15 @@ void	execute_command(t_shell *shell)
 	pid_t	pid;
 	int		status;
 
+	if (shell->command_list->redirection == 3)
+		get_std_in(shell);
 	if (check_commad_1(shell) == ERROR)
 	{
 		pid = fork();
 		if (pid == -1)
-			ft_error("Error fork execute_command");
+			ft_error_fork("Error fork execute_command");
 		else if (pid == 0)
-		{
-			do_redirection(shell);
-			if (check_commad_2(shell) == ERROR)
-			{
-				if (execve(ft_get_path(shell), shell->command_list->argv, shell->env) == -1)
-					ft_error("Error command not found");
-			}
-			else
-				exit(EXIT_SUCCESS);
-		}
+			do_redirection_in(shell);
 		else
 			wait(&status);
 	}
@@ -52,78 +120,3 @@ void	execute_command(t_shell *shell)
 		execute_command(shell);
 	}
 }
-
-/*
-int	ft_execute_cmd(t_shell *shell)
-{
-	pid_t	pid;
-	int		status;
-
-	shell->save_position = shell->position;
-	if (!shell->sp_prompt[shell->position])
-		return (ERROR);
-	shell->arg = ft_get_arg(shell);
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("Error fork cmd");
-		exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
-		if (shell->save_position != 0)
-		{
-			if (shell->redi_in == 1)
-			{
-				if (dup2(shell->fd_in, 0) == -1)
-					ft_error(shell, "Error dup2 cmd");
-			}
-			else
-				if (dup2(shell->pipe_fd[0], 0) == -1)
-					ft_error(shell, "Error dup2 cmd");
-		}
-		if (shell->sp_prompt[shell->position] != NULL)
-		{
-			if (!ft_strcmp(shell->sp_prompt[shell->position], ">"))
-			{
-				if (shell->sp_prompt[shell->position + 1])
-				{
-					shell->fd_out = open(shell->sp_prompt[shell->position + 1],
-							O_CREAT | O_RDWR, S_IRWXU);
-					if (shell->fd_out == -1)
-						ft_error(shell, "Error open fd_out");
-					if (dup2(shell->fd_out, 1) == -1)
-						ft_error(shell, "Error dup2 cmd");
-				}
-				else
-					exit(EXIT_FAILURE);
-			}
-			else if (dup2(shell->pipe_fd[1], 1) == -1)
-				ft_error(shell, "Error dup2 cmd");
-		}
-		if (close(shell->pipe_fd[0]) == -1)
-			ft_error(shell, "Error close cmd");
-		if (parse_program(shell) == ERROR)
-		{
-			if (execve(ft_get_path(shell), shell->arg, shell->env) == -1)
-				ft_error(shell, "Error command not found");
-		}
-		else
-			exit(EXIT_SUCCESS);
-	}
-	else
-	{
-		wait(&status);
-		if (shell->redi_out == 1)
-			shell->position++;
-		shell->redi_in = 0;
-		shell->redi_out = 0;
-		if (shell->sp_prompt[shell->position])
-		{
-			shell->position++;
-			ft_execute_cmd(shell);
-		}
-	}
-	return (SUCCESS);
-}
-*/

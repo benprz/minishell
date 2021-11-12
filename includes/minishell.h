@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/11 11:22:48 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/12 01:53:13 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,12 @@ typedef struct s_shell
 	char	**env;
 	char	**all_path;
 	int		pipe_fd[2];
+	int		pipe_fd_redi_din[2];
 }				t_shell;
 
-# define ERROR 1
 # define SUCCESS 0
+# define ERROR 1
+# define EXIT_CMD 2
 # define REDIRECTION_INPUT 1
 # define REDIRECTION_OUTPUT 2
 # define REDIRECTION_DINPUT 3
@@ -69,6 +71,7 @@ int		ft_export(t_shell *shell);
 int		ft_unset(t_shell *shell);
 char	*ft_get_path(t_shell *shell);
 char	**ft_get_arg(t_shell *shell);
+char	*get_pwd(t_shell *shell);
 
 void	*ft_tmp(void *a, void *b);
 size_t	ft_strclen(const char *str, const char c);
@@ -80,8 +83,10 @@ char	**ft_split(char const *s, char c);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strjoin(const char *s1, const char *s2);
 int		ft_strlen(const char *str);
+int		ft_tablen(char **tab);
 char	*ft_strdup(char *src);
-void	ft_error(char *str);
+void	ft_error_fork(char *str);
+int		ft_error(char *str, int	wich_one);
 void	free_tab(char **tab);
 char	*ft_strtrim(const char *s1);
 char	*ft_strndup(const char *s1, size_t len);

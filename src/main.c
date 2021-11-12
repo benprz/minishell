@@ -98,6 +98,8 @@ static void	init_shell_data(char **env)
 	i = 0;
 	if (pipe(g_shell.pipe_fd) == -1)
 		perror("Pipe");
+	if (pipe(g_shell.pipe_fd_redi_din) == -1)
+		perror("Pipe");
 	g_shell.all_path = ft_split(getenv("PATH"), ':');
 	while (env[i])
 		i++;

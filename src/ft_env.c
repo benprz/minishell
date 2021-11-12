@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:10:56 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/10 12:02:19 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/11 23:52:24 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,16 @@ int	ft_env(t_shell *shell)
 	i = 0;
 	str = NULL;
 	save = NULL;
-	if (!shell->command_list->next)
+	if (shell->command_list->redirection == 2)
+	{
+		if (dup2(shell->command_list->fd, shell->pipe_fd[0]) == -1)
+			ft_error_fork("Error, dup2");
+	}
+	else if (!shell->command_list->next)
+	{
 		if (dup2(1, shell->pipe_fd[0]) == -1)
-			ft_error("Error dup2 cmd");
+			ft_error_fork("Error dup2 cmd");
+	}
 	while (shell->env[i])
 	{
 		save = ft_strjoin(str, shell->env[i]);

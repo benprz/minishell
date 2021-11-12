@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:42:35 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/10/27 18:05:53 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/11 21:52:36 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,16 @@ int	ft_strlen(const char *str)
 
 	i = 0;
 	while (str[i] != '\0')
+		i++;
+	return (i);
+}
+
+int	ft_tablen(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
 		i++;
 	return (i);
 }

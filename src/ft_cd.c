@@ -6,13 +6,13 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/10 13:31:07 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/12 00:09:16 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// mieux gerer .. (tout refaire ?)
+// cas d'erreur ????
 
 static void	change_env(t_shell *shell)
 {
@@ -45,90 +45,89 @@ static void	change_env(t_shell *shell)
 	free(save_pwd);
 }
 
-static char	*get_path_cd(char *save)
+static char	*cd_back(t_shell *shell, char *pwd)
 {
-	char	*path;
-	int		i;
-	int		j;
-	int		size;
+	int	i;
+	int	j;
 
-	size = ft_strlen(save);
-	i = size - 1;
+	i = ft_strlen(pwd);
 	j = 0;
-	while (save[i] && save[i] != '/')
+	while (i && pwd[i] != '/')
 		i--;
-	path = malloc(sizeof(char) * (i + 1));
+	free(shell->command_list->argv[1]);
+	shell->command_list->argv[1] = malloc(sizeof(char) * (i + 1));
 	while (j < i)
 	{
-		path[j] = save[j];
+		shell->command_list->argv[1][j] = pwd[j];
 		j++;
 	}
-	path[j] = '\0';
-	return (path);
+	shell->command_list->argv[1][j] = '\0';
+	pwd = ft_strdup(shell->command_list->argv[1]);
+	return (pwd);
 }
 
-static void	get_arg_cd(t_shell *shell)
+static void	do_cd_one(t_shell *shell, char **split_path, char *pwd)
 {
-	char	*save;
-	char	*path;
 	int		i;
 	int		j;
 
-	path = getenv("PWD");
-	while (shell->command_list->argv[1][1] && shell->command_list->argv[1][0] == '.')
+	pwd = get_pwd(shell);
+	if (!ft_strcmp(split_path[0], ".."))
+		pwd = cd_back(shell, pwd);
+	else
 	{
-		i = 3;
-		j = 0;
-		save = ft_strdup(shell->command_list->argv[1]);
-		free(shell->command_list->argv[1]);
-		shell->command_list->argv[1] = NULL;
-		shell->command_list->argv[1] = malloc(sizeof(char) * (ft_strlen(save) - 2));
-		while (save[i])
-		{
-			shell->command_list->argv[1][j] = save[i];
-			i++;
-			j++;
-		}
-		shell->command_list->argv[1][j] = '\0';
-		free(save);
-		path = get_path_cd(path);
+		pwd = ft_strjoin(pwd, "/");
+		shell->command_list->argv[1] = ft_strjoin(pwd,
+				shell->command_list->argv[1]);
 	}
-	if (shell->command_list->argv[1][0] != '\0')
-		path = ft_strjoin(path, "/");
-	shell->command_list->argv[1] = ft_strjoin(path, shell->command_list->argv[1]);
+}
+
+static void	do_cd_else(t_shell *shell, char **split_path, char *pwd)
+{
+	int		i;
+
+	i = 0;
+	if (!ft_strcmp(split_path[i], "."))
+		i++;
+	while (split_path[i] && !ft_strcmp(split_path[i], ".."))
+	{
+		pwd = cd_back(shell, pwd);
+		i++;
+	}
+	if (split_path[i])
+	{
+		free(shell->command_list->argv[1]);
+		pwd = ft_strjoin(pwd, "/");
+		shell->command_list->argv[1] = ft_strjoin(pwd, split_path[i]);
+		while (split_path[i + 1])
+		{
+			shell->command_list->argv[1]
+				= ft_strjoin(shell->command_list->argv[1], "/");
+			shell->command_list->argv[1]
+				= ft_strjoin(shell->command_list->argv[1], split_path[i + 1]);
+			i++;
+		}
+	}
 }
 
 int	ft_cd(t_shell *shell)
 {
-	int	cd;
+	char	**split_path;
+	int		size_split;
+	char	*pwd;
 
 	if (shell->command_list->next)
-		return (SUCCESS);
-	if (shell->command_list->argv[1][0] == '.')
-	{
-		if (shell->command_list->argv[1][1] == '.'
-			&& (shell->command_list->argv[1][2] == '/'
-				|| !shell->command_list->argv[1][2]))
-			get_arg_cd(shell);
-		else
-		{
-			perror("Error No such file or directory");
-			return (SUCCESS);
-		}
-	}
-	else if (shell->command_list->argv[1][0] != '/')
-	{
-		shell->command_list->argv[1] = ft_strjoin("/",
-				shell->command_list->argv[1]);
-		shell->command_list->argv[1] = ft_strjoin(getenv("PWD"),
-				shell->command_list->argv[1]);
-	}
-	cd = chdir(shell->command_list->argv[1]);
-	if (cd == -1)
-	{
-		perror("Error No such file or directory");
-		return (SUCCESS);	
-	}
+		return (EXIT_CMD);
+	split_path = ft_split(shell->command_list->argv[1], '/');
+	size_split = ft_tablen(split_path);
+	pwd = get_pwd(shell);
+	if (size_split == 1)
+		do_cd_one(shell, split_path, pwd);
+	else
+		do_cd_else(shell, split_path, pwd);
+	free(pwd);
+	if (chdir(shell->command_list->argv[1]) == -1)
+		ft_error("Error No such file or directory", EXIT_CMD);
 	change_env(shell);
 	return (SUCCESS);
 }
