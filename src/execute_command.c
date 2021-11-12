@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 17:06:33 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/12 01:48:31 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/12 16:19:59 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void	get_std_in(t_shell *shell)
 		ret = read(0, buf, 1024);
 		buf[ret] = '\0';
 	}
-	write(shell->pipe_fd_redi_din[1], str, ft_strlen(str));
 	close(shell->pipe_fd_redi_din[0]);
+	write(shell->pipe_fd_redi_din[1], str, ft_strlen(str));
 	close(shell->pipe_fd_redi_din[1]);
 	free(str);
 }
@@ -84,7 +84,7 @@ void	do_redirection_in(t_shell *shell)
 	}
 	if (shell->command_list->redirection == 3)
 	{
-		close(shell->pipe_fd[1]);
+		close(shell->pipe_fd_redi_din[1]);
 		if (dup2(shell->pipe_fd_redi_din[0], STDIN_FILENO) == -1)
 			ft_error_fork("Error, Bad file descriptor");
 	}
@@ -100,10 +100,9 @@ void	do_redirection_in(t_shell *shell)
 void	execute_command(t_shell *shell)
 {
 	pid_t	pid;
+	pid_t	pid_redi_din;
 	int		status;
 
-	if (shell->command_list->redirection == 3)
-		get_std_in(shell);
 	if (check_commad_1(shell) == ERROR)
 	{
 		pid = fork();
@@ -112,7 +111,11 @@ void	execute_command(t_shell *shell)
 		else if (pid == 0)
 			do_redirection_in(shell);
 		else
+		{
+			if (shell->command_list->redirection == 3)
+				get_std_in(shell);
 			wait(&status);
+		}
 	}
 	if (shell->command_list->next)
 	{
