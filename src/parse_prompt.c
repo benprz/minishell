@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/12 00:41:00 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/16 19:57:53 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ void	get_redirection_type(t_command *cmd, char **split_cmd, int i)
 	}
 }
 
-int	get_redirection_fd(t_command *cmd, char **split_cmd)
+int	get_redirection_fd(t_shell *shell, t_command *cmd, char **split_cmd)
 {
 	if (cmd->redirection == 1)
 	{
@@ -178,24 +178,31 @@ int	get_redirection_fd(t_command *cmd, char **split_cmd)
 	}
 	else if (cmd->redirection == 2)
 	{
+		stat(*(split_cmd + 1), &shell->sct_stat);
+		if (shell->sct_stat.st_atime != 0)
+			unlink(*(split_cmd + 1));
 		cmd->fd = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
 		if (cmd->fd == -1)
 			return (ft_error("Error no such file or directory", ERROR));
 	}
 	else if (cmd->redirection == 4)
 	{
-		cmd->fd = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
-		if (cmd->fd == -1)
-			return (ft_error("Error no such file or directory", ERROR));
+		stat(*(split_cmd + 1), &shell->sct_stat);
+		if (shell->sct_stat.st_atime == 0)
+		{	
+			cmd->fd = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
+			if (cmd->fd == -1)
+				return (ft_error("Error no such file or directory", ERROR));
+		}
 	}
 	return (SUCCESS);
 }
 
-int	get_redirection_argument(t_command *cmd, char **split_cmd, int i)
+int	get_redirection_argument(t_shell *shell, t_command *cmd, char **split_cmd, int i)
 {
 	int	j;
 
-	if (get_redirection_fd(cmd, split_cmd) == ERROR)
+	if (get_redirection_fd(shell, cmd, split_cmd) == ERROR)
 		return (ERROR);
 	cmd->delimiter = *(split_cmd + 1);
 	j = 0;
@@ -212,19 +219,19 @@ int	get_redirection_argument(t_command *cmd, char **split_cmd, int i)
 	return (ERROR);
 }
 
-int	parse_redirection(t_command *cmd, char **split_cmd, int *i)
+int	parse_redirection(t_shell *shell, t_command *cmd, char **split_cmd, int *i)
 {
 	get_redirection_type(cmd, split_cmd, *i);
 	if (cmd->redirection == 3 || cmd->redirection == 4)
 		*i += 1;
-	if (get_redirection_argument(cmd, split_cmd, *i) == SUCCESS)
+	if (get_redirection_argument(shell, cmd, split_cmd, *i) == SUCCESS)
 	{
 		return (SUCCESS);
 	}
 	return (ERROR);
 }
 
-int	interpret_the_rest(t_command *cmd, char **split_cmd, int *i, int *dq)
+int	interpret_the_rest(t_shell *shell, t_command *cmd, char **split_cmd, int *i, int *dq)
 {
 	if ((*split_cmd)[*i] == '$')
 	{
@@ -242,7 +249,7 @@ int	interpret_the_rest(t_command *cmd, char **split_cmd, int *i, int *dq)
 	}
 	else if (((*split_cmd)[*i] == '<' || (*split_cmd)[*i] == '>') && *dq == 0)
 	{
-		if (parse_redirection(cmd, split_cmd, i) == ERROR)
+		if (parse_redirection(shell, cmd, split_cmd, i) == ERROR)
 			return (ERROR);
 	}
 	return (SUCCESS);
@@ -284,7 +291,7 @@ int	interpret_quotes(char **split_command, int i, int *quote, int *dq)
 	return (SUCCESS);
 }
 
-int	parse_argv(t_command *current_command, char **split_command)
+int	parse_argv(t_shell *shell, t_command *current_command, char **split_command)
 {
 	int	i;
 	int	quote;
@@ -301,7 +308,7 @@ int	parse_argv(t_command *current_command, char **split_command)
 				return (ERROR);
 			if ((*split_command)[i])
 			{
-				if (quote == 0 && interpret_the_rest(current_command, \
+				if (quote == 0 && interpret_the_rest(shell, current_command, \
 						split_command, &i, &double_quote) == ERROR)
 					return (ERROR);
 				i++;
@@ -312,7 +319,7 @@ int	parse_argv(t_command *current_command, char **split_command)
 	return (SUCCESS);
 }
 
-int	parse_command(t_command *current_command, char *command)
+int	parse_command(t_shell *shell, t_command *current_command, char *command)
 {
 	char	**split_command;
 
@@ -323,7 +330,7 @@ int	parse_command(t_command *current_command, char *command)
 	if (split_command)
 	{
 		current_command->argc = ft_strlen_2d(split_command);
-		if (parse_argv(current_command, split_command) == SUCCESS)
+		if (parse_argv(shell, current_command, split_command) == SUCCESS)
 		{
 			current_command->argv = split_command;
 			return (SUCCESS);
@@ -347,7 +354,7 @@ int	add_command(t_shell *shell, char *command)
 			current_command->prev->next = current_command;
 		}
 		shell->command_list = current_command;
-		if (parse_command(current_command, command) == SUCCESS)
+		if (parse_command(shell, current_command, command) == SUCCESS)
 		{
 			free(command);
 			return (SUCCESS);

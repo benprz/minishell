@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/12 01:53:13 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/16 19:38:16 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,11 @@ typedef struct s_command
 typedef struct s_shell
 {
 	t_command	*command_list;
-	char	**env;
-	char	**all_path;
-	int		pipe_fd[2];
-	int		pipe_fd_redi_din[2];
+	char		**env;
+	char		**all_path;
+	int			pipe_fd[2];
+	int			pipe_fd_redi_din[2];
+	struct stat	sct_stat;
 }				t_shell;
 
 # define SUCCESS 0

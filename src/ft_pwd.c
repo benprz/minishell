@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 18:01:39 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/11 23:52:24 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/16 18:54:25 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,20 @@ int	ft_pwd(t_shell *shell)
 	str = NULL;
 	if (shell->command_list->redirection == 2)
 	{
-		if (dup2(shell->command_list->fd, shell->pipe_fd[0]) == -1)
+		close(shell->pipe_fd[0]);
+		if (dup2(shell->command_list->fd, shell->pipe_fd[1]) == -1)
 			ft_error_fork("Error, dup2");
 	}
 	else if (!shell->command_list->next)
 	{
-		if (dup2(1, shell->pipe_fd[0]) == -1)
+		close(shell->pipe_fd[0]);
+		if (dup2(1, shell->pipe_fd[1]) == -1)
 			ft_error_fork("Error dup2 cmd");
 	}
 	str = get_pwd(shell);
 	str = ft_strjoin(str, "\n");
-	write(shell->pipe_fd[0], str, ft_strlen(str));
+	write(shell->pipe_fd[1], str, ft_strlen(str));
+	close(shell->pipe_fd[1]);
 	free(str);
 	return (SUCCESS);
 }

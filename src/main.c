@@ -89,6 +89,10 @@ void	free_prompt(t_shell *shell, char *prompt)
 		}
 	}
 	free(prompt);
+	close(g_shell.pipe_fd[0]);
+	close(g_shell.pipe_fd[1]);
+	close(g_shell.pipe_fd_redi_din[0]);
+	close(g_shell.pipe_fd_redi_din[1]);
 }
 
 static void	init_shell_data(char **env)
@@ -96,10 +100,6 @@ static void	init_shell_data(char **env)
 	int	i;
 
 	i = 0;
-	if (pipe(g_shell.pipe_fd) == -1)
-		perror("Pipe");
-	if (pipe(g_shell.pipe_fd_redi_din) == -1)
-		perror("Pipe");
 	g_shell.all_path = ft_split(getenv("PATH"), ':');
 	while (env[i])
 		i++;
@@ -119,6 +119,10 @@ void	launch_shell()
 
 	while (1)
 	{
+		if (pipe(g_shell.pipe_fd) == -1)
+			perror("Pipe");
+		if (pipe(g_shell.pipe_fd_redi_din) == -1)
+			perror("Pipe");
 		prompt = readline("minishell> ");
 		if (prompt == NULL || !strcmp(prompt, "exit"))
 			exit_shell();
