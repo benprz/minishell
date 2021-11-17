@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/16 19:57:53 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/17 18:58:40 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_commands(t_shell *shell)
 	while (current)
 	{
 		printf("\ncurrent = %p\ncurrent->prev = %p\ncurrent->next = %p\n", current, current->prev, current->next);
-		printf("current->argc = %d\ncurrent->redirection = %d\ncurrent->fd = %d\ncurrent->delimiter = %s\n", current->argc, current->redirection, current->fd, current->delimiter);
+		printf("current->argc = %d\ncurrent->redirection_in = %d\ncurrent->redirection_out = %d\ncurrent->fd_in = %d\ncurrent->fd_out = %d\ncurrent->delimiter = %s\n", current->argc, current->redirection_in, current->redirection_out, current->fd_in, current->fd_out, current->delimiter);
 		i = 0;
 		while (current->argv[i])
 		{
@@ -154,44 +154,44 @@ void	get_redirection_type(t_command *cmd, char **split_cmd, int i)
 
 	if ((*split_cmd)[i] == '<')
 	{
-		cmd->redirection = REDIRECTION_INPUT;
+		cmd->redirection_in = REDIRECTION_INPUT;
 		check_redirection = strncmp(*split_cmd + i, "<<", 2);
 		if (check_redirection == 0)
-			cmd->redirection = REDIRECTION_DINPUT;
+			cmd->redirection_in = REDIRECTION_DINPUT;
 	}
 	else if ((*split_cmd)[i] == '>')
 	{
-		cmd->redirection = REDIRECTION_OUTPUT;
+		cmd->redirection_out = REDIRECTION_OUTPUT;
 		check_redirection = strncmp(*split_cmd + i, ">>", 2);
 		if (check_redirection == 0)
-			cmd->redirection = REDIRECTION_DOUTPUT;
+			cmd->redirection_out = REDIRECTION_DOUTPUT;
 	}
 }
 
 int	get_redirection_fd(t_shell *shell, t_command *cmd, char **split_cmd)
 {
-	if (cmd->redirection == 1)
+	if (cmd->redirection_in == REDIRECTION_INPUT)
 	{
-		cmd->fd = open(*(split_cmd + 1), O_RDWR);
-		if (cmd->fd == -1)
+		cmd->fd_in = open(*(split_cmd + 1), O_RDWR);
+		if (cmd->fd_in == -1)
 			return (ft_error("Error no such file or directory", ERROR));
 	}
-	else if (cmd->redirection == 2)
+	else if (cmd->redirection_out == REDIRECTION_OUTPUT)
 	{
 		stat(*(split_cmd + 1), &shell->sct_stat);
 		if (shell->sct_stat.st_atime != 0)
 			unlink(*(split_cmd + 1));
-		cmd->fd = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
-		if (cmd->fd == -1)
+		cmd->fd_out = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
+		if (cmd->fd_out == -1)
 			return (ft_error("Error no such file or directory", ERROR));
 	}
-	else if (cmd->redirection == 4)
+	else if (cmd->redirection_out == REDIRECTION_DOUTPUT)
 	{
 		stat(*(split_cmd + 1), &shell->sct_stat);
 		if (shell->sct_stat.st_atime == 0)
-		{	
-			cmd->fd = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
-			if (cmd->fd == -1)
+		{
+			cmd->fd_out = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
+			if (cmd->fd_out == -1)
 				return (ft_error("Error no such file or directory", ERROR));
 		}
 	}
@@ -222,7 +222,7 @@ int	get_redirection_argument(t_shell *shell, t_command *cmd, char **split_cmd, i
 int	parse_redirection(t_shell *shell, t_command *cmd, char **split_cmd, int *i)
 {
 	get_redirection_type(cmd, split_cmd, *i);
-	if (cmd->redirection == 3 || cmd->redirection == 4)
+	if (cmd->redirection_in == 3 || cmd->redirection_out == 4)
 		*i += 1;
 	if (get_redirection_argument(shell, cmd, split_cmd, *i) == SUCCESS)
 	{
@@ -352,6 +352,8 @@ int	add_command(t_shell *shell, char *command)
 		{
 			current_command->prev = shell->command_list;
 			current_command->prev->next = current_command;
+			current_command->redirection_out = 0;
+			current_command->redirection_in = 0;
 		}
 		shell->command_list = current_command;
 		if (parse_command(shell, current_command, command) == SUCCESS)

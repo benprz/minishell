@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/16 19:38:16 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/17 18:21:50 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ typedef struct s_command
 	int					argc;
 	char				**argv;
 	char				*program_path;
-	int					redirection;
-	int					fd;
+	int					redirection_in;
+	int					fd_in;
+	int					redirection_out;
+	int					fd_out;
 	char				*delimiter;
 	struct s_command	*prev;
 	struct s_command	*next;

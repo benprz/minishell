@@ -91,8 +91,8 @@ void	free_prompt(t_shell *shell, char *prompt)
 	free(prompt);
 	close(g_shell.pipe_fd[0]);
 	close(g_shell.pipe_fd[1]);
-	close(g_shell.pipe_fd_redi_din[0]);
-	close(g_shell.pipe_fd_redi_din[1]);
+	// close(g_shell.pipe_fd_redi_din[0]);
+	// close(g_shell.pipe_fd_redi_din[1]);
 }
 
 static void	init_shell_data(char **env)
@@ -119,10 +119,6 @@ void	launch_shell()
 
 	while (1)
 	{
-		if (pipe(g_shell.pipe_fd) == -1)
-			perror("Pipe");
-		if (pipe(g_shell.pipe_fd_redi_din) == -1)
-			perror("Pipe");
 		prompt = readline("minishell> ");
 		if (prompt == NULL || !strcmp(prompt, "exit"))
 			exit_shell();
@@ -132,6 +128,10 @@ void	launch_shell()
 			add_history(prompt);
 			if (parse_prompt(&g_shell, prompt) == SUCCESS)
 			{
+				if (pipe(g_shell.pipe_fd) == -1)
+					perror("Pipe");
+				// if (pipe(g_shell.pipe_fd_redi_din) == -1)
+				// 	perror("Pipe");
 				g_shell.command_list = goto_first_command(g_shell.command_list);
 				execute_command(&g_shell);
 			}
