@@ -6,44 +6,11 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/12 00:09:16 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/19 10:38:33 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// cas d'erreur ????
-
-static void	change_env(t_shell *shell)
-{
-	int		i;
-	char	*save_pwd;
-
-	i = 0;
-	while (shell->env[i])
-	{
-		if (shell->env[i][0] == 'P' && shell->env[i][1] == 'W')
-			break ;
-		i++;
-	}
-	save_pwd = ft_strdup(shell->env[i]);
-	free(shell->env[i]);
-	shell->env[i] = NULL;
-	shell->env[i] = ft_strjoin(shell->env[i], "PWD=");
-	shell->env[i] = ft_strjoin(shell->env[i], shell->command_list->argv[1]);
-	i = 0;
-	while (shell->env[i])
-	{
-		if (shell->env[i][0] == 'O' && shell->env[i][1] == 'L')
-			break ;
-		i++;
-	}
-	free(shell->env[i]);
-	shell->env[i] = NULL;
-	shell->env[i] = ft_strjoin(shell->env[i], "OLD");
-	shell->env[i] = ft_strjoin(shell->env[i], save_pwd);
-	free(save_pwd);
-}
 
 static char	*cd_back(t_shell *shell, char *pwd)
 {
@@ -127,7 +94,7 @@ int	ft_cd(t_shell *shell)
 		do_cd_else(shell, split_path, pwd);
 	free(pwd);
 	if (chdir(shell->command_list->argv[1]) == -1)
-		ft_error("Error No such file or directory", EXIT_CMD);
-	change_env(shell);
+		return (ft_error("Error No such file or directory", EXIT_CMD));
+	change_env_cd(shell);
 	return (SUCCESS);
 }

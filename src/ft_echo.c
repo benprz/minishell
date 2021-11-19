@@ -6,19 +6,14 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 12:24:48 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/17 18:29:05 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/19 10:49:45 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(t_shell *shell)
+static void	do_redirection(t_shell *shell)
 {
-	int	i;
-	int	check;
-
-	i = 1;
-	check = 0;
 	if (shell->command_list->redirection_out == 2)
 	{
 		close(shell->pipe_fd[0]);
@@ -31,12 +26,23 @@ int	ft_echo(t_shell *shell)
 		if (dup2(1, shell->pipe_fd[1]) == -1)
 			ft_error_fork("Error dup2 cmd");
 	}
+}
+
+int	ft_echo(t_shell *shell)
+{
+	int	i;
+	int	check;
+
+	i = 1;
+	check = 0;
+	do_redirection(shell);
 	while (shell->command_list->argv[i])
 	{
 		if (ft_strcmp(shell->command_list->argv[i], "-n"))
 			check++;
 		if (shell->command_list->argv[i + 1])
-			shell->command_list->argv[i] = ft_strjoin(shell->command_list->argv[i], " ");
+			shell->command_list->argv[i]
+				= ft_strjoin(shell->command_list->argv[i], " ");
 		write(shell->pipe_fd[1], shell->command_list->argv[i],
 			ft_strlen(shell->command_list->argv[i]));
 		i++;

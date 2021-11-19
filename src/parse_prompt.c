@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/17 18:58:40 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/19 11:04:30 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,25 @@ void	get_redirection_type(t_command *cmd, char **split_cmd, int i)
 	}
 }
 
+void	get_carac_in_file(t_shell *shell)
+{
+	char	buf[1024 + 1];
+	char	*str;
+	int		ret;
+	
+	ret = read(shell->command_list->fd_out, buf, 1024);
+	buf[ret] = '\0';
+	str = ft_strdup(buf);
+	while (ret > 0)
+	{
+		ret = read(shell->command_list->fd_out, buf, 1024);
+		buf[ret] = '\0';
+		str = ft_strjoin(str, buf);
+	}
+	// write(shell->command_list->fd_out, str, ft_strlen(str));
+	free(str);
+}
+
 int	get_redirection_fd(t_shell *shell, t_command *cmd, char **split_cmd)
 {
 	if (cmd->redirection_in == REDIRECTION_INPUT)
@@ -188,12 +207,11 @@ int	get_redirection_fd(t_shell *shell, t_command *cmd, char **split_cmd)
 	else if (cmd->redirection_out == REDIRECTION_DOUTPUT)
 	{
 		stat(*(split_cmd + 1), &shell->sct_stat);
-		if (shell->sct_stat.st_atime == 0)
-		{
-			cmd->fd_out = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
-			if (cmd->fd_out == -1)
-				return (ft_error("Error no such file or directory", ERROR));
-		}
+		cmd->fd_out = open(*(split_cmd + 1), O_CREAT | O_RDWR, S_IRWXU);
+		if (cmd->fd_out == -1)
+			return (ft_error("Error no such file or directory", ERROR));
+		if (shell->sct_stat.st_atime != 0)
+			get_carac_in_file(shell);
 	}
 	return (SUCCESS);
 }

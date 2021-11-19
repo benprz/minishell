@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:12:00 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/12 00:20:01 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/19 10:42:10 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,9 @@ static void	remove_line_in_env(t_shell *shell, int index)
 	new_env[i] = NULL;
 	free(shell->env);
 	shell->env = malloc(sizeof(char *) * (ft_tablen(new_env) + 1));
-	i = 0;
-	while (new_env[i])
-	{
+	i = -1;
+	while (new_env[++i])
 		shell->env[i] = new_env[i];
-		i++;
-	}
 	shell->env[i] = NULL;
 	free(new_env);
 }
@@ -52,7 +49,7 @@ static int	check_where(t_shell *shell, char *value)
 	while (shell->env[i])
 	{
 		j = 0;
-		while(shell->env[i][j] && value[j] && shell->env[i][j] == value[j])
+		while (shell->env[i][j] && value[j] && shell->env[i][j] == value[j])
 		{
 			if (shell->env[i][j] == '=')
 				break ;

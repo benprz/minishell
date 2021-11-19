@@ -6,21 +6,14 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:10:56 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/17 18:29:46 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/19 10:44:41 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_env(t_shell *shell)
+static void	do_redirection(t_shell *shell)
 {
-	int		i;
-	char	*str;
-	char	*save;
-
-	i = 0;
-	str = NULL;
-	save = NULL;
 	if (shell->command_list->redirection_out == 2)
 	{
 		close(shell->pipe_fd[0]);
@@ -33,6 +26,18 @@ int	ft_env(t_shell *shell)
 		if (dup2(1, shell->pipe_fd[1]) == -1)
 			ft_error_fork("Error dup2 cmd");
 	}
+}
+
+int	ft_env(t_shell *shell)
+{
+	int		i;
+	char	*str;
+	char	*save;
+
+	i = 0;
+	str = NULL;
+	save = NULL;
+	do_redirection(shell);
 	while (shell->env[i])
 	{
 		save = ft_strjoin(str, shell->env[i]);

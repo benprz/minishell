@@ -25,22 +25,6 @@
 
 t_shell	g_shell;
 
-void	handle_program_signals(int signal)
-{
-	(void)signal;
-}
-
-void	init_program_signals(void)
-{
-	int	i;
-
-	i = 0;
-	while (++i <= 31)
-	{
-		signal(i, handle_program_signals);
-	}
-}
-
 void	exit_shell(void)
 {
 	write(1, "exit\n", 6);
@@ -54,18 +38,6 @@ void	break_current_loops(void)
 	// rl_on_new_line();
 	// rl_replace_line("", 0);
 	// rl_redisplay();
-}
-
-void	handle_shell_signals(int signal)
-{
-	if (signal == SIGINT)
-		break_current_loops();
-}
-
-void	init_shell_signals(void)
-{
-	signal(SIGINT, handle_shell_signals);
-	signal(SIGQUIT, handle_shell_signals);
 }
 
 void	free_prompt(t_shell *shell, char *prompt)
@@ -91,29 +63,9 @@ void	free_prompt(t_shell *shell, char *prompt)
 	free(prompt);
 	close(g_shell.pipe_fd[0]);
 	close(g_shell.pipe_fd[1]);
-	// close(g_shell.pipe_fd_redi_din[0]);
-	// close(g_shell.pipe_fd_redi_din[1]);
 }
 
-static void	init_shell_data(char **env)
-{
-	int	i;
-
-	i = 0;
-	g_shell.all_path = ft_split(getenv("PATH"), ':');
-	while (env[i])
-		i++;
-	g_shell.env = malloc(sizeof(char*) * (i + 1));
-	i = 0;
-	while (env[i])
-	{
-		g_shell.env[i] = ft_strdup(env[i]);
-		i++;
-	}
-	g_shell.env[i] = NULL;
-}
-
-void	launch_shell()
+void	launch_shell(void)
 {
 	char	*prompt;
 
@@ -130,8 +82,6 @@ void	launch_shell()
 			{
 				if (pipe(g_shell.pipe_fd) == -1)
 					perror("Pipe");
-				// if (pipe(g_shell.pipe_fd_redi_din) == -1)
-				// 	perror("Pipe");
 				g_shell.command_list = goto_first_command(g_shell.command_list);
 				execute_command(&g_shell);
 			}
@@ -154,7 +104,7 @@ int	main(int argc, char **argv, char **env)
 	else if (shell_pid == 0)
 	{
 		init_shell_signals();
-		init_shell_data(env);
+		init_shell_data(&g_shell, env);
 		launch_shell();
 	}
 	else

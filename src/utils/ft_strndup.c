@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 17:13:14 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/06 05:17:40 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/19 10:31:53 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
