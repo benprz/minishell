@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/19 20:45:28 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/19 11:03:19 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,11 @@ typedef struct s_command
 	int					argc;
 	char				**argv;
 	char				*program_path;
-	int					builtin;
 	int					redirection_in;
-	int					redirection_out;
 	int					fd_in;
+	int					redirection_out;
 	int					fd_out;
 	char				*delimiter;
-	struct stat			sct_stat;
 	struct s_command	*prev;
 	struct s_command	*next;
 }	t_command;
@@ -46,6 +44,7 @@ typedef struct s_shell
 	char		**all_path;
 	int			pipe_fd[2];
 	int			pipe_fd_redi_din[2];
+	struct stat	sct_stat;
 }				t_shell;
 
 # define SUCCESS 0
@@ -55,7 +54,6 @@ typedef struct s_shell
 # define REDIRECTION_OUTPUT 2
 # define REDIRECTION_DINPUT 3
 # define REDIRECTION_DOUTPUT 4
-# define SPLIT_DELIMITER 1
 
 // ***** Init data and signals *****
 void		init_shell_data(t_shell *shell, char **env);
@@ -111,6 +109,5 @@ size_t		ft_strlen_2d(char **array);
 int			ft_isalnum(const int c);
 int			ft_isalpha(const int c);
 int			ft_isdigit(const int c);
-int			ft_strncmp(const char *s1, const char *s2, const size_t n);
 
 #endif
