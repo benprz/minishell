@@ -6,22 +6,30 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 14:11:14 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/11 23:58:18 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/20 18:19:07 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_error_fork(char *str)
+void	ft_error_fork(t_shell *shell, char *str)
 {
 	perror(str);
+	printf("ft_error_fork %d\n", errno);
+	shell->last_exit_status = 1;
 	exit(EXIT_FAILURE);
 }
 
 int	ft_error(char *str, int	wich_one)
 {
 	perror(str);
+	printf("ft_error %d\n", errno);
 	return (wich_one);
+}
+
+void	ft_error2(char *str)
+{
+	perror(str);
 }
 
 void	free_tab(char **tab)

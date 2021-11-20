@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/19 23:56:28 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/20 17:52:50 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <string.h>
+# include <errno.h>
 
 typedef struct s_command
 {
 	int					argc;
 	char				**argv;
 	char				*program_path;
-	int					builtin;
 	int					redirection_in;
 	int					redirection_out;
 	int					fd_in;
@@ -46,7 +46,10 @@ typedef struct s_shell
 	char		**all_path;
 	int			pipe_fd[2];
 	int			pipe_fd_redi_din[2];
+	int			last_exit_status;
 }				t_shell;
+
+extern int	errno;
 
 # define SUCCESS 0
 # define ERROR 1
@@ -101,7 +104,7 @@ char		*ft_strjoin(const char *s1, const char *s2);
 int			ft_strlen(const char *str);
 int			ft_tablen(char **tab);
 char		*ft_strdup(char *src);
-void		ft_error_fork(char *str);
+void		ft_error_fork(t_shell *shell, char *str);
 int			ft_error(char *str, int	wich_one);
 void		free_tab(char **tab);
 char		*ft_strtrim(const char *s1);

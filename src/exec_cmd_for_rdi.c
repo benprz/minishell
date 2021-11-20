@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:20:40 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/19 10:35:12 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/20 17:57:17 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static int	check_same_delimiter(t_shell *shell, char *buf)
 {
 	int	i;
 
+// a faire tableu delimiter
 	while (buf[i] && buf[i] != '\n')
 	{
 		if (buf[i] != shell->command_list->delimiter[i])
@@ -43,7 +44,8 @@ static void	get_std_in(t_shell *shell)
 		buf[ret] = '\0';
 	}
 	close(shell->pipe_fd_redi_din[0]);
-	write(shell->pipe_fd_redi_din[1], str, ft_strlen(str));
+	if (str)
+		write(shell->pipe_fd_redi_din[1], str, ft_strlen(str));
 	close(shell->pipe_fd_redi_din[1]);
 	free(str);
 	exit(EXIT_SUCCESS);
@@ -58,7 +60,7 @@ void	exec_cmd_for_rdi(t_shell *shell)
 		ft_error("Pipe", EXIT_CMD);
 	pid_redi_din = fork();
 	if (pid_redi_din == -1)
-		ft_error_fork("Error fork execute_command");
+		ft_error_fork(shell,  "Error pipe() execute_command");
 	else if (pid_redi_din == 0)
 		get_std_in(shell);
 	else
@@ -66,6 +68,7 @@ void	exec_cmd_for_rdi(t_shell *shell)
 		wait(&status);
 		close(shell->pipe_fd_redi_din[1]);
 	}
+	printf("execcommand rdi wait()=%d\n", status);
 }
 
 void	close_pipe_rdi(t_shell *shell)

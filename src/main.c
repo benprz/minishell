@@ -17,6 +17,7 @@
 // sigaction, kill, exit, getcwd, chdir, stat,
 // lstat, fstat, unlink, execve, dup, dup2, pipe,
 // opendir, readdir, closedir, strerror, perror,
+
 // isatty, ttyname, ttyslot, ioctl, getenv, tcsetattr,
 // tcgetattr, tgetent, tgetflag, tgetnum, tgetstr,
 // tgoto, tputs
@@ -26,12 +27,12 @@
 void	exit_shell(void)
 {
 	write(1, "exit\n", 6);
-	exit(EXIT_SUCCESS);
+	exit(EXIT_FAILURE);
 }
 
 void	break_current_loops(void)
 {
-	exit_shell();
+	exit(EXIT_SUCCESS);
 	// write(0, "\n", 1);
 	// rl_on_new_line();
 	// rl_replace_line("", 0);
@@ -43,7 +44,7 @@ void	free_prompt(t_shell *shell, char *prompt)
 	shell->command_list = goto_first_command(shell->command_list);
 	while (shell->command_list)
 	{
-		free(shell->command_list->program_path);
+		//free(shell->command_list->program_path);
 		ft_free_2d((void **)shell->command_list->argv, \
 					shell->command_list->argc);
 		free(shell->command_list->delimiter);
@@ -82,6 +83,7 @@ void	launch_shell(t_shell *shell)
 					perror("Pipe");
 				shell->command_list = goto_first_command(shell->command_list);
 				execute_command(shell);
+				printf("shell_status=%d\n", shell->last_exit_status);
 			}
 			free_prompt(shell, prompt);
 		}
@@ -95,21 +97,27 @@ int	main(int argc, char **argv, char **env)
 	int		shell_status;
 
 	shell_status = 0;
-	shell_pid = fork();
-	if (shell_pid == -1)
-		perror("Error making shell's process\n");
-	else if (shell_pid == 0)
+	printf("%s\n", strerror(127));
+	while (shell_status == 0)
 	{
-		init_shell_signals();
-		init_shell_data(&shell, env);
-		launch_shell(&shell);
+		shell_pid = fork();
+		if (shell_pid == -1)
+			perror("Error making shell's process\n");
+		else if (shell_pid == 0)
+		{
+			init_shell_signals();
+			init_shell_data(&shell, env);
+			launch_shell(&shell);
+		}
+		else
+		{
+			init_program_signals();
+			wait(&shell_status);
+		}
+		write(1, "\n", 1);
 	}
-	else
-	{
-		init_program_signals();
-		wait(&shell_status);
-	}
-	return (shell_status);
+	printf("shell_status=%d\n", shell.last_exit_status);
+	return (shell.last_exit_status);
 }
 /*
 int main(int argc, char **argv, char **env)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_prompt.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/20 01:13:48 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/20 17:14:08 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_commands(t_shell *shell)
 	while (current)
 	{
 		printf("\ncurrent = %p\ncurrent->prev = %p\ncurrent->next = %p\n", current, current->prev, current->next);
-		printf("program_path = %s\nbuiltin = %d\nargc = %d\ntype_in = %d\ntype_out = %d\nfd_in = %d\nfd_out = %d\ndelimiter = %s\n", current->program_path, current->builtin, current->argc, current->redirection_in, current->redirection_out, current->fd_in, current->fd_out, current->delimiter);
+		printf("program_path = %s\nargc = %d\ntype_in = %d\ntype_out = %d\nfd_in = %d\nfd_out = %d\ndelimiter = %s\n", current->program_path, current->argc, current->redirection_in, current->redirection_out, current->fd_in, current->fd_out, current->delimiter);
 		i = 0;
 		while (current->argv[i])
 		{
@@ -185,7 +185,6 @@ int	get_redirection_type(t_command *cmd, char *command)
 {
 	int	check_redirection;
 	
-	printf("command=%s\n", command);
 	if (*command == '<')
 	{
 		cmd->redirection_in = REDIRECTION_INPUT;
@@ -206,44 +205,47 @@ int	get_redirection_type(t_command *cmd, char *command)
 
 void	goto_eof(t_command *command)
 {
-	char	buf[1024 + 1];
+	char	buf[1024];
 	int		ret;
 	
 	ret = read(command->fd_out, buf, 1024);
-	buf[ret] = '\0';
 	while (ret > 0)
-	{
 		ret = read(command->fd_out, buf, 1024);
-		buf[ret] = '\0';
-	}
 }
 
-int	open_redirection_file(t_command *command, char *redirection_argument)
+int	open_redirection_file(t_command *command, char *redirection_argument, int redirection_type)
 {
-	if (command->redirection_in == REDIRECTION_INPUT)
+	if (redirection_type == REDIRECTION_INPUT)
 	{
-		command->fd_in = open(redirection_argument, O_RDWR);
-		if (command->fd_in == -1)
-			return (ft_error("Error no such file or directory", ERROR));
+		if (command->redirection_in == REDIRECTION_INPUT)
+		{
+			command->fd_in = open(redirection_argument, O_RDWR);
+			if (command->fd_in == -1)
+				return (ft_error("Error no such file or directory", ERROR)); 
+		}
 	}
-	else if (command->redirection_out == REDIRECTION_OUTPUT)
+	else
 	{
-		stat(redirection_argument, &command->sct_stat);
-		if (command->sct_stat.st_atime != 0)
-			unlink(redirection_argument);
-		command->fd_out = open(redirection_argument, O_CREAT | O_RDWR, S_IRWXU);
-		if (command->fd_out == -1)
-			return (ft_error("Error no such file or directory", ERROR));
+		if (command->redirection_out == REDIRECTION_OUTPUT)
+		{
+			stat(redirection_argument, &command->sct_stat);
+			if (command->sct_stat.st_atime != 0)
+				unlink(redirection_argument);
+			command->fd_out = open(redirection_argument, O_CREAT | O_RDWR, S_IRWXU);
+			if (command->fd_out == -1)
+				return (ft_error("Error no such file or directory", ERROR));
+		}
+		else if (command->redirection_out == REDIRECTION_DOUTPUT)
+		{
+			stat(redirection_argument, &command->sct_stat);
+			command->fd_out = open(redirection_argument, O_CREAT | O_RDWR, S_IRWXU);
+			if (command->fd_out == -1)
+				return (ft_error("Error no such file or directory", ERROR));
+			if (command->sct_stat.st_atime != 0)
+				goto_eof(command);
+		}
 	}
-	else if (command->redirection_out == REDIRECTION_DOUTPUT)
-	{
-		stat(redirection_argument, &command->sct_stat);
-		command->fd_out = open(redirection_argument, O_CREAT | O_RDWR, S_IRWXU);
-		if (command->fd_out == -1)
-			return (ft_error("Error no such file or directory", ERROR));
-		if (command->sct_stat.st_atime != 0)
-			goto_eof(command);
-	}
+	printf("fd_out=%d\nfd_in=%d\n", command->fd_out, command->fd_in);
 	return (SUCCESS);
 }
 
@@ -304,7 +306,7 @@ int	parse_redirection(t_command *command, char **split_command)
 		}
 		else
 		{
-			if (open_redirection_file(command, *(split_command + 1)) == SUCCESS)
+			if (open_redirection_file(command, *(split_command + 1), current_type) == SUCCESS)
 				ret = SUCCESS;
 		}
 		free_redirection(current_type, split_command);
@@ -439,41 +441,47 @@ int	split_command(char **command)
 	return (SUCCESS);
 }
 
-int	is_program_builtin(char *program)
-{	
-	if (!ft_strcmp(program, "cd"))
-		return (1);
-	else if (!ft_strcmp(program, "export"))
-		return (1);
-	else if (!ft_strcmp(program, "unset"))
-		return (1);
-	else if (!ft_strcmp(program, "echo"))
-		return (1);
-	else if (!ft_strcmp(program, "pwd"))
-		return (1);
-	else if (!ft_strcmp(program, "env"))
-		return (1);
-	return (0);
-}
-
 char	*get_program_path(t_shell *shell)
 {
 	int		i;
 	char	*save;
+	char	**program_path;
 
-	i = 0;
-	if (is_program_builtin(shell->command_list->argv[0]))
-		shell->command_list->builtin = 1;
-	else
+	program_path = ft_split(shell->command_list->argv[0], '/');
+	if (!program_path)
 	{
-		while (shell->all_path[i])
+		printf("%s\n", program_path[0]);
+		printf("%s\n", program_path[1]);
+		printf("%s\n", program_path[2]);
+		if (ft_tablen(program_path) > 1)
 		{
-			save = ft_strjoin(shell->all_path[i], "/");
-			save = ft_strjoin(save, shell->command_list->argv[0]);
-			if (access(save, X_OK) == 0)
-				return (save);
-			free(save);
-			i++;
+			if (shell->command_list->argv[0][0] == '/')
+			{
+				if (access(shell->command_list->argv[0], X_OK) == 0)
+				{
+					shell->command_list->argv[0] = ft_tmp(shell->command_list->argv[0], program_path[ft_tablen(program_path) - 1]);
+					//free_tab
+					return (shell->command_list->argv[0]);
+				}
+			}
+			else
+			{
+				shell->command_list->argv[0] = ft_tmp(shell->command_list->argv[0], program_path[ft_tablen(program_path) - 1]);
+				return (ft_strjoin(get_pwd(shell), shell->command_list->argv[0]));
+			}
+		}
+		else
+		{
+			i = 0;
+			while (shell->all_path[i])
+			{
+				save = ft_strjoin(shell->all_path[i], "/");
+				save = ft_strjoin(save, shell->command_list->argv[0]);
+				if (access(save, X_OK) == 0)
+					return (save);
+				free(save);
+				i++;
+			}
 		}
 	}
 	return (NULL);
@@ -492,8 +500,9 @@ int	parse_command(t_shell *shell, t_command *current_command, char **command)
 			if (parse_argv(current_command, ret) == SUCCESS)
 			{
 				current_command->argv = ret;
-				current_command->program_path = get_program_path(shell);
-				return (SUCCESS);
+				current_command->program_path = NULL;//get_program_path(shell);
+				// if (current_command->program_path)
+					return (SUCCESS);
 			}
 			ft_free_2d((void **)ret, current_command->argc);
 		}
@@ -553,7 +562,7 @@ int	parse_prompt(t_shell *shell, char *prompt)
 			}
 			i++;
 		}
-		print_commands(shell);
+		//print_commands(shell);
 	}
 	return (SUCCESS);
 }
