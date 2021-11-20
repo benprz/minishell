@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_data.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:51:17 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/19 10:59:26 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/20 00:24:03 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	init_shell_data(t_shell *shell, char **env)
 	int	i;
 
 	i = 0;
+	ft_bzero(shell, sizeof(t_shell));
 	shell->all_path = ft_split(getenv("PATH"), ':');
 	while (env[i])
 		i++;

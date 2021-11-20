@@ -39,7 +39,8 @@ SRC =	main.c \
 		utils/ft_strlen_2d.c \
 		utils/ft_isalnum.c \
 		utils/ft_isalpha.c \
-		utils/ft_isdigit.c
+		utils/ft_isdigit.c \
+		utils/ft_strncmp.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)

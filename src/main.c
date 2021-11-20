@@ -23,8 +23,6 @@
 
 #include "minishell.h"
 
-t_shell	g_shell;
-
 void	exit_shell(void)
 {
 	write(1, "exit\n", 6);
@@ -45,58 +43,57 @@ void	free_prompt(t_shell *shell, char *prompt)
 	shell->command_list = goto_first_command(shell->command_list);
 	while (shell->command_list)
 	{
+		free(shell->command_list->program_path);
 		ft_free_2d((void **)shell->command_list->argv, \
 					shell->command_list->argc);
+		free(shell->command_list->delimiter);
 		if (shell->command_list->next)
 		{
 			shell->command_list = shell->command_list->next;
-			//printf("free(%p)\n", shell->command_list->prev);
 			free(shell->command_list->prev);
 		}
 		else
 		{
-			//printf("(end) free(%p)\n", shell->command_list);
 			free(shell->command_list);
 			shell->command_list = NULL;
 		}
 	}
 	free(prompt);
-	close(g_shell.pipe_fd[0]);
-	close(g_shell.pipe_fd[1]);
+	close(shell->pipe_fd[0]);
+	close(shell->pipe_fd[1]);
 }
 
-void	launch_shell(void)
+void	launch_shell(t_shell *shell)
 {
 	char	*prompt;
 
 	while (1)
 	{
 		prompt = readline("minishell> ");
-		if (prompt == NULL || !strcmp(prompt, "exit"))
+		if (prompt == NULL || !ft_strcmp(prompt, "exit"))
 			exit_shell();
 		prompt = ft_tmp(prompt, ft_strtrim(prompt));
 		if (prompt)
 		{
 			add_history(prompt);
-			if (parse_prompt(&g_shell, prompt) == SUCCESS)
+			if (parse_prompt(shell, prompt) == SUCCESS)
 			{
-				if (pipe(g_shell.pipe_fd) == -1)
+				if (pipe(shell->pipe_fd) == -1)
 					perror("Pipe");
-				g_shell.command_list = goto_first_command(g_shell.command_list);
-				execute_command(&g_shell);
+				shell->command_list = goto_first_command(shell->command_list);
+				execute_command(shell);
 			}
-			free_prompt(&g_shell, prompt);
+			free_prompt(shell, prompt);
 		}
 	}
 }
 
 int	main(int argc, char **argv, char **env)
 {
+	t_shell	shell;
 	pid_t	shell_pid;
 	int		shell_status;
 
-	(void)argc;
-	(void)argv;
 	shell_status = 0;
 	shell_pid = fork();
 	if (shell_pid == -1)
@@ -104,8 +101,8 @@ int	main(int argc, char **argv, char **env)
 	else if (shell_pid == 0)
 	{
 		init_shell_signals();
-		init_shell_data(&g_shell, env);
-		launch_shell();
+		init_shell_data(&shell, env);
+		launch_shell(&shell);
 	}
 	else
 	{

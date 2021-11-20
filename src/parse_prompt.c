@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_prompt.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/19 18:12:27 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/20 01:13:48 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,10 +185,11 @@ int	get_redirection_type(t_command *cmd, char *command)
 {
 	int	check_redirection;
 	
+	printf("command=%s\n", command);
 	if (*command == '<')
 	{
 		cmd->redirection_in = REDIRECTION_INPUT;
-		check_redirection = ft_strncmp(command, "<<", 2);
+		check_redirection = ft_strcmp(command, "<<");
 		if (check_redirection == 0)
 			cmd->redirection_in = REDIRECTION_DINPUT;
 		return (cmd->redirection_in);
@@ -196,7 +197,7 @@ int	get_redirection_type(t_command *cmd, char *command)
 	else
 	{
 		cmd->redirection_out = REDIRECTION_OUTPUT;
-		check_redirection = ft_strncmp(command, ">>", 2);
+		check_redirection = ft_strcmp(command, ">>");
 		if (check_redirection == 0)
 			cmd->redirection_out = REDIRECTION_DOUTPUT;
 		return (cmd->redirection_out);
@@ -291,7 +292,7 @@ int	parse_redirection(t_command *command, char **split_command)
 	int		ret;
 
 	ret = ERROR;
-	current_type = get_redirection_type(command, *(split_command + 1));
+	current_type = get_redirection_type(command, *split_command);
 	if (parse_redirection_argument(split_command + 1) == SUCCESS)
 	{
 		if (current_type == REDIRECTION_DINPUT)
