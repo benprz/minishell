@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/21 15:19:45 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/21 17:14:08 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ static int	change_env_cd(t_shell *shell)
 	int		i;
 	char	*save_pwd;
 
-	i = get_current_env(shell, "PWD");
+	i = get_current_env_int(shell, "PWD");
 	save_pwd = ft_strdup(shell->env[i]);
 	free(shell->env[i]);
 	shell->env[i] = NULL;
 	shell->env[i] = ft_strjoin(shell->env[i], "PWD=");
 	shell->env[i] = ft_strjoin(shell->env[i], shell->command_list->argv[1]);
-	i = get_current_env(shell, "OLDPWD");
+	i = get_current_env_int(shell, "OLDPWD");
 	free(shell->env[i]);
 	shell->env[i] = NULL;
 	shell->env[i] = ft_strjoin(shell->env[i], "OLD");
@@ -57,7 +57,7 @@ static void	do_cd_one(t_shell *shell, char **split_path, char *pwd)
 {
 	int		i;
 
-	i = get_current_env(shell, "PWD");
+	i = get_current_env_int(shell, "PWD");
 	pwd = ft_strdup(shell->env[i]);
 	if (!ft_strcmp(split_path[0], ".."))
 		pwd = cd_back(shell, pwd);
@@ -108,7 +108,7 @@ int	ft_cd(t_shell *shell)
 		return (EXIT_CMD);
 	split_path = ft_split(shell->command_list->argv[1], '/');
 	size_split = ft_tablen(split_path);
-	i = get_current_env(shell, "PWD");
+	i = get_current_env_int(shell, "PWD");
 	if (i == -1)
 		return (EXIT_CMD);
 	pwd = ft_strdup(shell->env[i]);

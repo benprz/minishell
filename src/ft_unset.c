@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:12:00 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/21 16:00:48 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/21 17:14:08 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	check_where(t_shell *shell, char *value)
 	char	**tab;
 
 	tab = ft_split(value, '=');
-	i = get_current_env(shell, tab[0]);
+	i = get_current_env_int(shell, tab[0]);
 	free_tab(tab);
 	return (i);
 }

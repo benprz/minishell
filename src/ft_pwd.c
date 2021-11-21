@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 18:01:39 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/21 15:19:56 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/21 17:14:08 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*get_pwd(t_shell *shell)
 
 	j = 4;
 	k = 0;
-	i =	get_current_env(shell, "PWD");
+	i =	get_current_env_int(shell, "PWD");
 	if (i == -1)
 		return (NULL);
 	pwd = malloc(sizeof(char) * (ft_strlen(shell->env[i]) - 3));
