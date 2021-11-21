@@ -6,39 +6,28 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:11:30 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/12 00:08:00 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/21 15:59:06 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	change_value(t_shell *shell, char *value, int index)
-{
-	free(shell->env[index]);
-	shell->env[index] = ft_strdup(value);
-	return (SUCCESS);
-}
-
 static int	check_already_here(t_shell *shell, char *value)
 {
-	int	i;
-	int	j;
+	int		i;
+	char	**tab;
 
-	i = 0;
-	while (shell->env[i])
+	tab = ft_split(value, '=');
+	i = get_current_env(shell, tab[0]);
+	free_tab(tab);
+	if (i == -1)
+		return (ERROR);
+	else
 	{
-		j = 0;
-		while (shell->env[i][j] && value[j] && shell->env[i][j] == value[j])
-		{
-			if (shell->env[i][j] == '=')
-				break ;
-			j++;
-		}
-		if (value[j] == '=')
-			return (change_value(shell, value, i));
-		i++;
+		free(shell->env[i]);
+		shell->env[i] = ft_strdup(value);
+		return (SUCCESS);
 	}
-	return (ERROR);
 }
 
 static void	change_env(t_shell *shell, int i)
@@ -84,9 +73,7 @@ int	ft_export(t_shell *shell)
 			if (shell->command_list->argv[i][j] == '=')
 				check++;
 		if (check == 0)
-			return (ft_error("Error export not a valid identifier", EXIT_CMD));
-		if (shell->command_list->argv[i][0] == '=')
-			return (ft_error("Error export not a valid identifier", EXIT_CMD));
+			return (EXIT_CMD);
 		if (check_already_here(shell, shell->command_list->argv[i]) == ERROR)
 			change_env(shell, i);
 		i++;

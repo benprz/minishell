@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:12:00 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/19 10:42:10 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/21 16:00:48 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,13 @@ static void	remove_line_in_env(t_shell *shell, int index)
 
 static int	check_where(t_shell *shell, char *value)
 {
-	int	i;
-	int	j;
+	int		i;
+	char	**tab;
 
-	i = 0;
-	while (shell->env[i])
-	{
-		j = 0;
-		while (shell->env[i][j] && value[j] && shell->env[i][j] == value[j])
-		{
-			if (shell->env[i][j] == '=')
-				break ;
-			j++;
-		}
-		if (!value[j])
-			return (i);
-		i++;
-	}
-	return (-1);
+	tab = ft_split(value, '=');
+	i = get_current_env(shell, tab[0]);
+	free_tab(tab);
+	return (i);
 }
 
 int	ft_unset(t_shell *shell)
