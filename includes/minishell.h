@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/20 17:52:50 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/21 15:06:52 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_command
 	int					redirection_out;
 	int					fd_in;
 	int					fd_out;
-	char				*delimiter;
+	char				**delimiter;
 	struct stat			sct_stat;
 	struct s_command	*prev;
 	struct s_command	*next;
@@ -83,7 +83,6 @@ void		close_pipe_rdi(t_shell *shell);
 int			ft_pwd(t_shell *shell);
 int			ft_echo(t_shell *shell);
 int			ft_cd(t_shell *shell);
-void		change_env_cd(t_shell *shell);
 int			ft_env(t_shell *shell);
 int			ft_export(t_shell *shell);
 int			ft_unset(t_shell *shell);
@@ -115,5 +114,6 @@ int			ft_isalnum(const int c);
 int			ft_isalpha(const int c);
 int			ft_isdigit(const int c);
 int			ft_strncmp(const char *s1, const char *s2, const size_t n);
+int			get_current_env(t_shell *shell, char *str);
 
 #endif

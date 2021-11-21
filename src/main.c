@@ -83,7 +83,7 @@ void	launch_shell(t_shell *shell)
 					perror("Pipe");
 				shell->command_list = goto_first_command(shell->command_list);
 				execute_command(shell);
-				printf("shell_status=%d\n", shell->last_exit_status);
+				// printf("shell_status=%d\n", shell->last_exit_status);
 			}
 			free_prompt(shell, prompt);
 		}
@@ -97,7 +97,7 @@ int	main(int argc, char **argv, char **env)
 	int		shell_status;
 
 	shell_status = 0;
-	printf("%s\n", strerror(127));
+	// printf("%s\n", strerror(127));
 	while (shell_status == 0)
 	{
 		shell_pid = fork();
@@ -116,7 +116,7 @@ int	main(int argc, char **argv, char **env)
 		}
 		write(1, "\n", 1);
 	}
-	printf("shell_status=%d\n", shell.last_exit_status);
+	// printf("shell_status=%d\n", shell.last_exit_status);
 	return (shell.last_exit_status);
 }
 /*

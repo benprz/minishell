@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/20 18:18:16 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/21 15:21:03 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ void	do_redirection_out(t_shell *shell)
 	}
 	if (check_commad_2(shell) == ERROR)
 	{
-		// changer ft_get_pat par shell->command_list->program_path
-		if (execve(ft_get_path(shell),
+		if (execve(shell->command_list->program_path,
 				shell->command_list->argv, shell->env) == -1)
 			ft_error_fork(shell, "Error command not found");
 	}

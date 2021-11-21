@@ -15,7 +15,6 @@ SRC =	main.c \
 		ft_parse.c \
 		ft_echo.c \
 		ft_cd.c \
-		ft_cd_change_env.c \
 		ft_export.c \
 		ft_unset.c \
 		ft_pwd.c \
@@ -40,7 +39,8 @@ SRC =	main.c \
 		utils/ft_isalnum.c \
 		utils/ft_isalpha.c \
 		utils/ft_isdigit.c \
-		utils/ft_strncmp.c
+		utils/ft_strncmp.c \
+		utils/get_current_env.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)

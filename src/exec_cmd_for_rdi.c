@@ -6,24 +6,23 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:20:40 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/20 17:57:17 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/21 13:57:45 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	check_same_delimiter(t_shell *shell, char *buf)
+static int	check_same_delimiter(char *delimiter, char *buf)
 {
 	int	i;
 
-// a faire tableu delimiter
 	while (buf[i] && buf[i] != '\n')
 	{
-		if (buf[i] != shell->command_list->delimiter[i])
+		if (buf[i] != delimiter[i])
 			return (ERROR);
 		i++;
 	}
-	if (shell->command_list->delimiter[i] == '\0')
+	if (delimiter[i] == '\0')
 		return (SUCCESS);
 	return (ERROR);
 }
@@ -33,15 +32,21 @@ static void	get_std_in(t_shell *shell)
 	int		ret;
 	char	buf[1024 + 1];
 	char	*str;
+	int		i;
 
+	i = 0;
 	str = NULL;
 	ret = read(0, buf, 1024);
 	buf[ret] = '\0';
-	while (check_same_delimiter(shell, buf))
+	while (shell->command_list->delimiter[i])
 	{
-		str = ft_strjoin(str, buf);
-		ret = read(0, buf, 1024);
-		buf[ret] = '\0';
+		while (check_same_delimiter(shell, buf))
+		{
+			str = ft_strjoin(str, buf);
+			ret = read(0, buf, 1024);
+			buf[ret] = '\0';
+		}
+		i++;
 	}
 	close(shell->pipe_fd_redi_din[0]);
 	if (str)
@@ -60,7 +65,7 @@ void	exec_cmd_for_rdi(t_shell *shell)
 		ft_error("Pipe", EXIT_CMD);
 	pid_redi_din = fork();
 	if (pid_redi_din == -1)
-		ft_error_fork(shell,  "Error pipe() execute_command");
+		ft_error_fork(shell, "Error pipe() execute_command");
 	else if (pid_redi_din == 0)
 		get_std_in(shell);
 	else

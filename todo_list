@@ -2,9 +2,10 @@
 ctrl c
 
 - execution
-delimiter double tableau
-echo > a ne met pas un \n
-faire get_current_env
+// delimiter double tableau
+// echo > a ne met pas un \n
+// faire get_current_env
+// remplacer ft_get_path par shell->command_list->program_path
 $?(avec strerror et perror)
 
 - parsing
