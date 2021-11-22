@@ -44,10 +44,11 @@ void	free_prompt(t_shell *shell, char *prompt)
 	shell->command_list = goto_first_command(shell->command_list);
 	while (shell->command_list)
 	{
-		//free(shell->command_list->program_path);
+		free(shell->command_list->program_path);
 		ft_free_2d((void **)shell->command_list->argv, \
 					shell->command_list->argc);
-		free(shell->command_list->delimiter);
+		ft_free_2d((void **)shell->command_list->delimiters, \
+					ft_tablen(shell->command_list->delimiters));
 		if (shell->command_list->next)
 		{
 			shell->command_list = shell->command_list->next;

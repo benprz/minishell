@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/21 17:13:39 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/22 11:15:26 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_command
 	int					fd_in;
 	int					fd_out;
 	char				*delimiter;
-	//char				**delimiter;
+	char				**delimiters;
 	struct s_shell		*shell;
 	struct s_command	*prev;
 	struct s_command	*next;
@@ -116,5 +116,6 @@ int			ft_isalpha(const int c);
 int			ft_isdigit(const int c);
 int			ft_strncmp(const char *s1, const char *s2, const size_t n);
 int			get_current_env_int(t_shell *shell, char *str);
+char		*get_current_env(t_shell *shell, char *str);
 
 #endif

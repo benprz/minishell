@@ -6,7 +6,7 @@
 /*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/22 01:55:42 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/22 11:22:28 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,16 @@ void	print_commands(t_shell *shell)
 	{
 		printf("\ncurrent = %p\ncurrent->prev = %p\ncurrent->next = %p\n", current, current->prev, current->next);
 		printf("program_path = %s\nargc = %d\ntype_in = %d\ntype_out = %d\nfd_in = %d\nfd_out = %d\ndelimiter = %s\n", current->program_path, current->argc, current->redirection_in, current->redirection_out, current->fd_in, current->fd_out, current->delimiter);
+		i = 0;
+		if (current->delimiters)
+		{
+		while (current->delimiters[i])
+			{
+				printf("current->delimiters[%d] = %s\n", i, current->delimiters[i]);
+				i++;
+			}
+		}
+		printf("\n");
 		i = 0;
 		while (current->argv[i])
 		{
@@ -136,17 +146,20 @@ int	expand_tilde(t_command *command, char **split_command, int i)
 	char	*new_command;
 
 	var = get_current_env(command->shell, "HOME");
-	new_command = ft_substr(*split_command, 0, i);
-	new_command = ft_tmp(new_command, ft_strjoin(new_command, var));
-	var = ft_substr(*split_command, i + 1, ft_strlen(*split_command + i + 1));
-	if (var)
+	if (var[0] != '\0')
 	{
+		new_command = ft_substr(*split_command, 0, i);
 		new_command = ft_tmp(new_command, ft_strjoin(new_command, var));
-		if (new_command)
+		var = ft_substr(*split_command, i + 1, ft_strlen(*split_command + i + 1));
+		if (var)
 		{
-			free(*split_command);
-			*split_command = new_command;
-			return (SUCCESS);
+			new_command = ft_tmp(new_command, ft_strjoin(new_command, var));
+			if (new_command)
+			{
+				free(*split_command);
+				*split_command = new_command;
+				return (SUCCESS);
+			}
 		}
 	}
 	return (ERROR);
@@ -160,11 +173,9 @@ int	expand_env_variable(t_command *command, char **split_command, int i)
 
 	var_name_length = get_variable_name_length(*split_command, i);
 	var = ft_substr(*split_command, i, var_name_length);
-	printf("varname=%s\n", var);
 	if (var)
 	{
 		var = ft_tmp(var, get_current_env(command->shell, var));
-		printf("var=%s\n", var);
 		new_command = ft_substr(*split_command, 0, i - 1);
 		new_command = ft_tmp(new_command, ft_strjoin(new_command, var));
 		i += var_name_length;
@@ -270,24 +281,79 @@ void	free_redirection(int current_type, char **split_command)
 	split_command[i + 1] = NULL;
 }
 
-int	parse_redirection_argument(char **split_command)
+int	parse_redirection_argument(int type, t_command *cmd, char **split_cmd)
 {
 	int	i;
 	int	quote;
 	int	double_quote;
 
-	if (*split_command)
+	if (*split_cmd)
 	{
 		i = 0;
 		quote = 0;
 		double_quote = 0;
-		while (*split_command && (*split_command)[i])
+		while (*split_cmd && i < ft_strlen(*split_cmd))
 		{
-			if (interpret_quotes(split_command, i, &quote, &double_quote))
+			if (interpret_quotes(split_cmd, i, &quote, &double_quote))
 				return (ERROR);
+			if (type != REDIRECTION_DINPUT && quote == 0 && \
+				(*split_cmd)[i] == '$' && ft_isalnum((*split_cmd)[i + 1]))
+			{
+				if (expand_env_variable(cmd, split_cmd, i + 1) == ERROR)
+					return (ERROR);
+					i -= -1;
+			}
 			i++;
 		}
 		return (SUCCESS);
+	}
+	return (ERROR);
+}
+
+int	add_delimiter_to_list(t_command *command, char **split_command)
+{
+	int		len;
+	char	**delimiters;
+	int		i;
+
+	len = ft_tablen(command->delimiters);
+	delimiters = malloc(sizeof(char *) * (len + 2));
+	if (delimiters)
+	{
+		i = 0;
+		while (command->delimiters[i])
+		{
+			delimiters[i] = command->delimiters[i];
+			i++;
+		}
+		free(command->delimiters);
+		delimiters[i] = *split_command;
+		delimiters[i + 1] = NULL;
+		command->delimiters = delimiters;
+		return (SUCCESS);
+	}
+	return (ERROR);
+}
+
+int	parse_delimiter(t_command *command, char **split_command)
+{
+	char	**delimiters;
+
+	if (command->delimiters)
+	{
+		if (add_delimiter_to_list(command, split_command) == SUCCESS)
+			return (SUCCESS);
+	}
+	else
+	{
+		delimiters = malloc(sizeof(char *) * 2);
+		if (delimiters)
+		{
+			delimiters[0] = *split_command;
+			delimiters[1] = NULL;
+			command->delimiters = delimiters;
+			return (SUCCESS);
+		}
 	}
 	return (ERROR);
 }
@@ -299,14 +365,13 @@ int	parse_redirection(t_command *command, char **split_command)
 
 	ret = ERROR;
 	current_type = get_redirection_type(command, *split_command);
-	if (parse_redirection_argument(split_command + 1) == SUCCESS)
+	if (parse_redirection_argument(current_type, command, \
+		split_command + 1) == SUCCESS)
 	{
 		if (current_type == REDIRECTION_DINPUT)
 		{
-			if (command->delimiter)
-				free(command->delimiter);
-			command->delimiter = *(split_command + 1);
-			ret = SUCCESS;
+			if (parse_delimiter(command, split_command + 1) == SUCCESS)
+				ret = SUCCESS;
 		}
 		else
 		{
@@ -325,11 +390,12 @@ int	interpret_the_rest(t_command *cmd, char **split_cmd, int *i, int dq)
 	{
 		if (expand_env_variable(cmd, split_cmd, *i + 1) == ERROR)
 			return (ERROR);
-		printf("splitcmd=%s\n", *split_cmd);
+			*i -= 1;
 	}
 	else if ((*split_cmd)[*i] == '~' && dq == 0)
 	{
-		if (*i == 0 && (*split_cmd)[*i + 1] == '\0')
+		if (*i == 0 && ((*split_cmd)[*i + 1] == '\0' || \
+			(*split_cmd)[*i + 1] == '/'))
 		{
 			if (expand_tilde(cmd, split_cmd, *i) == ERROR)
 				return (ERROR);
@@ -359,7 +425,8 @@ int	parse_argv(t_command *current_command, char **split_command)
 		{
 			if (interpret_quotes(split_command, i, &quote, &double_quote))
 				return (ERROR);
-			if ((*split_command)[i])
+			if ((*split_command)[i] && (*split_command)[i] != '"' && \
+				(*split_command)[i] != '\'')
 			{
 				if (quote == 0 && interpret_the_rest(current_command, \
 						split_command, &i, double_quote) == ERROR)
@@ -454,9 +521,6 @@ char	*get_program_path(t_shell *shell)
 	program_path = ft_split(shell->command_list->argv[0], '/');
 	if (!program_path)
 	{
-		printf("%s\n", program_path[0]);
-		printf("%s\n", program_path[1]);
-		printf("%s\n", program_path[2]);
 		if (ft_tablen(program_path) > 1)
 		{
 			if (shell->command_list->argv[0][0] == '/')
@@ -491,6 +555,23 @@ char	*get_program_path(t_shell *shell)
 	return (NULL);
 }
 
+int	is_program_builtin(char *program)
+{
+	if (!ft_strcmp(program, "cd"))
+		return (1);
+	if (!ft_strcmp(program, "export"))
+		return (1);
+	if (!ft_strcmp(program, "unset"))
+		return (1);
+	if (!ft_strcmp(program, "echo"))
+		return (1);
+	if (!ft_strcmp(program, "pwd"))
+		return (1);
+	if (!ft_strcmp(program, "env"))
+		return (1);
+	return (0);
+}
+
 int	parse_command(t_shell *shell, t_command *current_command, char **command)
 {
 	char	**ret;
@@ -505,7 +586,10 @@ int	parse_command(t_shell *shell, t_command *current_command, char **command)
 			if (parse_argv(current_command, ret) == SUCCESS)
 			{
 				current_command->argv = ret;
-				current_command->program_path = NULL;//get_program_path(shell);
+				if (is_program_builtin(current_command->argv[0]))
+				{
+					current_command->program_path = get_program_path(shell);
+				}
 				// if (current_command->program_path)
 					return (SUCCESS);
 			}

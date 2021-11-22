@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_current_env.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 14:57:24 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/21 17:14:08 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/22 04:35:44y ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,25 @@ char	*get_current_env(t_shell *shell, char *str)
 {
 	int		index;
 	int		index_equal;
+	char	**array;
 
 	index = 0;
 	if (*str)
 	{
 		while (shell->env[index])
 		{
+			array = ft_split(shell->env[index], '=');
+			if (!array && ft_tablen(array) != 2)
+				break ;
 			index_equal = ft_strclen(shell->env[index], '=');
-			if (!ft_strcmp(shell->env[index], str))
+			if (!ft_strcmp(array[0], str))
 			{
-				printf("env:%s\n", shell->env[index]);
-				printf("strcmp=%d equal=%d\n", ft_strcmp(shell->env[index], str), index_equal);
+				ft_free_2d((void **)array, ft_tablen(array));
 				return (shell->env[index] + index_equal + 1);
 			}
 			index++;
 		}
+		ft_free_2d((void **)array, ft_tablen(array));
 	}
 	return ("");
 }
