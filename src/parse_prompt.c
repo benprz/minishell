@@ -6,7 +6,7 @@
 /*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/22 12:12:58 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/22 12:49:56 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -468,7 +468,7 @@ char	*add_char(char *str, int index, char c)
 
 int	add_delimiters_to_redirection(char **command, int *i)
 {
-	if (i > 0 && (*command)[*i - 1] != SPLIT_DELIMITER)
+	if (*i > 0 && (*command)[*i - 1] != SPLIT_DELIMITER)
 	{
 		*command = ft_tmp(*command, add_char(*command, *i, SPLIT_DELIMITER));
 		if (*command == NULL)
@@ -476,7 +476,12 @@ int	add_delimiters_to_redirection(char **command, int *i)
 		*i += 1;
 	}
 	if ((*command)[*i + 1] == '<' || (*command)[*i + 1] == '>')
+	{
+		if (((*command)[*i] == '<' && (*command)[*i + 1] == '>') || \
+			((*command)[*i] == '>' && (*command)[*i + 1] == '<'))
+			return (ERROR);
 		*i += 1;
+	}
 	if ((*command)[*i + 1] != '\0' && (*command)[*i + 1] != ' ')
 	{
 		*command = ft_tmp(*command, add_char(*command, *i + 1, SPLIT_DELIMITER));
@@ -643,24 +648,24 @@ int	add_command(t_shell *shell, char *command)
 int	parse_prompt(t_shell *shell, char *prompt)
 {
 	int	i;
-	int	quote;
-	int	double_quote;
+	int	q;
+	int	dq;
 	int	prompt_length;
 
 	if (prompt)
 	{
 		i = 0;
-		quote = 0;
-		double_quote = 0;
+		q = 0;
+		dq = 0;
 		prompt_length = ft_strlen(prompt);
 		while (prompt_length-- >= 0)
 		{
-			check_quotes(prompt[i], &quote, &double_quote);
-			if (prompt[i] == '\0' || (prompt[i] == '|' && quote == 0 && double_quote == 0))
+			check_quotes(prompt[i], &q, &dq);
+			if (prompt[i] == '\0' || (prompt[i] == '|' && q == 0 && dq == 0))
 			{
 				if (add_command(shell, ft_substr(prompt, 0, i)) == ERROR)
 				{
-					printf("Error during parsing\n");
+					printf("Error parsing\n");
 					return (ERROR);
 				}
 				prompt += i + 1;
