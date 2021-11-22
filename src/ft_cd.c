@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/21 17:14:08 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/22 18:39:51 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,12 @@ static char	*cd_back(t_shell *shell, char *pwd)
 
 static void	do_cd_one(t_shell *shell, char **split_path, char *pwd)
 {
-	int		i;
-
-	i = get_current_env_int(shell, "PWD");
-	pwd = ft_strdup(shell->env[i]);
-	if (!ft_strcmp(split_path[0], ".."))
+	if (!ft_strcmp(split_path[0], "Users"))
+	{
+		free(shell->command_list->argv[1]);
+		shell->command_list->argv[1] = ft_strdup("/Users");
+	}
+	else if (!ft_strcmp(split_path[0], ".."))
 		pwd = cd_back(shell, pwd);
 	else
 	{
@@ -108,15 +109,15 @@ int	ft_cd(t_shell *shell)
 		return (EXIT_CMD);
 	split_path = ft_split(shell->command_list->argv[1], '/');
 	size_split = ft_tablen(split_path);
-	i = get_current_env_int(shell, "PWD");
-	if (i == -1)
+	pwd = get_pwd(shell);
+	if (pwd == NULL)
 		return (EXIT_CMD);
-	pwd = ft_strdup(shell->env[i]);
 	if (size_split == 1)
 		do_cd_one(shell, split_path, pwd);
 	else
 		do_cd_else(shell, split_path, pwd);
 	free(pwd);
+	printf("%s\n", shell->command_list->argv[1]);
 	if (chdir(shell->command_list->argv[1]) == -1)
 		return (ft_error("Error No such file or directory", EXIT_CMD));
 	change_env_cd(shell);

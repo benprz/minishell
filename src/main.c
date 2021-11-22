@@ -62,8 +62,6 @@ void	free_prompt(t_shell *shell, char *prompt)
 		}
 	}
 	free(prompt);
-	close(shell->pipe_fd[0]);
-	close(shell->pipe_fd[1]);
 }
 
 void	launch_shell(t_shell *shell)
@@ -85,6 +83,8 @@ void	launch_shell(t_shell *shell)
 					perror("Pipe");
 				shell->command_list = goto_first_command(shell->command_list);
 				execute_command(shell);
+				close(shell->pipe_fd[0]);
+				close(shell->pipe_fd[1]);
 				// printf("shell_status=%d\n", shell->last_exit_status);
 			}
 			free_prompt(shell, prompt);
