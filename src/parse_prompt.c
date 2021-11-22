@@ -6,7 +6,7 @@
 /*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/22 11:56:29 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/22 12:12:58 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_commands(t_shell *shell)
 	while (current)
 	{
 		printf("\ncurrent = %p\ncurrent->prev = %p\ncurrent->next = %p\n", current, current->prev, current->next);
-		printf("program_path = %s\nargc = %d\ntype_in = %d\ntype_out = %d\nfd_in = %d\nfd_out = %d\ndelimiter = %s\n", current->program_path, current->argc, current->redirection_in, current->redirection_out, current->fd_in, current->fd_out, current->delimiter);
+		printf("program_path = %s\nargc = %d\ntype_in = %d\ntype_out = %d\nfd_in = %d\nfd_out = %d\n", current->program_path, current->argc, current->redirection_in, current->redirection_out, current->fd_in, current->fd_out);
 		i = 0;
 		if (current->delimiters)
 		{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd_for_rdi.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:20:40 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/21 13:57:45 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/22 12:12:26 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ static void	get_std_in(t_shell *shell)
 	str = NULL;
 	ret = read(0, buf, 1024);
 	buf[ret] = '\0';
-	while (shell->command_list->delimiter[i])
+	while (shell->command_list->delimiters[i])
 	{
-		while (check_same_delimiter(shell, buf))
+		while (check_same_delimiter(shell->command_list->delimiters[i], buf))
 		{
 			str = ft_strjoin(str, buf);
 			ret = read(0, buf, 1024);
