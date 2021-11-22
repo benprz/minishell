@@ -6,7 +6,7 @@
 /*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/22 11:22:28 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/22 11:56:29 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -512,30 +512,46 @@ int	split_command(char **command)
 	return (SUCCESS);
 }
 
-char	*get_program_path(t_shell *shell)
+char	*get_program_path(t_shell *shell, t_command *command)
 {
 	int		i;
-	char	*save;
+	char	*path;
 	char	**program_path;
+	int		array_size;
+	char	*new_path;
 
-	program_path = ft_split(shell->command_list->argv[0], '/');
-	if (!program_path)
+	program_path = ft_split(command->argv[0], '/');
+	if (program_path)
 	{
-		if (ft_tablen(program_path) > 1)
+		array_size = ft_tablen(program_path);
+		if (array_size > 1)
 		{
-			if (shell->command_list->argv[0][0] == '/')
+			if (command->argv[0][0] == '/')
 			{
-				if (access(shell->command_list->argv[0], X_OK) == 0)
+				printf("A\n");
+				if (access(command->argv[0], X_OK) == 0)
 				{
-					shell->command_list->argv[0] = ft_tmp(shell->command_list->argv[0], program_path[ft_tablen(program_path) - 1]);
-					//free_tab
-					return (shell->command_list->argv[0]);
+					printf("B\n");
+					for (int j = 0; j < array_size; j++)
+					{
+						printf("path[%d]=%s\n", j, program_path[j]);
+					}
+					new_path = command->argv[0];
+					command->argv[0] = program_path[array_size - 1];
+					program_path[array_size - 1] = NULL;
+					ft_free_2d((void **)program_path, array_size - 1);
+					return (new_path);
 				}
 			}
 			else
 			{
-				shell->command_list->argv[0] = ft_tmp(shell->command_list->argv[0], program_path[ft_tablen(program_path) - 1]);
-				return (ft_strjoin(get_pwd(shell), shell->command_list->argv[0]));
+				new_path = get_pwd(shell);
+				new_path = ft_tmp(new_path, ft_strjoin(new_path, "/"));
+				new_path = ft_tmp(new_path, ft_strjoin(new_path, program_path[array_size - 1]));
+				command->argv[0] = ft_tmp(command->argv[0], program_path[array_size - 1]);
+				program_path[array_size - 1] = NULL;
+				ft_free_2d((void **)program_path, array_size - 1);
+				return (new_path);
 			}
 		}
 		else
@@ -543,11 +559,11 @@ char	*get_program_path(t_shell *shell)
 			i = 0;
 			while (shell->all_path[i])
 			{
-				save = ft_strjoin(shell->all_path[i], "/");
-				save = ft_strjoin(save, shell->command_list->argv[0]);
-				if (access(save, X_OK) == 0)
-					return (save);
-				free(save);
+				path = ft_strjoin(shell->all_path[i], "/");
+				path = ft_strjoin(path, command->argv[0]);
+				if (access(path, X_OK) == 0)
+					return (path);
+				free(path);
 				i++;
 			}
 		}
@@ -586,12 +602,13 @@ int	parse_command(t_shell *shell, t_command *current_command, char **command)
 			if (parse_argv(current_command, ret) == SUCCESS)
 			{
 				current_command->argv = ret;
-				if (is_program_builtin(current_command->argv[0]))
+				if (!is_program_builtin(current_command->argv[0]))
 				{
-					current_command->program_path = get_program_path(shell);
+					current_command->program_path = get_program_path(shell, \
+													current_command);
 				}
 				// if (current_command->program_path)
-					return (SUCCESS);
+				return (SUCCESS);
 			}
 			ft_free_2d((void **)ret, current_command->argc);
 		}
