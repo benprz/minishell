@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:20:40 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/21 13:57:45 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/22 08:36:20 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	get_std_in(t_shell *shell)
 	buf[ret] = '\0';
 	while (shell->command_list->delimiter[i])
 	{
-		while (check_same_delimiter(shell, buf))
+		while (check_same_delimiter(shell->command_list->delimiter[i], buf))
 		{
 			str = ft_strjoin(str, buf);
 			ret = read(0, buf, 1024);
