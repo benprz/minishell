@@ -33,8 +33,9 @@ typedef struct s_command
 	int					redirection_out;
 	int					fd_in;
 	int					fd_out;
-	char				**delimiter;
-	struct stat			sct_stat;
+	char				*delimiter;
+	//char				**delimiter;
+	struct s_shell		*shell;
 	struct s_command	*prev;
 	struct s_command	*next;
 }	t_command;

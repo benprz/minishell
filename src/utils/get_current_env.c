@@ -31,3 +31,26 @@ int	get_current_env_int(t_shell *shell, char *str)
 	}
 	return (-1);
 }
+
+char	*get_current_env(t_shell *shell, char *str)
+{
+	int		index;
+	int		index_equal;
+
+	index = 0;
+	if (*str)
+	{
+		while (shell->env[index])
+		{
+			index_equal = ft_strclen(shell->env[index], '=');
+			if (!ft_strcmp(shell->env[index], str))
+			{
+				printf("env:%s\n", shell->env[index]);
+				printf("strcmp=%d equal=%d\n", ft_strcmp(shell->env[index], str), index_equal);
+				return (shell->env[index] + index_equal + 1);
+			}
+			index++;
+		}
+	}
+	return ("");
+}
