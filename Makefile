@@ -6,9 +6,9 @@ CFLAGS = -g3 -fsanitize=address -include stdio.h -I${includedir} #-Wextra -Wall 
 INC_DIR = includes/
 INC =	minishell.h
 
-ifeq (, $(shell which brew))
-   $(ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)")
-endif
+# ifeq (, $(shell which brew))
+BREW := $(shell curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)
+# endif
 
 prefix=$(shell brew --prefix readline)
 exec_prefix=${prefix}
