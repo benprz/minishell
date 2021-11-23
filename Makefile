@@ -2,12 +2,18 @@
 
 NAME = minishell
 CC = gcc
-CFLAGS = -g3 -fsanitize=address #-Wextra -Wall #-Werror
+CFLAGS = -g3 -fsanitize=address -include stdio.h -I${includedir} #-Wextra -Wall #-Werror
 INC_DIR = includes/
-INC = minishell.h
+INC =	minishell.h
+
+prefix=$(shell brew --prefix readline)
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
 
 SRC_DIR = src/
 SRC =	main.c \
+		history.c \
 		init_data.c \
 		parse_prompt.c \
 		execute_command.c \
@@ -19,6 +25,7 @@ SRC =	main.c \
 		ft_unset.c \
 		ft_pwd.c \
 		ft_env.c \
+		utils/get_next_line.c \
 		utils/ft_split.c \
 		utils/ft_strcmp.c \
 		utils/ft_strjoin.c \
@@ -50,7 +57,7 @@ OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
 all: $(NAME) #exec
 
 $(NAME): $(OBJ)
-	$(CC) -lreadline $(CFLAGS) $(OBJ) -o $(NAME) -I $(INC_DIR) -lm
+	$(CC) -L${libdir} -lreadline $(CFLAGS) $(OBJ) -o $(NAME) -I $(INC_DIR) -lm
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(addprefix $(INC_DIR),$(INC))
 	mkdir -p $(@D)
@@ -60,7 +67,7 @@ exec:
 	./$(NAME)
 
 norm:
-	norminette $(SRC_DIR)$(SRC) $(INC_DIR)$(INC)
+	norminette
 
 clean:
 	/bin/rm -rf $(OBJ_DIR)

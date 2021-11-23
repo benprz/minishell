@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	init_shell_data(t_shell *shell, char **env)
+void	init_shell(t_shell *shell, char **env)
 {
 	int	i;
 
@@ -50,7 +50,7 @@ void	init_program_signals(void)
 void	handle_shell_signals(int signal)
 {
 	if (signal == SIGINT)
-		break_current_loops();
+		exit(SUCCESS);
 }
 
 void	init_shell_signals(void)
