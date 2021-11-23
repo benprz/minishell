@@ -7,7 +7,7 @@ INC_DIR = includes/
 INC =	minishell.h
 
 ifeq (, $(shell which brew))
-   $(ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)")
+   $(shell ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)")
 endif
 
 prefix=$(shell brew --prefix readline)
