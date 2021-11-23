@@ -56,7 +56,7 @@ OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
 
 .PHONY : all clean fclean re exec
 
-all: $(NAME) #exec
+all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) -L${libdir} -lreadline $(CFLAGS) $(OBJ) -o $(NAME) -I $(INC_DIR) -lm

@@ -56,39 +56,12 @@ void	free_prompt(t_shell *shell, char *prompt)
 	}
 }
 
-void	handle_signals(int signo)
-{
-	if (signo == SIGINT)
-	{
-		if (process_section == 0)
-		{
-			write(1, "\n", 1);
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			rl_redisplay();
-		}
-		else
-			exit(EXIT_FAILURE);
-	}
-	if (signo == SIGQUIT)
-	{
-		if (process_section == 1)
-			exit(EXIT_FAILURE);
-	}
-}
-
-void	init_signals()
-{
-	signal(SIGINT, handle_signals);
-	signal(SIGQUIT, handle_signals);
-}
 
 int	main(int argc, char **argv, char **env)
 {
 	t_shell	shell;
 	char	*prompt;
 
-	init_signals();
 	init_shell(&shell, env);
 	while (1)
 	{

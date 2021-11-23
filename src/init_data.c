@@ -12,16 +12,38 @@
 
 #include "minishell.h"
 
+void	handle_signals(int signo)
+{
+	if (signo == SIGINT)
+	{
+		if (process_section == 0)
+		{
+			write(1, "\n", 1);
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+		}
+		else if (process_section == 1)
+		{
+			exit(EXIT_FAILURE);
+		}
+	}
+}
+
+void	init_signals()
+{
+	signal(SIGINT, handle_signals);
+	signal(SIGQUIT, handle_signals);
+}
+
 void	init_shell(t_shell *shell, char **env)
 {
 	int	i;
 
-	i = 0;
+	init_signals();
 	ft_bzero(shell, sizeof(t_shell));
 	shell->all_path = ft_split(getenv("PATH"), ':');
-	while (env[i])
-		i++;
-	shell->env = malloc(sizeof(char *) * (i + 1));
+	shell->env = malloc(sizeof(char *) * (ft_tablen(env) + 1));
 	i = 0;
 	while (env[i])
 	{
@@ -29,32 +51,4 @@ void	init_shell(t_shell *shell, char **env)
 		i++;
 	}
 	shell->env[i] = NULL;
-}
-
-void	handle_program_signals(int signal)
-{
-	(void)signal;
-}
-
-void	init_program_signals(void)
-{
-	int	i;
-
-	i = 0;
-	while (++i <= 31)
-	{
-		signal(i, handle_program_signals);
-	}
-}
-
-void	handle_shell_signals(int signal)
-{
-	if (signal == SIGINT)
-		exit(SUCCESS);
-}
-
-void	init_shell_signals(void)
-{
-	signal(SIGINT, handle_shell_signals);
-	signal(SIGQUIT, handle_shell_signals);
 }

@@ -67,11 +67,7 @@ typedef struct s_shell
 int	process_section;
 
 // ***** Init data and signals *****
-void		init_prompt_history(void);
-void		add_prompt_to_history(char *prompt);
 void		init_shell(t_shell *shell, char **env);
-void		init_shell_signals(void);
-void		init_program_signals(void);
 void		exit_shell(void);
 
 // ***** Parsing *****

@@ -563,7 +563,7 @@ int	parse_command(t_shell *shell, t_command *current_command, char **command)
 {
 	char	**ret;
 
-	if (split_command(command) == SUCCESS)
+	if (ft_strlen(*command) > 0 && split_command(command) == SUCCESS)
 	{
 		ret = ft_split(*command, SPLIT_DELIMITER);
 		if (ret)
