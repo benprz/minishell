@@ -6,13 +6,34 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 12:27:09 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 16:12:41 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	do_redirection_out(t_shell *shell)
+static void	get_env_export(t_shell *shell)
+{
+	int		ret;
+	char	buff[1024 + 1];
+	char	*str;
+
+	str = NULL;
+	close(shell->pipe_export[1]);
+	ret = read(shell->pipe_export[0], buff, 1024);
+	buff[ret] = '\0';
+	while (ret > 0)
+	{
+		str = ft_strjoin(str, buff);
+		ret = read(shell->pipe_export[0], buff, 1024);
+		buff[ret] = '\0';
+	}
+	close(shell->pipe_export[0]);
+	free_tab(shell->env);
+	shell->env = ft_split(str, '\n');
+}
+
+static void	do_redirection_out(t_shell *shell)
 {
 	if (shell->command_list->redirection_out == REDIRECTION_OUTPUT
 		|| shell->command_list->redirection_out == REDIRECTION_DOUTPUT)
@@ -35,7 +56,7 @@ void	do_redirection_out(t_shell *shell)
 		exit(EXIT_SUCCESS);
 }
 
-void	do_redirection_in(t_shell *shell, int status)
+static void	do_redirection_in(t_shell *shell, int status)
 {
 	if (shell->command_list->redirection_in == REDIRECTION_INPUT)
 	{
@@ -75,6 +96,8 @@ void	execute_command(t_shell *shell)
 	}
 	if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
 		close_pipe_rdi(shell);
+	if (!ft_strcmp(shell->command_list->argv[0], "export"))
+		get_env_export(shell);
 	if (shell->command_list->next)
 	{
 		shell->command_list = shell->command_list->next;

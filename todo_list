@@ -9,7 +9,7 @@ ctrl c
 $?(avec strerror et perror)
 
 - parsing
-if error, perror 258 syntx error | 127 if command not found | (1 pour toutes les autres erreurs ?)
+if error, perror 258 syntx error | 127 if command not found | (1 pour toutes les autres erreurs ?) Sacha Baranes
 echo | {
 	bash-3.2$ echo |
 	> bash: syntax error: unexpected end of file

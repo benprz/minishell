@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 13:14:35 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 15:48:54 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <string.h>
-# include <errno.h>
+# include <sys/errno.h>
 
 typedef struct s_command
 {
@@ -45,6 +45,7 @@ typedef struct s_shell
 	char		**env;
 	char		**all_path;
 	int			pipe_fd[2];
+	int			pipe_export[2];
 	int			pipe_fd_redi_din[2];
 	int			last_exit_status;
 }				t_shell;
