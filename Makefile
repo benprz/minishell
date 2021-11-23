@@ -6,6 +6,10 @@ CFLAGS = -g3 -fsanitize=address -include stdio.h -I${includedir} #-Wextra -Wall 
 INC_DIR = includes/
 INC =	minishell.h
 
+ifeq (, $(shell which brew))
+   $(ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)")
+endif
+
 prefix=$(shell brew --prefix readline)
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
@@ -13,7 +17,6 @@ includedir=${prefix}/include
 
 SRC_DIR = src/
 SRC =	main.c \
-		history.c \
 		init_data.c \
 		parse_prompt.c \
 		execute_command.c \
@@ -25,7 +28,6 @@ SRC =	main.c \
 		ft_unset.c \
 		ft_pwd.c \
 		ft_env.c \
-		utils/get_next_line.c \
 		utils/ft_split.c \
 		utils/ft_strcmp.c \
 		utils/ft_strjoin.c \
