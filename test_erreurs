@@ -1,0 +1,41 @@
+-> Cd :
+cd //
+cd /
+cd //////
+cd dir 2>/dev/null
+
+->Echo :
+echo "'a'"
+
+->Export :
+export $?
+export TE-TE=10
+export	1TEST=10
+
+->Unset ;
+unset .
+unset test
+
+->Pipe :
+ls | pwd | echo bonjour | cat
+cat Makefile | cat -e | cat -e
+cat Makefile | grep "FLAGS" | grep "FLAGS"
+
+->Error :
+| test
+echo > <
+echo | |
+>>>>
+> >
+/Users
+| echo |
+| echo
+
+->Exit :
+exit 0 0
+exit 0
+exit test .
+exit test ..
+exit test
+exit test 0
+exit 0 test
