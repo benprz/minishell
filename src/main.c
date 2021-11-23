@@ -56,7 +56,6 @@ void	free_prompt(t_shell *shell, char *prompt)
 	}
 }
 
-
 int	main(int argc, char **argv, char **env)
 {
 	t_shell	shell;

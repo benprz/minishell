@@ -13,8 +13,8 @@ export TE-TE=10
 export	1TEST=10
 
 ->Unset ;
-unset .
-unset test
+//unset .
+//unset test
 
 ->Pipe :
 ls | pwd | echo bonjour | cat
