@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_data.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:51:17 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 18:33:02 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 23:05:08 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ void	handle_signals(int signo)
 			rl_replace_line("", 0);
 			rl_redisplay();
 		}
+		else if (g_process_section == 1)
+			g_process_section = 0;
 		else if (g_process_section == 2)
-		{
 			exit(EXIT_FAILURE);
-		}
 	}
 }
 

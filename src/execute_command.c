@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 18:19:10 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 23:06:27 by ben              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	execute_command(t_shell *shell)
 		else
 			wait(&status);
 	}
-	g_process_section = 1;
+	g_process_section = 0;
 	if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
 		close_pipe_rdi(shell);
 	if (!ft_strcmp(shell->command_list->argv[0], "export"))

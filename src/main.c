@@ -64,6 +64,7 @@ int	main(int argc, char **argv, char **env)
 	init_shell(&shell, env);
 	while (1)
 	{
+		printf("process_section=%d\n", g_process_section);
 		prompt = readline("minishell> ");
 		if (prompt == NULL || !ft_strcmp(prompt, "exit"))
 			exit_shell();
