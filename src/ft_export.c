@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:11:30 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 16:14:36 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 18:22:50 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,20 @@ static void	do_redirection(t_shell *shell)
 	}
 }
 
+static int	check_value(char *value)
+{
+	int	i;
+
+	i = 0;
+	while (value[i])
+	{
+		if (!ft_isalnum(value[i]) && value[i] != '_' && value[i] != '=')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	ft_export(t_shell *shell)
 {
 	int	i;
@@ -120,7 +134,13 @@ int	ft_export(t_shell *shell)
 		i = 1;
 		while (shell->command_list->argv[i])
 		{
-			if (check_already_here(shell, shell->command_list->argv[i]) == ERROR)
+			if (ft_isdigit(shell->command_list->argv[i][0]))
+				printf("Error export not a valid identifier\n");
+			if (!check_value(shell->command_list->argv[i]))
+				printf("Error export not a valid identifier\n");
+			else if (shell->command_list->argv[i][0] == '=')
+				printf("Error export '=' not a valid identifier\n");
+			else if (check_already_here(shell, shell->command_list->argv[i]) == ERROR)
 				change_env(shell, i);
 			i++;
 		}

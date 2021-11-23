@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 15:48:54 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 18:01:08 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef struct s_shell
 # define REDIRECTION_DOUTPUT 4
 # define SPLIT_DELIMITER 1
 
-int	process_section;
+int	g_process_section;
 
 // ***** Init data and signals *****
 void		init_prompt_history(void);

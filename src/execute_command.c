@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 16:12:41 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 18:19:10 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ static void	do_redirection_out(t_shell *shell)
 
 static void	do_redirection_in(t_shell *shell, int status)
 {
+	g_process_section = 1;
 	if (shell->command_list->redirection_in == REDIRECTION_INPUT)
 	{
 		if (dup2(shell->command_list->fd_in, STDIN_FILENO) == -1)
@@ -86,6 +87,7 @@ void	execute_command(t_shell *shell)
 	{
 		if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
 			exec_cmd_for_rdi(shell);
+		g_process_section = 1;
 		pid = fork();
 		if (pid == -1)
 			ft_error_fork(shell, "Error fork() execute_command");
@@ -94,6 +96,7 @@ void	execute_command(t_shell *shell)
 		else
 			wait(&status);
 	}
+	g_process_section = 1;
 	if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
 		close_pipe_rdi(shell);
 	if (!ft_strcmp(shell->command_list->argv[0], "export"))

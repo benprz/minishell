@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:12:00 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/21 17:14:08 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 17:43:49 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,28 @@ static int	check_where(t_shell *shell, char *value)
 	return (i);
 }
 
+static int	check_value(char *value)
+{
+	int	i;
+
+	i = 0;
+	while (value[i])
+	{
+		if (!ft_isalnum(value[i]) && value[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	ft_unset(t_shell *shell)
 {
 	int		index;
 	char	*value;
 
 	value = shell->command_list->argv[1];
+	if (!check_value(value))
+		return (EXIT_CMD);
 	index = check_where(shell, value);
 	if (index == -1)
 		return (EXIT_CMD);

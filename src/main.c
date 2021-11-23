@@ -60,7 +60,7 @@ void	handle_signals(int signo)
 {
 	if (signo == SIGINT)
 	{
-		if (process_section == 0)
+		if (g_process_section == 0)
 		{
 			write(1, "\n", 1);
 			rl_on_new_line();
@@ -72,7 +72,7 @@ void	handle_signals(int signo)
 	}
 	if (signo == SIGQUIT)
 	{
-		if (process_section == 1)
+		if (g_process_section == 1)
 			exit(EXIT_FAILURE);
 	}
 }
