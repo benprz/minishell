@@ -4,10 +4,12 @@ NAME = minishell
 CC = gcc
 CFLAGS = -g3 -fsanitize=address #-Wextra -Wall #-Werror
 INC_DIR = includes/
-INC = minishell.h
+INC =	minishell.h \
+		get_next_line.h
 
 SRC_DIR = src/
 SRC =	main.c \
+		history.c \
 		init_data.c \
 		parse_prompt.c \
 		execute_command.c \
@@ -19,6 +21,7 @@ SRC =	main.c \
 		ft_unset.c \
 		ft_pwd.c \
 		ft_env.c \
+		utils/get_next_line.c \
 		utils/ft_split.c \
 		utils/ft_strcmp.c \
 		utils/ft_strjoin.c \
@@ -40,7 +43,10 @@ SRC =	main.c \
 		utils/ft_isalpha.c \
 		utils/ft_isdigit.c \
 		utils/ft_strncmp.c \
-		utils/get_current_env.c
+		utils/get_current_env.c \
+		utils/ft_strccpy.c \
+		utils/ft_strcpy.c \
+		utils/ft_strchr.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
@@ -60,10 +66,11 @@ exec:
 	./$(NAME)
 
 norm:
-	norminette $(SRC_DIR)$(SRC) $(INC_DIR)$(INC)
+	norminette
 
 clean:
 	/bin/rm -rf $(OBJ_DIR)
+	/bin/rm .minishell_history
 
 fclean: clean
 	/bin/rm -f $(NAME)

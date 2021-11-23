@@ -50,7 +50,7 @@ void	init_program_signals(void)
 void	handle_shell_signals(int signal)
 {
 	if (signal == SIGINT)
-		break_current_loops();
+		exit(SUCCESS);
 }
 
 void	init_shell_signals(void)

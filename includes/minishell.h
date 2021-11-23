@@ -42,11 +42,14 @@ typedef struct s_command
 typedef struct s_shell
 {
 	t_command	*command_list;
+	char		**prompt_history;
+	int			history_fd;
 	char		**env;
 	char		**all_path;
 	int			pipe_fd[2];
 	int			pipe_fd_redi_din[2];
 	int			last_exit_status;
+	int			exit;
 }				t_shell;
 
 extern int	errno;
@@ -61,11 +64,12 @@ extern int	errno;
 # define SPLIT_DELIMITER 1
 
 // ***** Init data and signals *****
+void		init_prompt_history(void);
+void		add_prompt_to_history(char *prompt);
 void		init_shell_data(t_shell *shell, char **env);
 void		init_shell_signals(void);
 void		init_program_signals(void);
 void		exit_shell(void);
-void		break_current_loops(void);
 
 // ***** Parsing *****
 int			parse_prompt(t_shell *shell, char *prompt);
@@ -116,5 +120,8 @@ int			ft_isdigit(const int c);
 int			ft_strncmp(const char *s1, const char *s2, const size_t n);
 int			get_current_env_int(t_shell *shell, char *str);
 char		*get_current_env(t_shell *shell, char *str);
+void		*ft_strccpy(char *dst, const char *src, const char c);
+char		*ft_strchr(const char *s, const int c);
+char		*ft_strcpy(char *dst, const char *src);
 
 #endif

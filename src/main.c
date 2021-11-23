@@ -26,17 +26,8 @@
 
 void	exit_shell(void)
 {
-	write(1, "exit\n", 6);
+	write(1, "exit", 5);
 	exit(EXIT_FAILURE);
-}
-
-void	break_current_loops(void)
-{
-	exit(EXIT_SUCCESS);
-	// write(0, "\n", 1);
-	// rl_on_new_line();
-	// rl_replace_line("", 0);
-	// rl_redisplay();
 }
 
 void	free_prompt(t_shell *shell, char *prompt)
@@ -61,7 +52,6 @@ void	free_prompt(t_shell *shell, char *prompt)
 			shell->command_list = NULL;
 		}
 	}
-	free(prompt);
 }
 
 void	launch_shell(t_shell *shell)
@@ -76,7 +66,7 @@ void	launch_shell(t_shell *shell)
 		prompt = ft_tmp(prompt, ft_strtrim(prompt));
 		if (prompt)
 		{
-			add_history(prompt);
+			add_prompt_to_history(prompt);
 			if (parse_prompt(shell, prompt) == SUCCESS)
 			{
 				if (pipe(shell->pipe_fd) == -1)
@@ -85,7 +75,6 @@ void	launch_shell(t_shell *shell)
 				execute_command(shell);
 				close(shell->pipe_fd[0]);
 				close(shell->pipe_fd[1]);
-				// printf("shell_status=%d\n", shell->last_exit_status);
 			}
 			free_prompt(shell, prompt);
 		}
@@ -99,14 +88,15 @@ int	main(int argc, char **argv, char **env)
 	int		shell_status;
 
 	shell_status = 0;
-	// printf("%s\n", strerror(127));
 	while (shell_status == 0)
 	{
+		ft_bzero(&shell, sizeof(t_shell));
 		shell_pid = fork();
 		if (shell_pid == -1)
 			perror("Error making shell's process\n");
 		else if (shell_pid == 0)
 		{
+			init_prompt_history();
 			init_shell_signals();
 			init_shell_data(&shell, env);
 			launch_shell(&shell);
@@ -118,34 +108,5 @@ int	main(int argc, char **argv, char **env)
 		}
 		write(1, "\n", 1);
 	}
-	// printf("shell_status=%d\n", shell.last_exit_status);
 	return (shell.last_exit_status);
 }
-/*
-int main(int argc, char **argv, char **env)
-{
-	pid_t	pid;
-	int		status;
-	char	c;
-
-	init_shell_data(env);
-	g_shell.arg = argv + 1;
-	pid = fork();
-	if (pid == 0)
-	{
-		g_shell.fd_in = open("a", O_RDWR);
-		dup2(1, g_shell.fd_in);
-		execve(ft_get_path(&g_shell), g_shell.arg, env);
-	}
-	else
-	{
-		wait(&status);
-		while (read(g_shell.fd_in, &c, 1) == 1)
-		{
-			printf("%c\n", c);
-		}
-		close(g_shell.fd_in);
-	}
-	return (0);
-}
-*/
