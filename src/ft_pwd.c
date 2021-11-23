@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 18:01:39 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/21 17:14:08 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 11:13:08 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*get_pwd(t_shell *shell)
 
 	j = 4;
 	k = 0;
-	i =	get_current_env_int(shell, "PWD");
+	i = get_current_env_int(shell, "PWD");
 	if (i == -1)
 		return (NULL);
 	pwd = malloc(sizeof(char) * (ft_strlen(shell->env[i]) - 3));
@@ -46,13 +46,13 @@ int	ft_pwd(t_shell *shell)
 	{
 		close(shell->pipe_fd[0]);
 		if (dup2(shell->command_list->fd_out, shell->pipe_fd[1]) == -1)
-			ft_error_fork(shell,  "Error, dup2");
+			ft_error_fork(shell, "Error, dup2");
 	}
 	else if (!shell->command_list->next)
 	{
 		close(shell->pipe_fd[0]);
 		if (dup2(1, shell->pipe_fd[1]) == -1)
-			ft_error_fork(shell,  "Error dup2 cmd");
+			ft_error_fork(shell, "Error dup2 cmd");
 	}
 	str = get_pwd(shell);
 	str = ft_strjoin(str, "\n");

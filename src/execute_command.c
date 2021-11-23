@@ -6,11 +6,13 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/21 15:21:03 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 11:13:41 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// execve("/bin/ls", "ls -l", env)
 
 void	do_redirection_out(t_shell *shell)
 {
@@ -61,7 +63,6 @@ void	execute_command(t_shell *shell)
 	int		status;
 
 	status = 0;
-	
 	if (check_commad_1(shell) == ERROR)
 	{
 		if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
