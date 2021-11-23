@@ -22,7 +22,8 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <string.h>
-# include <errno.h>
+# include <stdio.h>
+# include <string.h>
 
 typedef struct s_command
 {
@@ -52,8 +53,6 @@ typedef struct s_shell
 	int			exit;
 }				t_shell;
 
-extern int	errno;
-
 # define SUCCESS 0
 # define ERROR 1
 # define EXIT_CMD 2
@@ -63,10 +62,12 @@ extern int	errno;
 # define REDIRECTION_DOUTPUT 4
 # define SPLIT_DELIMITER 1
 
+int	process_section;
+
 // ***** Init data and signals *****
 void		init_prompt_history(void);
 void		add_prompt_to_history(char *prompt);
-void		init_shell_data(t_shell *shell, char **env);
+void		init_shell(t_shell *shell, char **env);
 void		init_shell_signals(void);
 void		init_program_signals(void);
 void		exit_shell(void);

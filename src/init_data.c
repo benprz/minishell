@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	init_shell_data(t_shell *shell, char **env)
+void	init_shell(t_shell *shell, char **env)
 {
 	int	i;
 

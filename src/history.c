@@ -50,7 +50,6 @@ void	add_prompt_to_history(char *prompt)
 	fd = open(".minishell_history", O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (fd > 0)
 	{
-		add_history(prompt);
 		write(fd, prompt, ft_strlen(prompt));
 		write(fd, "\n", 1);
 	}

@@ -2,10 +2,14 @@
 
 NAME = minishell
 CC = gcc
-CFLAGS = -g3 -fsanitize=address #-Wextra -Wall #-Werror
+CFLAGS = -g3 -fsanitize=address -include stdio.h -I${includedir} #-Wextra -Wall #-Werror
 INC_DIR = includes/
-INC =	minishell.h \
-		get_next_line.h
+INC =	minishell.h
+
+prefix=$(shell brew --prefix readline)
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
 
 SRC_DIR = src/
 SRC =	main.c \
@@ -56,7 +60,7 @@ OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
 all: $(NAME) #exec
 
 $(NAME): $(OBJ)
-	$(CC) -lreadline $(CFLAGS) $(OBJ) -o $(NAME) -I $(INC_DIR) -lm
+	$(CC) -L${libdir} -lreadline $(CFLAGS) $(OBJ) -o $(NAME) -I $(INC_DIR) -lm
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(addprefix $(INC_DIR),$(INC))
 	mkdir -p $(@D)
@@ -70,7 +74,6 @@ norm:
 
 clean:
 	/bin/rm -rf $(OBJ_DIR)
-	/bin/rm .minishell_history
 
 fclean: clean
 	/bin/rm -f $(NAME)

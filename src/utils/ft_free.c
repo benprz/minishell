@@ -15,7 +15,7 @@
 void	ft_error_fork(t_shell *shell, char *str)
 {
 	perror(str);
-	printf("ft_error_fork %d\n", errno);
+	//printf("ft_error_fork %d\n", errno);
 	shell->last_exit_status = 1;
 	exit(EXIT_FAILURE);
 }
@@ -23,7 +23,7 @@ void	ft_error_fork(t_shell *shell, char *str)
 int	ft_error(char *str, int	wich_one)
 {
 	perror(str);
-	printf("ft_error %d\n", errno);
+	//printf("ft_error %d\n", errno);
 	return (wich_one);
 }
 

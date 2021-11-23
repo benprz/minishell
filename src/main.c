@@ -24,9 +24,11 @@
 
 #include "minishell.h"
 
+#include <stdio.h>
+
 void	exit_shell(void)
 {
-	write(1, "exit", 5);
+	write(1, "exit\n", 6);
 	exit(EXIT_FAILURE);
 }
 
@@ -54,10 +56,40 @@ void	free_prompt(t_shell *shell, char *prompt)
 	}
 }
 
-void	launch_shell(t_shell *shell)
+void	handle_signals(int signo)
 {
+	if (signo == SIGINT)
+	{
+		if (process_section == 0)
+		{
+			write(1, "\n", 1);
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+		}
+		else
+			exit(EXIT_FAILURE);
+	}
+	if (signo == SIGQUIT)
+	{
+		if (process_section == 1)
+			exit(EXIT_FAILURE);
+	}
+}
+
+void	init_signals()
+{
+	signal(SIGINT, handle_signals);
+	signal(SIGQUIT, handle_signals);
+}
+
+int	main(int argc, char **argv, char **env)
+{
+	t_shell	shell;
 	char	*prompt;
 
+	init_signals();
+	init_shell(&shell, env);
 	while (1)
 	{
 		prompt = readline("minishell> ");
@@ -66,47 +98,17 @@ void	launch_shell(t_shell *shell)
 		prompt = ft_tmp(prompt, ft_strtrim(prompt));
 		if (prompt)
 		{
-			add_prompt_to_history(prompt);
-			if (parse_prompt(shell, prompt) == SUCCESS)
+			add_history(prompt);
+			if (parse_prompt(&shell, prompt) == SUCCESS)
 			{
-				if (pipe(shell->pipe_fd) == -1)
+				if (pipe(shell.pipe_fd) == -1)
 					perror("Pipe");
-				shell->command_list = goto_first_command(shell->command_list);
-				execute_command(shell);
-				close(shell->pipe_fd[0]);
-				close(shell->pipe_fd[1]);
+				shell.command_list = goto_first_command(shell.command_list);
+				execute_command(&shell);
+				close(shell.pipe_fd[0]);
+				close(shell.pipe_fd[1]);
 			}
-			free_prompt(shell, prompt);
+			free_prompt(&shell, prompt);
 		}
 	}
-}
-
-int	main(int argc, char **argv, char **env)
-{
-	t_shell	shell;
-	pid_t	shell_pid;
-	int		shell_status;
-
-	shell_status = 0;
-	while (shell_status == 0)
-	{
-		ft_bzero(&shell, sizeof(t_shell));
-		shell_pid = fork();
-		if (shell_pid == -1)
-			perror("Error making shell's process\n");
-		else if (shell_pid == 0)
-		{
-			init_prompt_history();
-			init_shell_signals();
-			init_shell_data(&shell, env);
-			launch_shell(&shell);
-		}
-		else
-		{
-			init_program_signals();
-			wait(&shell_status);
-		}
-		write(1, "\n", 1);
-	}
-	return (shell.last_exit_status);
 }
