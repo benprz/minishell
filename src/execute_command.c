@@ -58,7 +58,7 @@ static void	do_redirection_out(t_shell *shell)
 
 static void	do_redirection_in(t_shell *shell, int status)
 {
-	g_process_section = 1;
+	g_process_section = 2;
 	if (shell->command_list->redirection_in == REDIRECTION_INPUT)
 	{
 		if (dup2(shell->command_list->fd_in, STDIN_FILENO) == -1)
