@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:12:00 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 17:43:49 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 18:35:04 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ static int	check_value(char *value)
 	int	i;
 
 	i = 0;
+	if (ft_isdigit(value[0]))
+		return (0);
 	while (value[i])
 	{
 		if (!ft_isalnum(value[i]) && value[i] != '_')
@@ -67,15 +69,20 @@ static int	check_value(char *value)
 
 int	ft_unset(t_shell *shell)
 {
+	int		i;
 	int		index;
 	char	*value;
 
-	value = shell->command_list->argv[1];
-	if (!check_value(value))
-		return (EXIT_CMD);
-	index = check_where(shell, value);
-	if (index == -1)
-		return (EXIT_CMD);
-	remove_line_in_env(shell, index);
+	i = 1;
+	while (shell->command_list->argv[i])
+	{
+		value = shell->command_list->argv[i];
+		if (!check_value(value))
+			printf("Error export not a valid identifier\n");
+		index = check_where(shell, value);
+		if (index != -1)
+			remove_line_in_env(shell, index);
+		i++;
+	}
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 13:21:28 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/23 18:52:58 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,27 @@ static void	do_cd_else(t_shell *shell, char **split_path, char *pwd)
 	}
 }
 
+int	check_dir_base(t_shell *shell)
+{
+	int	i;
+	int	check;
+
+	check = 0;
+	i = 0;
+	while (shell->command_list->argv[1][i])
+	{
+		if (shell->command_list->argv[1][i] != '/')
+			check++;
+		i++;
+	}
+	if (check)
+		return (ERROR);
+	if (chdir(shell->command_list->argv[1]) == -1)
+		return (ft_error("Error No such file or directory", EXIT_CMD));
+	change_env_cd(shell);
+	return (SUCCESS);
+}
+
 int	ft_cd(t_shell *shell)
 {
 	char	**split_path;
@@ -106,6 +127,8 @@ int	ft_cd(t_shell *shell)
 		return (EXIT_CMD);
 	if (shell->command_list->argv[1] == NULL)
 		shell->command_list->argv[1] = ft_strdup("/Users/ngeschwi");
+	if (check_dir_base(shell) == SUCCESS)
+		return (EXIT_CMD);
 	split_path = ft_split(shell->command_list->argv[1], '/');
 	size_split = ft_tablen(split_path);
 	pwd = get_pwd(shell);

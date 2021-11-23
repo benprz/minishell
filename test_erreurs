@@ -1,20 +1,21 @@
 -> Cd :
-cd //
-cd /
-cd //////
+/cd //
+/cd /
+/cd //////
 cd dir 2>/dev/null
 
 ->Echo :
 echo "'a'"
 
 ->Export :
-export $?
-export TE-TE=10
-export	1TEST=10
+//export TE-TE=10
+//export 1TEST=10
 
 ->Unset ;
 //unset .
 //unset test
+//unset TE-TE=10
+//unset 1TEST=10
 
 ->Pipe :
 ls | pwd | echo bonjour | cat
@@ -22,14 +23,15 @@ cat Makefile | cat -e | cat -e
 cat Makefile | grep "FLAGS" | grep "FLAGS"
 
 ->Error :
-| test
+$?
+//| test
 echo > <
 echo | |
 >>>>
 > >
 /Users
-| echo |
-| echo
+//| echo |
+//| echo
 
 ->Exit :
 exit 0 0
