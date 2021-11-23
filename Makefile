@@ -23,7 +23,6 @@ SRC =	main.c \
 		utils/ft_strcmp.c \
 		utils/ft_strjoin.c \
 		utils/ft_strlen.c \
-		utils/ft_get_path.c \
 		utils/ft_strdup.c \
 		utils/ft_free.c \
 		utils/ft_substr.c \
@@ -40,7 +39,8 @@ SRC =	main.c \
 		utils/ft_isalpha.c \
 		utils/ft_isdigit.c \
 		utils/ft_strncmp.c \
-		utils/get_current_env.c
+		utils/get_current_env.c \
+		utils/check_pwd.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
