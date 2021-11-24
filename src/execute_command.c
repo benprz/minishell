@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/24 13:58:32 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/24 17:47:23 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,92 +55,8 @@ static void	get_env_export(t_shell *shell)
 	shell->env = ft_split(str, '\n');
 }
 
-static void	do_redirection_out(t_shell *shell)
+static void	do_after_cmd(t_shell *shell)
 {
-	close(shell->pipe_fd[shell->index][0]);
-	if (shell->command_list->redirection_out == REDIRECTION_OUTPUT
-		|| shell->command_list->redirection_out == REDIRECTION_DOUTPUT)
-	{
-		if (dup2(shell->command_list->fd_out, STDOUT_FILENO) == -1)
-			ft_error_fork(shell, "Error, Bad file descriptor");
-	}
-	else if (shell->command_list->next)
-	{
-		if (dup2(shell->pipe_fd[shell->index][1], STDOUT_FILENO) == -1)
-			ft_error_fork(shell, "Error, Bad file descriptor");
-	}
-	if (check_commad_2(shell) == ERROR)
-	{
-		if (execve(shell->command_list->program_path,
-				shell->command_list->argv, shell->env) == -1)
-			ft_error_fork(shell, "Error command not found");
-	}
-	exit(EXIT_SUCCESS);
-}
-
-static void	do_redirection_in(t_shell *shell, int status)
-{
-	g_process_section = 2;
-	if (shell->index == 0)
-		close(shell->pipe_fd[2][1]);
-	else
-		close(shell->pipe_fd[shell->index - 1][1]);
-	if (shell->command_list->redirection_in == REDIRECTION_INPUT)
-	{
-		if (dup2(shell->command_list->fd_in, STDIN_FILENO) == -1)
-			ft_error_fork(shell, "Error, Bad file descriptor");
-	}
-	else if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
-	{
-		if (dup2(shell->pipe_fd_redi_din[0], STDIN_FILENO) == -1)
-			ft_error_fork(shell, "Error, Bad file descriptor");
-	}
-	else if (shell->command_list->prev)
-	{
-		if (shell->index == 0)
-		{
-			if (dup2(shell->pipe_fd[2][0], STDIN_FILENO) == -1)
-				ft_error_fork(shell, "Error, Bad file descriptor");
-		}
-		else
-			if (dup2(shell->pipe_fd[shell->index - 1][0], STDIN_FILENO) == -1)
-				ft_error_fork(shell, "Error, Bad file descriptor");
-	}
-	do_redirection_out(shell);
-}
-
-void	execute_command(t_shell *shell)
-{
-	pid_t	pid;
-	int		status;
-
-	status = 0;
-	if (check_commad_1(shell) == ERROR)
-	{
-		if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
-			exec_cmd_for_rdi(shell);
-		g_process_section = 1;
-		pid = fork();
-		if (pid == -1)
-			ft_error_fork(shell, "Error fork() execute_command");
-		else if (pid == 0)
-			do_redirection_in(shell, status);
-		else
-		{
-			if (shell->index == 0)
-			{
-				close(shell->pipe_fd[2][0]);
-				close(shell->pipe_fd[2][1]);
-			}
-			else
-			{
-				close(shell->pipe_fd[shell->index - 1][0]);
-				close(shell->pipe_fd[shell->index - 1][1]);
-			}
-			wait(&status);
-		}
-	}
-	g_process_section = 0;
 	care_pipe(shell);
 	if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
 		close_pipe_rdi(shell);
@@ -166,4 +82,44 @@ void	execute_command(t_shell *shell)
 		}
 		execute_command(shell);
 	}
+}
+
+static void	close_pipe_after_cmd(t_shell *shell)
+{
+	if (shell->index == 0)
+	{
+		close(shell->pipe_fd[2][0]);
+		close(shell->pipe_fd[2][1]);
+	}
+	else
+	{
+		close(shell->pipe_fd[shell->index - 1][0]);
+		close(shell->pipe_fd[shell->index - 1][1]);
+	}
+}
+
+void	execute_command(t_shell *shell)
+{
+	pid_t	pid;
+	int		status;
+
+	status = 0;
+	if (check_commad_1(shell) == ERROR)
+	{
+		if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
+			exec_cmd_for_rdi(shell);
+		g_process_section = 1;
+		pid = fork();
+		if (pid == -1)
+			ft_error_fork(shell, "Error fork() execute_command");
+		else if (pid == 0)
+			do_redirection_in(shell);
+		else
+		{
+			close_pipe_after_cmd(shell);
+			wait(&status);
+		}
+	}
+	g_process_section = 0;
+	do_after_cmd(shell);
 }
