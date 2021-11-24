@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 18:01:08 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/24 12:36:32 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ typedef struct s_shell
 	int			history_fd;
 	char		**env;
 	char		**all_path;
-	int			pipe_fd[2];
+	int			index;
+	int			pipe_fd[3][2];
 	int			pipe_export[2];
 	int			pipe_fd_redi_din[2];
 	int			last_exit_status;
@@ -64,10 +65,13 @@ typedef struct s_shell
 # define REDIRECTION_DOUTPUT 4
 # define SPLIT_DELIMITER 1
 
+// ***** Variable global *****
+
 int	g_process_section;
 
 // ***** Init data and signals *****
 void		init_shell(t_shell *shell, char **env);
+int			init_pipe(t_shell *shell);
 void		exit_shell(void);
 
 // ***** Parsing *****

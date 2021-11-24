@@ -32,6 +32,16 @@ void	exit_shell(void)
 	exit(EXIT_FAILURE);
 }
 
+void	close_pipe(t_shell *shell)
+{
+	close(shell->pipe_fd[0][0]);
+	close(shell->pipe_fd[0][1]);
+	close(shell->pipe_fd[1][0]);
+	close(shell->pipe_fd[1][1]);
+	close(shell->pipe_fd[2][0]);
+	close(shell->pipe_fd[2][1]);
+}
+
 void	free_prompt(t_shell *shell, char *prompt)
 {
 	shell->command_list = goto_first_command(shell->command_list);
@@ -54,6 +64,8 @@ void	free_prompt(t_shell *shell, char *prompt)
 			shell->command_list = NULL;
 		}
 	}
+	// free(shell->pipe_fd);
+	close_pipe(shell);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -74,12 +86,10 @@ int	main(int argc, char **argv, char **env)
 			add_history(prompt);
 			if (parse_prompt(&shell, prompt) == SUCCESS)
 			{
-				if (pipe(shell.pipe_fd) == -1)
-					perror("Pipe");
+				if (init_pipe(&shell) == ERROR)
+					perror("Error pipe creation");
 				shell.command_list = goto_first_command(shell.command_list);
 				execute_command(&shell);
-				close(shell.pipe_fd[0]);
-				close(shell.pipe_fd[1]);
 			}
 			free_prompt(&shell, prompt);
 		}

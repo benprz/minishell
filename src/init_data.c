@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_data.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ben <ben@student.42lyon.fr>                +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:51:17 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 23:05:08 by ben              ###   ########lyon.fr   */
+/*   Updated: 2021/11/24 12:06:50 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,15 @@ void	init_shell(t_shell *shell, char **env)
 		i++;
 	}
 	shell->env[i] = NULL;
+}
+
+int	init_pipe(t_shell *shell)
+{
+	if (pipe(shell->pipe_fd[0]) == -1)
+		return (ERROR);
+	if (pipe(shell->pipe_fd[1]) == -1)
+		return (ERROR);
+	if (pipe(shell->pipe_fd[2]) == -1)
+		return (ERROR);
+	return (SUCCESS);
 }

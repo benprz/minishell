@@ -18,9 +18,9 @@ echo "'a'"
 //unset 1TEST=10
 
 ->Pipe :
-ls | pwd | echo bonjour | cat
-cat Makefile | cat -e | cat -e
-cat Makefile | grep "FLAGS" | grep "FLAGS"
+//ls | pwd | echo bonjour | cat
+//cat Makefile | cat -e | cat -e
+//cat Makefile | grep "FLAGS" | grep "FLAGS"
 
 ->Error :
 $?
@@ -29,7 +29,7 @@ echo > <
 echo | |
 >>>>
 > >
-/Users
+// /Users
 //| echo |
 //| echo
 

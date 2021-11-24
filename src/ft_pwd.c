@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 18:01:39 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 11:13:08 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/24 12:01:34 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,22 @@ char	*get_pwd(t_shell *shell)
 	return (pwd);
 }
 
+static void	do_redirection(t_shell *shell)
+{
+	if (shell->command_list->redirection_out == 2)
+	{
+		close(shell->pipe_fd[shell->index][0]);
+		if (dup2(shell->command_list->fd_out, shell->pipe_fd[shell->index][1]) == -1)
+			ft_error_fork(shell, "Error, dup2");
+	}
+	else if (!shell->command_list->next)
+	{
+		close(shell->pipe_fd[shell->index][0]);
+		if (dup2(1, shell->pipe_fd[shell->index][1]) == -1)
+			ft_error_fork(shell, "Error dup2 cmd");
+	}
+}
+
 int	ft_pwd(t_shell *shell)
 {
 	char	*str;
@@ -42,22 +58,11 @@ int	ft_pwd(t_shell *shell)
 
 	i = 1;
 	str = NULL;
-	if (shell->command_list->redirection_out == 2)
-	{
-		close(shell->pipe_fd[0]);
-		if (dup2(shell->command_list->fd_out, shell->pipe_fd[1]) == -1)
-			ft_error_fork(shell, "Error, dup2");
-	}
-	else if (!shell->command_list->next)
-	{
-		close(shell->pipe_fd[0]);
-		if (dup2(1, shell->pipe_fd[1]) == -1)
-			ft_error_fork(shell, "Error dup2 cmd");
-	}
+	do_redirection(shell);
 	str = get_pwd(shell);
 	str = ft_strjoin(str, "\n");
-	write(shell->pipe_fd[1], str, ft_strlen(str));
-	close(shell->pipe_fd[1]);
+	write(shell->pipe_fd[shell->index][1], str, ft_strlen(str));
+	close(shell->pipe_fd[shell->index][1]);
 	free(str);
 	return (SUCCESS);
 }
