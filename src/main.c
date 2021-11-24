@@ -6,7 +6,7 @@
 /*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/08 00:35:58by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/24 14:45:19 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,18 @@ void	exit_shell(void)
 
 void	close_pipe(t_shell *shell)
 {
-	close(shell->pipe_fd[0][0]);
-	close(shell->pipe_fd[0][1]);
-	close(shell->pipe_fd[1][0]);
-	close(shell->pipe_fd[1][1]);
-	close(shell->pipe_fd[2][0]);
-	close(shell->pipe_fd[2][1]);
+	if (shell->pipe_fd[0][0])
+		close(shell->pipe_fd[0][0]);
+	if (shell->pipe_fd[0][1])
+		close(shell->pipe_fd[0][1]);
+	if (shell->pipe_fd[1][0])
+		close(shell->pipe_fd[1][0]);
+	if (shell->pipe_fd[1][1])
+		close(shell->pipe_fd[1][1]);
+	if (shell->pipe_fd[2][0])
+		close(shell->pipe_fd[2][0]);
+	if (shell->pipe_fd[2][1])
+		close(shell->pipe_fd[2][1]);
 }
 
 void	free_prompt(t_shell *shell, char *prompt)

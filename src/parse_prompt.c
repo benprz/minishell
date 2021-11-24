@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/22 18:47:31 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/24 14:47:21 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -566,7 +566,7 @@ int	parse_command(t_shell *shell, t_command *current_command, char **command)
 	if (split_command(command) == SUCCESS)
 	{
 		ret = ft_split(*command, SPLIT_DELIMITER);
-		if (ret)
+		if (ret && ret[0])
 		{
 			current_command->shell = shell;
 			current_command->argc = ft_strlen_2d(ret);
@@ -580,8 +580,8 @@ int	parse_command(t_shell *shell, t_command *current_command, char **command)
 				}
 				return (SUCCESS);
 			}
-			ft_free_2d((void **)ret, current_command->argc);
 		}
+		ft_free_2d((void **)ret, current_command->argc);
 	}
 	return (ERROR);
 }
