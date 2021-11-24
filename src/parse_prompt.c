@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/24 14:47:21 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/24 17:02:19 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ int get_variable_name_length(char *command, int i)
 	return (var_name_length);
 }
 
-int	expand_tilde(t_command *command, char **split_command, int i)
+int	expand_tilde(t_command *command, char **split_cmd, int i)
 {
 	char	*var;
 	char	*new_command;
@@ -148,16 +148,16 @@ int	expand_tilde(t_command *command, char **split_command, int i)
 	var = get_current_env(command->shell, "HOME");
 	if (var[0] != '\0')
 	{
-		new_command = ft_substr(*split_command, 0, i);
+		new_command = ft_substr(*split_cmd, 0, i);
 		new_command = ft_tmp(new_command, ft_strjoin(new_command, var));
-		var = ft_substr(*split_command, i + 1, ft_strlen(*split_command + i + 1));
+		var = ft_substr(*split_cmd, i + 1, ft_strlen(*split_cmd + i + 1));
 		if (var)
 		{
 			new_command = ft_tmp(new_command, ft_strjoin(new_command, var));
 			if (new_command)
 			{
-				free(*split_command);
-				*split_command = new_command;
+				free(*split_cmd);
+				*split_cmd = new_command;
 				return (SUCCESS);
 			}
 		}
@@ -384,9 +384,38 @@ int	parse_redirection(t_command *command, char **split_command)
 	return (ret);
 }
 
+int	expand_exit_status_variable(t_command *command, char **split_cmd, int i)
+{
+	char	*exit_status;
+	char	*new_command;
+	int		strlen;
+
+	exit_status = ft_itoa(command->shell->last_exit_status);
+	if (exit_status)
+	{
+		new_command = ft_substr(*split_cmd, 0, i);
+		new_command = ft_tmp(new_command, ft_strjoin(new_command, exit_status));
+		strlen = ft_strlen(*split_cmd);
+		*split_cmd = ft_tmp(*split_cmd, ft_substr(*split_cmd, i + 2, strlen));
+		new_command = ft_tmp(new_command, ft_strjoin(new_command, *split_cmd));
+		if (new_command)
+		{
+			free(*split_cmd);
+			*split_cmd = new_command;
+			return (SUCCESS);
+		}
+	}
+	return (ERROR);
+}
+
 int	interpret_the_rest(t_command *cmd, char **split_cmd, int *i, int dq)
 {
-	if ((*split_cmd)[*i] == '$' && ft_isalnum((*split_cmd)[*i + 1]))
+	if ((*split_cmd)[*i] == '$' && (*split_cmd)[*i + 1] == '?')
+	{
+		if (expand_exit_status_variable(cmd, split_cmd, *i) == ERROR)
+			return (ERROR);
+	}
+	else if ((*split_cmd)[*i] == '$' && ft_isalnum((*split_cmd)[*i + 1]))
 	{
 		if (expand_env_variable(cmd, split_cmd, *i + 1) == ERROR)
 			return (ERROR);
