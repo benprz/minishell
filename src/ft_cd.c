@@ -6,32 +6,11 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 18:52:58 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/24 17:05:50 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	change_env_cd(t_shell *shell)
-{
-	int		i;
-	char	*save_pwd;
-
-	i = get_current_env_int(shell, "PWD");
-	save_pwd = ft_strdup(shell->env[i]);
-	free(shell->env[i]);
-	shell->env[i] = NULL;
-	shell->env[i] = ft_strdup("PWD=");
-	shell->env[i] = ft_strjoin(shell->env[i], shell->command_list->argv[1]);
-	check_pwd(shell);
-	i = get_current_env_int(shell, "OLDPWD");
-	free(shell->env[i]);
-	shell->env[i] = NULL;
-	shell->env[i] = ft_strdup("OLD");
-	shell->env[i] = ft_strjoin(shell->env[i], save_pwd);
-	free(save_pwd);
-	return (SUCCESS);
-}
 
 static char	*cd_back(t_shell *shell, char *pwd)
 {
@@ -74,7 +53,7 @@ static void	do_cd_else(t_shell *shell, char **split_path, char *pwd)
 
 	i = 0;
 	if (!ft_strcmp(split_path[i], "."))
-		i++;	
+		i++;
 	while (split_path[i] && !ft_strcmp(split_path[i], ".."))
 	{
 		pwd = cd_back(shell, pwd);

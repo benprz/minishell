@@ -6,35 +6,11 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:11:30 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/24 12:00:45 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/24 17:09:32 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	send_env(t_shell *shell)
-{
-	char	*chaine_env;
-	int		i;
-	int		size;
-	
-	i = -1;
-	size = 0;
-	while (shell->env[++i])
-		size += ft_strlen(shell->env[i]) + 1;
-	chaine_env = malloc(sizeof(char) * (size + 1));
-	chaine_env = NULL;
-	i = -1;
-	while (shell->env[++i])
-	{
-		chaine_env = ft_strjoin(chaine_env, shell->env[i]);
-		chaine_env = ft_strjoin(chaine_env, "\n");
-	}
-	chaine_env[size] = '\0';
-	close(shell->pipe_export[0]);
-	write(shell->pipe_export[1], chaine_env, size);
-	close(shell->pipe_export[1]);
-}
 
 static int	check_already_here(t_shell *shell, char *value)
 {
@@ -90,22 +66,6 @@ static void	change_env(t_shell *shell, int i)
 	free_tab(save_env);
 }
 
-static void	do_redirection(t_shell *shell)
-{
-	if (shell->command_list->redirection_out == 2)
-	{
-		close(shell->pipe_fd[shell->index][0]);
-		if (dup2(shell->command_list->fd_out, shell->pipe_fd[shell->index][1]) == -1)
-			ft_error_fork(shell, "Error, dup2");
-	}
-	else if (!shell->command_list->next)
-	{
-		close(shell->pipe_fd[shell->index][0]);
-		if (dup2(1, shell->pipe_fd[shell->index][1]) == -1)
-			ft_error_fork(shell, "Error dup2 cmd");
-	}
-}
-
 static int	check_value(char *value)
 {
 	int	i;
@@ -120,6 +80,23 @@ static int	check_value(char *value)
 	return (1);
 }
 
+static void	do_redirection(t_shell *shell)
+{
+	if (shell->command_list->redirection_out == 2)
+	{
+		close(shell->pipe_fd[shell->index][0]);
+		if (dup2(shell->command_list->fd_out,
+				shell->pipe_fd[shell->index][1]) == -1)
+			ft_error_fork(shell, "Error, dup2");
+	}
+	else if (!shell->command_list->next)
+	{
+		close(shell->pipe_fd[shell->index][0]);
+		if (dup2(1, shell->pipe_fd[shell->index][1]) == -1)
+			ft_error_fork(shell, "Error dup2 cmd");
+	}
+}
+
 int	ft_export(t_shell *shell)
 {
 	int	i;
@@ -131,8 +108,8 @@ int	ft_export(t_shell *shell)
 			printf("declare -x %s\n", shell->env[i]);
 	else
 	{
-		i = 1;
-		while (shell->command_list->argv[i])
+		i = 0;
+		while (shell->command_list->argv[++i])
 		{
 			if (ft_isdigit(shell->command_list->argv[i][0]))
 				printf("Error export not a valid identifier\n");
@@ -140,9 +117,9 @@ int	ft_export(t_shell *shell)
 				printf("Error export not a valid identifier\n");
 			else if (shell->command_list->argv[i][0] == '=')
 				printf("Error export '=' not a valid identifier\n");
-			else if (check_already_here(shell, shell->command_list->argv[i]) == ERROR)
+			else if (check_already_here(shell,
+					shell->command_list->argv[i]) == ERROR)
 				change_env(shell, i);
-			i++;
 		}
 	}
 	send_env(shell);

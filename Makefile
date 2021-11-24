@@ -49,7 +49,9 @@ SRC =	main.c \
 		utils/ft_isdigit.c \
 		utils/ft_strncmp.c \
 		utils/get_current_env.c \
-		utils/check_pwd.c
+		utils/check_pwd.c \
+		utils/change_env_cd.c \
+		utils/send_env_export.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)

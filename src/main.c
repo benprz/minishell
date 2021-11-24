@@ -64,7 +64,6 @@ void	free_prompt(t_shell *shell, char *prompt)
 			shell->command_list = NULL;
 		}
 	}
-	// free(shell->pipe_fd);
 	close_pipe(shell);
 }
 

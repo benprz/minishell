@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:51:17 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/24 12:06:50 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/24 17:03:07 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	handle_signals(int signo)
 	}
 }
 
-void	init_signals()
+void	init_signals(void)
 {
 	signal(SIGINT, handle_signals);
 	signal(SIGQUIT, handle_signals);
