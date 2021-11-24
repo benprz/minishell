@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "__config": "c",
-        "get_next_line.h": "c",
-        "minishell.h": "c"
-    }
-}
