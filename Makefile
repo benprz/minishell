@@ -51,7 +51,7 @@ SRC =	main.c \
 		utils/get_current_env.c \
 		utils/check_pwd.c \
 		utils/change_env_cd.c \
-		utils/send_env_export.c
+		utils/send_env_export.c \
 		utils/ft_itoa.c
 
 OBJ_DIR = .obj/
