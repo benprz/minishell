@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:11:30 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 09:56:34 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 10:00:33 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,9 @@ static void	change_env(t_shell *shell, int i)
 	save_env = malloc(sizeof(char *) * (ft_tablen(shell->env) + 1));
 	if (!save_env)
 		return ;
-	j = 0;
-	while (shell->env[j])
-	{
+	j = -1;
+	while (shell->env[++j])
 		save_env[j] = ft_strdup(shell->env[j]);
-		j++;
-	}
 	save_env[j] = NULL;
 	free_tab(shell->env);
 	shell->env = malloc(sizeof(char *) * (ft_tablen(save_env) + 2));
