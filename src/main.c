@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 14:36:54 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 14:47:39 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,6 @@
 // tgoto, tputs
 
 #include "minishell.h"
-
-void	exit_shell(void)
-{
-	write(1, "exit\n", 6);
-	exit(EXIT_FAILURE);
-}
 
 void	close_pipe(t_shell *shell)
 {
@@ -71,6 +65,17 @@ void	free_prompt(t_shell *shell, char *prompt)
 	close_pipe(shell);
 }
 
+void	handle_parse_errors(t_shell *shell)
+{
+	if (shell->parsing_error == 0)
+	{
+		printf("Parsing failed, syntax error\n");
+		shell->last_exit_status = 258;
+	}
+	else
+		shell->last_exit_status = 1;
+}
+
 int	read_prompt(t_shell *shell, char *prompt)
 {
 	int		parse_ret;
@@ -88,18 +93,10 @@ int	read_prompt(t_shell *shell, char *prompt)
 			execute_command(shell);
 		}
 		else
-		{
-			if (shell->parsing_error == 0)
-			{
-				printf("Parsing failed, syntax error\n");
-				shell->last_exit_status = 258;
-			}
-			else
-				shell->last_exit_status = 1;
-		}
+			handle_parse_errors(shell);
 		free_prompt(shell, prompt);
 	}
-	return (0);	
+	return (0);
 }
 
 int	main(int argc, char **argv, char **env)

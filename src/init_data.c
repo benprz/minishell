@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:51:17 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 12:44:00 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 14:44:32 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	handle_signals(int signo)
 {
-	printf("process=%d errno=%d\n", g_process_section, errno);
 	if (signo == SIGINT)
 	{
 		if (g_process_section == 0)
@@ -25,12 +24,7 @@ void	handle_signals(int signo)
 			rl_redisplay();
 		}
 		else if (g_process_section == 1)
-		 	g_process_section = 0;
-		else if (g_process_section == 2)
-		{
-			write(1, "AHHHH\n", 6);
-			//exit(130);
-		}
+			g_process_section = 0;
 	}
 }
 
