@@ -6,13 +6,13 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:14:50 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 10:03:13 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 10:22:50 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	interpret_the_rest(t_command *cmd, char **split_cmd, int *i, int dq)
+int	expand_variables(t_command *cmd, char **split_cmd, int *i)
 {
 	if ((*split_cmd)[*i] == '$' && (*split_cmd)[*i + 1] == '?')
 	{
@@ -24,6 +24,16 @@ int	interpret_the_rest(t_command *cmd, char **split_cmd, int *i, int dq)
 		if (expand_env_variable(cmd, split_cmd, *i + 1) == ERROR)
 			return (ERROR);
 		*i -= 1;
+	}
+	return (SUCCESS);
+}
+
+int	interpret_the_rest(t_command *cmd, char **split_cmd, int *i, int dq)
+{
+	if ((*split_cmd)[*i] == '$')
+	{
+		if (expand_variables(cmd, split_cmd, i) == ERROR)
+			return (ERROR);
 	}
 	else if ((*split_cmd)[*i] == '~' && dq == 0)
 	{
@@ -97,33 +107,6 @@ char	*add_char(char *str, int index, char c)
 		new_str[i] = '\0';
 	}
 	return (new_str);
-}
-
-int	add_delimiters_to_redirection(char **command, int *i)
-{
-	if (*i > 0 && (*command)[*i - 1] != SPLIT_DELIMITER)
-	{
-		*command = ft_tmp(*command, add_char(*command, *i, SPLIT_DELIMITER));
-		if (*command == NULL)
-			return (ERROR);
-		*i += 1;
-	}
-	if ((*command)[*i + 1] == '<' || (*command)[*i + 1] == '>')
-	{
-		if (((*command)[*i] == '<' && (*command)[*i + 1] == '>') || \
-			((*command)[*i] == '>' && (*command)[*i + 1] == '<'))
-			return (ERROR);
-		*i += 1;
-	}
-	if ((*command)[*i + 1] != '\0' && (*command)[*i + 1] != ' ')
-	{
-		*command = ft_tmp(*command, \
-					add_char(*command, *i + 1, SPLIT_DELIMITER));
-		if (command == NULL)
-			return (ERROR);
-		*i += 1;
-	}
-	return (SUCCESS);
 }
 
 int	split_command(char **command)

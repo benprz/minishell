@@ -6,21 +6,11 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:22:24 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 07:21:20 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 10:13:51 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	goto_eof(t_command *command)
-{
-	char	buf[1024];
-	int		ret;
-
-	ret = read(command->fd_out, buf, 1024);
-	while (ret > 0)
-		ret = read(command->fd_out, buf, 1024);
-}
 
 int	open_redirection_file(t_command *command, char *arg, int type)
 {
@@ -65,4 +55,31 @@ int	add_delimiter_to_list(t_command *command, char **split_command)
 		return (SUCCESS);
 	}
 	return (ERROR);
+}
+
+int	add_delimiters_to_redirection(char **command, int *i)
+{
+	if (*i > 0 && (*command)[*i - 1] != SPLIT_DELIMITER)
+	{
+		*command = ft_tmp(*command, add_char(*command, *i, SPLIT_DELIMITER));
+		if (*command == NULL)
+			return (ERROR);
+		*i += 1;
+	}
+	if ((*command)[*i + 1] == '<' || (*command)[*i + 1] == '>')
+	{
+		if (((*command)[*i] == '<' && (*command)[*i + 1] == '>') || \
+			((*command)[*i] == '>' && (*command)[*i + 1] == '<'))
+			return (ERROR);
+		*i += 1;
+	}
+	if ((*command)[*i + 1] != '\0' && (*command)[*i + 1] != ' ')
+	{
+		*command = ft_tmp(*command, \
+					add_char(*command, *i + 1, SPLIT_DELIMITER));
+		if (command == NULL)
+			return (ERROR);
+		*i += 1;
+	}
+	return (SUCCESS);
 }
