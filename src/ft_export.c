@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:11:30 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/24 17:09:32 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 09:40:31 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ static void	change_env(t_shell *shell, int i)
 	int		j;
 
 	save_env = malloc(sizeof(char *) * (ft_tablen(shell->env) + 1));
+	if (!save_env)
+		return ;
 	j = 0;
 	while (shell->env[j])
 	{
@@ -55,6 +57,8 @@ static void	change_env(t_shell *shell, int i)
 	save_env[j] = NULL;
 	free_tab(shell->env);
 	shell->env = malloc(sizeof(char *) * (ft_tablen(save_env) + 2));
+	if (!save_env)
+		return ;
 	j = 0;
 	while (save_env[j])
 	{

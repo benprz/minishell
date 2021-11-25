@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 17:09:12 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/24 17:09:37 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 09:45:38 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,11 @@ void	send_env(t_shell *shell)
 	while (shell->env[++i])
 		size += ft_strlen(shell->env[i]) + 1;
 	chaine_env = malloc(sizeof(char) * (size + 1));
-	chaine_env = NULL;
-	i = -1;
+	if (!chaine_env)
+		return ;
+	i = 0;
+	chaine_env = ft_strdup(shell->env[i]);
+	chaine_env = ft_strjoin(chaine_env, "\n");
 	while (shell->env[++i])
 	{
 		chaine_env = ft_strjoin(chaine_env, shell->env[i]);

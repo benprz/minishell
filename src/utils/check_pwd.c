@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 12:37:38 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/23 13:26:38 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 09:39:25 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,21 @@ void	order_pwd(char **save_pwd, int check, int i)
 	k = 0;
 	new_size = ft_strlen(*save_pwd) - (check - i);
 	new_pwd = malloc(sizeof(char) * (new_size + 1));
-	while ((*save_pwd)[j])
+	if (new_pwd)
 	{
-		new_pwd[k] = (*save_pwd)[j];
-		j++;
-		k++;
-		if (j == i)
-			j = check;
+		while ((*save_pwd)[j])
+		{
+			new_pwd[k] = (*save_pwd)[j];
+			j++;
+			k++;
+			if (j == i)
+				j = check;
+		}
+		new_pwd[k] = '\0';
+		free(*save_pwd);
+		*save_pwd = ft_strdup(new_pwd);
+		free(new_pwd);
 	}
-	new_pwd[k] = '\0';
-	free(*save_pwd);
-	*save_pwd = ft_strdup(new_pwd);
-	free(new_pwd);
 }
 
 void	check_pwd(t_shell *shell)

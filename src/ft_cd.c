@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/24 17:05:50 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 09:43:46 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,16 @@ static char	*cd_back(t_shell *shell, char *pwd)
 		i--;
 	free(shell->command_list->argv[1]);
 	shell->command_list->argv[1] = malloc(sizeof(char) * (i + 1));
-	while (j < i)
+	if (shell->command_list->argv[1])
 	{
-		shell->command_list->argv[1][j] = pwd[j];
-		j++;
+		while (j < i)
+		{
+			shell->command_list->argv[1][j] = pwd[j];
+			j++;
+		}
+		shell->command_list->argv[1][j] = '\0';
+		pwd = ft_strdup(shell->command_list->argv[1]);
 	}
-	shell->command_list->argv[1][j] = '\0';
-	pwd = ft_strdup(shell->command_list->argv[1]);
 	return (pwd);
 }
 
