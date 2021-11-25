@@ -44,9 +44,9 @@ exit 0 test
 
 
 cat | echo bonjour
-<< EOF
-cd . -> $OLDPWD
-unset PATH
-export OLDPWD=/caca/bonjour
-unset OLDPWD=/caca/bonjour
-PWD=lalaq
+// << EOF
+// cd . -> $OLDPWD
+// unset PATH
+// export OLDPWD=/caca/bonjour
+// unset OLDPWD=/caca/bonjour
+// PWD=lalaq

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 15:52:50 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 18:09:14 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,20 @@ static char	*cd_back(t_shell *shell, char *pwd)
 
 static void	do_cd_one(t_shell *shell, char **split_path, char *pwd)
 {
+	int	i;
+
 	if (shell->command_list->argv[1][0] == '/')
 		return ;
 	else if (!ft_strcmp(split_path[0], ".."))
 		pwd = cd_back(shell, pwd);
+	else if (!ft_strcmp(split_path[0], "."))
+	{
+		i = get_current_env_int(shell, "OLDPWD");
+		free(shell->env[i]);
+		shell->env[i] = ft_strdup(pwd);
+		free(shell->command_list->argv[1]);
+		shell->command_list->argv[1] = ft_strdup(pwd);
+	}
 	else
 	{
 		pwd = ft_strjoin(pwd, "/");
