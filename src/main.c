@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 12:22:10 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 14:36:54 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,16 +73,29 @@ void	free_prompt(t_shell *shell, char *prompt)
 
 int	read_prompt(t_shell *shell, char *prompt)
 {
+	int		parse_ret;
+
 	prompt = ft_tmp(prompt, ft_strtrim(prompt));
 	if (prompt)
 	{
 		add_history(prompt);
-		if (parse_prompt(shell, prompt) == SUCCESS)
+		parse_ret = parse_prompt(shell, prompt);
+		if (parse_ret == SUCCESS)
 		{
 			if (init_pipe(shell) == ERROR)
 				ft_error("Error pipe creation", ERROR);
 			shell->command_list = goto_first_command(shell->command_list);
 			execute_command(shell);
+		}
+		else
+		{
+			if (shell->parsing_error == 0)
+			{
+				printf("Parsing failed, syntax error\n");
+				shell->last_exit_status = 258;
+			}
+			else
+				shell->last_exit_status = 1;
 		}
 		free_prompt(shell, prompt);
 	}

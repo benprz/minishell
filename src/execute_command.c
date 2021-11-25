@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 14:11:57 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 14:38:55 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,10 +134,7 @@ void	execute_command(t_shell *shell)
 		{
 			close_pipe_after_cmd(shell);
 			wait(&status);
-			write(0, "hi\n", 3);
-			printf("g CTRLC %d\n", status);
 			shell->last_exit_status = status / 256;
-			printf("status=%d\n", status);
 			waitpid(-1, &status, 0);
 				
 		}

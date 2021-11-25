@@ -6,7 +6,7 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:22:24 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 10:13:51 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 14:35:20 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ int	open_redirection_file(t_command *command, char *arg, int type)
 		command->fd_out = open(arg, O_CREAT | O_RDWR, S_IRWXU);
 	}
 	if (command->fd_in == -1)
+	{
+		command->shell->parsing_error = 1;
 		return (ft_error("Error no such file or directory", ERROR));
+	}
 	return (SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 13:10:55 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 14:20:48 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_shell
 	int			pipe_fd[3][2];
 	int			pipe_export[2];
 	int			pipe_fd_redi_din[2];
+	int			parsing_error;
 	int			last_exit_status;
 	int			last_errno;
 }				t_shell;
@@ -65,6 +66,7 @@ typedef struct s_shell
 # define REDIRECTION_DOUTPUT 4
 # define SPLIT_DELIMITER 1
 # define ERRNO_DEFAULT_VALUE 256
+# define FILE_NOT_FOUND 
 
 // ***** Variable global *****
 
