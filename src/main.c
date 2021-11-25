@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 09:54:16 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 09:59:42 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,4 +103,5 @@ int	main(int argc, char **argv, char **env)
 		else
 			read_prompt(&shell, prompt);
 	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:14:50 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 07:34:17 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 10:03:13 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 int	interpret_the_rest(t_command *cmd, char **split_cmd, int *i, int dq)
 {
 	if ((*split_cmd)[*i] == '$' && (*split_cmd)[*i + 1] == '?')
+	{
 		if (expand_exit_status_variable(cmd, split_cmd, *i) == ERROR)
 			return (ERROR);
+	}
 	else if ((*split_cmd)[*i] == '$' && ft_isalnum((*split_cmd)[*i + 1]))
 	{
 		if (expand_env_variable(cmd, split_cmd, *i + 1) == ERROR)
