@@ -6,7 +6,7 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 15:43:49 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 16:49:55 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ int	parse_prompt(t_shell *shell, char *prompt)
 			}
 			i++;
 		}
-		print_commands(shell);
+		//print_commands(shell);
 	}
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 14:43:00 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 16:49:22 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,19 @@ char	*remove_char(char *str, int i)
 	return (new_str);
 }
 
-int	interpret_quotes(char **split_command, int i, int *quote, int *dq)
+int	interpret_quotes(char **split_command, int *i, int *quote, int *dq)
 {
-	check_quotes((*split_command)[i], quote, dq);
-	if (((*split_command)[i] == '"' && *quote == 0) || \
-		((*split_command)[i] == '\'' && *dq == 0))
+	check_quotes((*split_command)[*i], quote, dq);
+	if (((*split_command)[*i] == '"' && *quote == 0) || \
+		((*split_command)[*i] == '\'' && *dq == 0))
 	{
-		*split_command = ft_tmp(*split_command, remove_char(*split_command, i));
+		*split_command = ft_tmp(*split_command, \
+							remove_char(*split_command, *i));
 		if (*split_command == NULL)
 			return (ERROR);
-	}	
+	}
+	else if (((*split_command)[*i] == '"' && *quote == 1) || \
+		((*split_command)[*i] == '\'' && *dq == 1))
+		*i += 1;
 	return (SUCCESS);
 }
