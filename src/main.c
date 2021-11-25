@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 10:27:55 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 10:30:09 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int	main(int argc, char **argv, char **env)
 	t_shell	shell;
 	char	*prompt;
 
+	exit(EXIT_FAILURE);
 	init_shell(&shell, env);
 	while (1)
 	{
