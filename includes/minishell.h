@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 17:22:15 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 17:22:45 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ int			ft_tablen(char **tab);
 char		*ft_strdup(char *src);
 void		ft_error_fork(t_shell *shell, char *str);
 void		free_tab(char **tab);
-int			ft_error(char *str, int	wich_one);
+int			ft_error(char *str, int wich_one);
 char		*ft_strtrim(const char *s1);
 char		*ft_strndup(const char *s1, size_t len);
 void		ft_free_2d(void **array, size_t size);
