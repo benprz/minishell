@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 12:24:48 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 14:44:58 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 17:09:40 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,18 @@ int	ft_echo(t_shell *shell)
 	i = 0;
 	check = 0;
 	do_redirection(shell);
+	if (!ft_strcmp(shell->command_list->argv[1], "-n"))
+	{
+		i++;
+		check++;
+	}
 	while (shell->command_list->argv[++i])
 	{
-		if (!ft_strcmp(shell->command_list->argv[i], "-n"))
-			check++;
-		else
-		{
-			if (shell->command_list->argv[i + 1]
-				&& ft_strcmp(shell->command_list->argv[i + 1], "-n"))
-				shell->command_list->argv[i]
-					= ft_strjoin(shell->command_list->argv[i], " ");
-			write(shell->pipe_fd[shell->index][1], shell->command_list->argv[i],
-				ft_strlen(shell->command_list->argv[i]));
-		}
+		if (shell->command_list->argv[i + 1])
+			shell->command_list->argv[i]
+				= ft_strjoin(shell->command_list->argv[i], " ");
+		write(shell->pipe_fd[shell->index][1], shell->command_list->argv[i],
+			ft_strlen(shell->command_list->argv[i]));
 	}
 	if (check == 0)
 		write(shell->pipe_fd[shell->index][1], "\n", 1);
