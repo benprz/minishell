@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/24 17:58:51 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 07:44:10 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,18 @@ void		exit_shell(void);
 
 // ***** Parsing *****
 int			parse_prompt(t_shell *shell, char *prompt);
+int			split_command(char **command);
+int			parse_argv(t_command *current_command, char **split_command);
+int			parse_redirection(t_command *command, char **split_command);
 t_command	*goto_first_command(t_command *current);
+void		check_quotes(char c, int *quote, int *double_quote);
+int			interpret_quotes(char **split_command, int i, int *quote, int *dq);
+int			expand_exit_status_variable(t_command *command, char **split_cmd, int i);
+int			expand_env_variable(t_command *command, char **split_command, int i);
+int			expand_tilde(t_command *command, char **split_cmd, int i);
+void		replace_split_spaces(char *command);
 int			check_commad_1(t_shell *shell);
 int			check_commad_2(t_shell *shell);
-char		*add_spaces_to_pipes(char *command);
 void		rm_quotes_on_cmd(t_shell *shell);
 
 // ***** Execution *****
