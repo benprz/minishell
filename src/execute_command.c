@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 13:39:29 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 14:11:57 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,8 @@ void	execute_command(t_shell *shell)
 	pid_t	pid;
 	int		status;
 
-	status = 0;
-	if (check_commad_1(shell) == ERROR)
+	status = check_commad_1(shell) * ERRNO_DEFAULT_VALUE;
+	if (status == ERROR * ERRNO_DEFAULT_VALUE)
 	{
 		if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
 			exec_cmd_for_rdi(shell);
@@ -138,8 +138,16 @@ void	execute_command(t_shell *shell)
 			printf("g CTRLC %d\n", status);
 			shell->last_exit_status = status / 256;
 			printf("status=%d\n", status);
+			waitpid(-1, &status, 0);
+				
 		}
 	}
+	if (status == EXIT_CMD * ERRNO_DEFAULT_VALUE)
+		status = ERRNO_DEFAULT_VALUE;
+	if (WIFSIGNALED(status) == 1)
+		shell->last_exit_status = status + 128;
+	else
+		shell->last_exit_status = status / ERRNO_DEFAULT_VALUE;
 	g_process_section = 0;
 	do_after_cmd(shell);
 }
