@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 10:53:50 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 12:17:51 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,5 @@ int	main(int argc, char **argv, char **env)
 			read_prompt(&shell, prompt);
 	}
 	printf("errno=%d exit=%d\n", errno, shell.last_exit_status);
-	return (errno + shell.last_exit_status);
+	return (shell.last_exit_status);
 }
