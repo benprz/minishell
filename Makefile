@@ -52,7 +52,8 @@ SRC =	main.c \
 		utils/check_pwd.c \
 		utils/change_env_cd.c \
 		utils/send_env_export.c \
-		utils/ft_itoa.c
+		utils/ft_itoa.c \
+		utils/ft_strchr.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)

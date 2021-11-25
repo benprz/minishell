@@ -23,3 +23,5 @@ $? (avec strerror et perror)
 // $variables crash
 // echo >< a c censer ft_error
 // < a < b cat
+
+cd minishell/src

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/24 17:02:19 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/24 18:45:13 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -365,7 +365,9 @@ int	parse_redirection(t_command *command, char **split_command)
 
 	ret = ERROR;
 	current_type = get_redirection_type(command, *split_command);
-	if (parse_redirection_argument(current_type, command, \
+	if (*(split_command + 1) && !ft_strchr(*(split_command + 1), '<') && \
+		!ft_strchr(*(split_command + 1), '>') && \
+		parse_redirection_argument(current_type, command, \
 		split_command + 1) == SUCCESS)
 	{
 		if (current_type == REDIRECTION_DINPUT)

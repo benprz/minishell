@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/24 17:23:14 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/24 17:58:51 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,5 +127,6 @@ void		check_pwd(t_shell *shell);
 int			change_env_cd(t_shell *shell);
 void		send_env(t_shell *shell);
 char		*ft_itoa(const int n);
+char		*ft_strchr(const char *s, const int c);
 
 #endif
