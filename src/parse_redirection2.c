@@ -6,7 +6,7 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:22:24 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 15:16:34 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 15:22:55 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,27 @@ int	add_delimiters_to_redirection(char **command, int *i)
 		*i += 1;
 	}
 	return (SUCCESS);
+}
+
+int	parse_delimiter(t_command *command, char **split_command)
+{
+	char	**delimiters;
+
+	if (command->delimiters)
+	{
+		if (add_delimiter_to_list(command, split_command) == SUCCESS)
+			return (SUCCESS);
+	}
+	else
+	{
+		delimiters = malloc(sizeof(char *) * 2);
+		if (delimiters)
+		{
+			delimiters[0] = *split_command;
+			delimiters[1] = NULL;
+			command->delimiters = delimiters;
+			return (SUCCESS);
+		}
+	}
+	return (ERROR);
 }

@@ -6,7 +6,7 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:19:57 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 15:03:56 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 15:22:55 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,29 +49,6 @@ void	free_redirection(int current_type, char **split_command)
 	}
 	split_command[i] = NULL;
 	split_command[i + 1] = NULL;
-}
-
-int	parse_delimiter(t_command *command, char **split_command)
-{
-	char	**delimiters;
-
-	if (command->delimiters)
-	{
-		if (add_delimiter_to_list(command, split_command) == SUCCESS)
-			return (SUCCESS);
-	}
-	else
-	{
-		delimiters = malloc(sizeof(char *) * 2);
-		if (delimiters)
-		{
-			delimiters[0] = *split_command;
-			delimiters[1] = NULL;
-			command->delimiters = delimiters;
-			return (SUCCESS);
-		}
-	}
-	return (ERROR);
 }
 
 int	parse_redirection_argument(int type, t_command *cmd, char **split_cmd)

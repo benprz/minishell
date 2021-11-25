@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 14:51:43 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 15:23:57 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ int			expand_env_variable(t_command *command,
 				char **split_command, int i);
 int			expand_tilde(t_command *command, char **split_cmd, int i);
 void		replace_split_spaces(char *command);
+int			parse_delimiter(t_command *command, char **split_command);
 int			add_delimiter_to_list(t_command *command, char **split_command);
 int			add_delimiters_to_redirection(char **command, int *i);
 int			open_redirection_file(t_command *command, char *arg, int type);
@@ -130,8 +131,8 @@ int			ft_strlen(const char *str);
 int			ft_tablen(char **tab);
 char		*ft_strdup(char *src);
 void		ft_error_fork(t_shell *shell, char *str);
-int			ft_error(char *str, int	wich_one);
 void		free_tab(char **tab);
+int			ft_error(char *str, int	wich_one);
 char		*ft_strtrim(const char *s1);
 char		*ft_strndup(const char *s1, size_t len);
 void		ft_free_2d(void **array, size_t size);
