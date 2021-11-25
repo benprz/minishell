@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 17:55:56 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 18:09:04 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ int	read_prompt(t_shell *shell, char *prompt)
 	if (prompt)
 	{
 		add_history(prompt);
+		shell->all_path = ft_tmp(shell->all_path, \
+							ft_split(get_current_env(shell, "PATH"), ':'));
 		parse_ret = parse_prompt(shell, prompt);
 		if (parse_ret == SUCCESS)
 		{

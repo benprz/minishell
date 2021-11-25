@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:51:17 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 14:44:32 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 18:07:10 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	init_shell(t_shell *shell, char **env)
 
 	init_signals();
 	ft_bzero(shell, sizeof(t_shell));
-	shell->all_path = ft_split(getenv("PATH"), ':');
 	shell->env = malloc(sizeof(char *) * (ft_tablen(env) + 1));
 	if (!shell->env)
 		return ;

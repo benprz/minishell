@@ -6,7 +6,7 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 16:49:55 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 18:19:08 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ char	*get_program_path(t_shell *shell, t_command *command)
 		free(path);
 		i++;
 	}
+	shell->parsing_error = 1;
 	return (NULL);
 }
 
@@ -52,6 +53,8 @@ int	is_program_builtin(char *program)
 	if (!ft_strcmp(program, "pwd"))
 		return (1);
 	if (!ft_strcmp(program, "env"))
+		return (1);
+	if (!ft_strcmp(program, "exit"))
 		return (1);
 	return (0);
 }
@@ -74,6 +77,8 @@ int	parse_command(t_shell *shell, t_command *current_command, char **command)
 				{
 					current_command->program_path = get_program_path(shell, \
 													current_command);
+					if (current_command->program_path == NULL)
+						return (ft_error("No such file or directory", ERROR));
 				}
 				return (SUCCESS);
 			}
