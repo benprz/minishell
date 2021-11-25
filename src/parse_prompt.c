@@ -6,7 +6,7 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 09:56:03 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 10:27:55 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,24 +112,21 @@ int	parse_prompt(t_shell *shell, char *prompt)
 	int	dq;
 	int	prompt_length;
 
-	if (prompt)
+	i = 0;
+	q = 0;
+	dq = 0;
+	prompt_length = ft_strlen(prompt);
+	while (prompt_length-- >= 0)
 	{
-		i = 0;
-		q = 0;
-		dq = 0;
-		prompt_length = ft_strlen(prompt);
-		while (prompt_length-- >= 0)
+		check_quotes(prompt[i], &q, &dq);
+		if (prompt[i] == '\0' || (prompt[i] == '|' && q == 0 && dq == 0))
 		{
-			check_quotes(prompt[i], &q, &dq);
-			if (prompt[i] == '\0' || (prompt[i] == '|' && q == 0 && dq == 0))
-			{
-				if (add_command(shell, ft_substr(prompt, 0, i)) == ERROR)
-					return (ERROR);
-				prompt += i + 1;
-				i = -1;
-			}
-			i++;
+			if (add_command(shell, ft_substr(prompt, 0, i)) == ERROR)
+				return (ERROR);
+			prompt += i + 1;
+			i = -1;
 		}
+		i++;
 	}
 	return (SUCCESS);
 }

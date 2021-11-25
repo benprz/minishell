@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 10:14:11 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 10:27:55 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,9 @@ void	free_prompt(t_shell *shell, char *prompt)
 
 int	read_prompt(t_shell *shell, char *prompt)
 {
+	int	ret;
+
+	ret = 0;
 	prompt = ft_tmp(prompt, ft_strtrim(prompt));
 	if (prompt)
 	{
@@ -83,6 +86,11 @@ int	read_prompt(t_shell *shell, char *prompt)
 				ft_error("Error pipe creation", ERROR);
 			shell->command_list = goto_first_command(shell->command_list);
 			execute_command(shell);
+		}
+		else
+		{
+			printf("Syntax error\n");
+			ret = 258;
 		}
 		free_prompt(shell, prompt);
 	}
