@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 10:53:50 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 11:35:02 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,9 @@ int	read_prompt(t_shell *shell, char *prompt)
 			shell->command_list = goto_first_command(shell->command_list);
 			execute_command(shell);
 		}
-		printf("exit=%d\n", shell->last_exit_status);
+		//printf("exit=%d errno=%d shellerrno=%d\n", shell->last_exit_status, errno, shell->last_errno);
 		free_prompt(shell, prompt);
-	}	
+	}
 	return (0);	
 }
 
@@ -107,6 +107,6 @@ int	main(int argc, char **argv, char **env)
 		else
 			read_prompt(&shell, prompt);
 	}
-	printf("errno=%d exit=%d\n", errno, shell.last_exit_status);
-	return (errno + shell.last_exit_status);
+	//printf("exit=%d errno=%d shellerno=%d\n", shell.last_exit_status, errno, shell.last_errno);
+	return (shell.last_exit_status);
 }

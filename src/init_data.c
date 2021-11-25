@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:51:17 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 09:41:51 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 12:02:05 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	handle_signals(int signo)
 		else if (g_process_section == 1)
 			g_process_section = 0;
 		else if (g_process_section == 2)
-			exit(EXIT_FAILURE);
+			exit(130);
 	}
 }
 

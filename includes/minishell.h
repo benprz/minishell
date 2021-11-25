@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 10:49:59 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 11:03:20 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_shell
 	int			pipe_export[2];
 	int			pipe_fd_redi_din[2];
 	int			last_exit_status;
-	int			exit;
+	int			last_errno;
 }				t_shell;
 
 # define SUCCESS 0
