@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/24 17:02:19 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 08:56:34 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -669,5 +669,8 @@ int	parse_prompt(t_shell *shell, char *prompt)
 		}
 		//print_commands(shell);
 	}
+	if (init_pipe(shell) == ERROR)
+		ft_error("Error pipe creation", ERROR);
+	shell->command_list = goto_first_command(shell->command_list);
 	return (SUCCESS);
 }

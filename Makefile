@@ -28,6 +28,7 @@ SRC =	main.c \
 		ft_unset.c \
 		ft_pwd.c \
 		ft_env.c \
+		ft_exit.c \
 		utils/ft_split.c \
 		utils/ft_strcmp.c \
 		utils/ft_strjoin.c \
@@ -53,6 +54,7 @@ SRC =	main.c \
 		utils/change_env_cd.c \
 		utils/send_env_export.c \
 		utils/ft_itoa.c \
+		utils/ft_atoi.c \
 		utils/do_redirection_in.c \
 		utils/do_redirection_out.c
 

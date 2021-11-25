@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/24 14:45:19 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 09:05:52 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@
 // tgoto, tputs
 
 #include "minishell.h"
-
-#include <stdio.h>
 
 void	exit_shell(void)
 {
@@ -83,20 +81,18 @@ int	main(int argc, char **argv, char **env)
 	{
 		printf("process_section=%d\n", g_process_section);
 		prompt = readline("minishell> ");
-		if (prompt == NULL || !ft_strcmp(prompt, "exit"))
+		if (prompt == NULL)
 			exit_shell();
-		prompt = ft_tmp(prompt, ft_strtrim(prompt));
-		if (prompt)
+		else
 		{
-			add_history(prompt);
-			if (parse_prompt(&shell, prompt) == SUCCESS)
+			prompt = ft_tmp(prompt, ft_strtrim(prompt));
+			if (prompt)
 			{
-				if (init_pipe(&shell) == ERROR)
-					perror("Error pipe creation");
-				shell.command_list = goto_first_command(shell.command_list);
-				execute_command(&shell);
+				add_history(prompt);
+				if (parse_prompt(&shell, prompt) == SUCCESS)
+					execute_command(&shell);
+				free_prompt(&shell, prompt);
 			}
-			free_prompt(&shell, prompt);
 		}
 	}
 }

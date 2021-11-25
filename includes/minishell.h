@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/24 17:43:08 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 09:06:22 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int			ft_cd(t_shell *shell);
 int			ft_env(t_shell *shell);
 int			ft_export(t_shell *shell);
 int			ft_unset(t_shell *shell);
+int			ft_exit(t_shell *shell);
 char		*ft_get_path(t_shell *shell);
 char		**ft_get_arg(t_shell *shell);
 char		*get_pwd(t_shell *shell);
@@ -127,6 +128,7 @@ void		check_pwd(t_shell *shell);
 int			change_env_cd(t_shell *shell);
 void		send_env(t_shell *shell);
 char		*ft_itoa(const int n);
+int			ft_atoi(const char *str);
 void		do_redirection_in(t_shell *shell);
 void		do_redirection_out(t_shell *shell);
 
