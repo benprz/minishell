@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:03:31 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 09:13:11 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 17:02:52 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_exit(t_shell *shell)
 	else
 	{
 		write(1, "exit\n", 6);
-		exit(EXIT_SUCCESS);
+		exit(shell->last_exit_status);
 	}
 	return (SUCCESS);
 }
