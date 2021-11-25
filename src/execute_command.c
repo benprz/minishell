@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 12:19:36 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 12:27:55 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,12 +129,18 @@ void	execute_command(t_shell *shell)
 		if (pid == -1)
 			ft_error_fork(shell, "Error fork() execute_command");
 		else if (pid == 0)
-			do_redirection_in(shell);
+		{
+			g_process_section = 2;
+			while (1){}
+		//	do_redirection_in(shell);
+		}
 		else
 		{
 			close_pipe_after_cmd(shell);
 			wait(&status);
-			shell->last_exit_status = status/256;
+			printf("g CTRLC %d\n", status);
+			shell->last_exit_status = status / 256;
+			printf("%d\n", status);
 		}
 	}
 	g_process_section = 0;
