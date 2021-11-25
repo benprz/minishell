@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 15:23:57 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 16:29:55 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ int			ft_echo(t_shell *shell);
 int			ft_cd(t_shell *shell);
 int			ft_env(t_shell *shell);
 int			ft_export(t_shell *shell);
+int			check_add(t_shell *shell, char **tab);
 int			ft_unset(t_shell *shell);
 int			ft_exit(t_shell *shell);
 char		*ft_get_path(t_shell *shell);
@@ -151,5 +152,6 @@ int			ft_atoi(const char *str);
 void		do_redirection_in(t_shell *shell);
 void		do_redirection_out(t_shell *shell);
 char		*ft_strchr(const char *s, const int c);
+void		*ft_strccpy(char *dst, const char *src, const char c);
 
 #endif

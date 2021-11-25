@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:11:30 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 12:04:54 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 17:06:35 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,23 @@ static int	check_already_here(t_shell *shell, char *value)
 	char	**tab;
 
 	tab = ft_split(value, '=');
+	if (check_add(shell, (&tab)[0]) == SUCCESS)
+		return (SUCCESS);
 	i = get_current_env_int(shell, tab[0]);
 	free_tab(tab);
 	if (i == -1)
 		return (ERROR);
-	else
+	j = -1;
+	check = 0;
+	while (value[++j])
+		if (value[j] == '=')
+			check++;
+	if (check)
 	{
-		j = -1;
-		check = 0;
-		while (value[++j])
-			if (value[j] == '=')
-				check++;
-		if (check)
-		{
-			free(shell->env[i]);
-			shell->env[i] = ft_strdup(value);
-		}
-		return (SUCCESS);
+		free(shell->env[i]);
+		shell->env[i] = ft_strdup(value);
 	}
+	return (SUCCESS);
 }
 
 static void	change_env(t_shell *shell, int i)
@@ -74,7 +73,8 @@ static int	check_value(char *value)
 	i = 0;
 	while (value[i])
 	{
-		if (!ft_isalnum(value[i]) && value[i] != '_' && value[i] != '=')
+		if (!ft_isalnum(value[i]) && value[i] != '_' && value[i] != '='
+			&& value[i] != '+')
 			return (0);
 		i++;
 	}
