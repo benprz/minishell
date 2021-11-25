@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:19:57 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 15:28:21 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 16:47:22 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	parse_redirection_argument(int type, t_command *cmd, char **split_cmd)
 		double_quote = 0;
 		while (*split_cmd && i < ft_strlen(*split_cmd))
 		{
-			if (interpret_quotes(split_cmd, i, &quote, &double_quote))
+			if (interpret_quotes(split_cmd, &i, &quote, &double_quote))
 				return (ERROR);
 			if (type != REDIRECTION_DINPUT && quote == 0 && \
 				(*split_cmd)[i] == '$' && ft_isalnum((*split_cmd)[i + 1]))

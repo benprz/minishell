@@ -6,7 +6,7 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:14:50 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 10:22:50 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 16:48:49 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	parse_argv(t_command *current_command, char **split_command)
 		i = 0;
 		while (*split_command && (*split_command)[i])
 		{
-			if (interpret_quotes(split_command, i, &quote, &double_quote))
+			if (interpret_quotes(split_command, &i, &quote, &double_quote))
 				return (ERROR);
 			if ((*split_command)[i] && (*split_command)[i] != '"' && \
 				(*split_command)[i] != '\'')
