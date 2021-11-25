@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redirection2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:22:24 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 15:22:55 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 15:28:13 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ int	open_redirection_file(t_command *command, char *arg, int type)
 
 	if (type == REDIRECTION_INPUT)
 		command->fd_in = open(arg, O_RDWR);
-	else if (command->redirection_out == REDIRECTION_DOUTPUT)
-		command->fd_out = open(arg, O_CREAT | O_RDWR, S_IRWXU);
-	else if (command->redirection_out == REDIRECTION_OUTPUT)
+	else if (type == REDIRECTION_DOUTPUT)
+		command->fd_out = open(arg, O_CREAT | O_RDWR | O_APPEND, S_IRWXU);
+	else if (type == REDIRECTION_OUTPUT)
 	{
 		stat(arg, &sct_stat);
 		if (sct_stat.st_atime != 0)
