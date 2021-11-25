@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 09:57:47 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 09:59:35 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,10 @@ int			parse_redirection(t_command *command, char **split_command);
 t_command	*goto_first_command(t_command *current);
 void		check_quotes(char c, int *quote, int *double_quote);
 int			interpret_quotes(char **split_command, int i, int *quote, int *dq);
-int			expand_exit_status_variable(t_command *command, char **split_cmd, int i);
-int			expand_env_variable(t_command *command, char **split_command, int i);
+int			expand_exit_status_variable(t_command *command,
+				char **split_cmd, int i);
+int			expand_env_variable(t_command *command,
+				char **split_command, int i);
 int			expand_tilde(t_command *command, char **split_cmd, int i);
 void		replace_split_spaces(char *command);
 int			check_commad_1(t_shell *shell);

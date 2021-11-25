@@ -6,11 +6,21 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:12:00 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 09:41:32 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 10:03:52 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	set_new_env(t_shell *shell, char **new_env)
+{
+	int	i;
+
+	i = -1;
+	while (new_env[++i])
+		shell->env[i] = new_env[i];
+	shell->env[i] = NULL;
+}
 
 static void	remove_line_in_env(t_shell *shell, int index)
 {
@@ -19,28 +29,24 @@ static void	remove_line_in_env(t_shell *shell, int index)
 	char	**new_env;
 
 	i = 0;
-	j = 0;
+	j = -1;
 	new_env = malloc(sizeof(char *) * (ft_tablen(shell->env)));
 	if (!new_env)
 		return ;
-	while (shell->env[j])
+	while (shell->env[++j])
 	{
 		if (j != index)
 		{
 			new_env[i] = ft_strdup(shell->env[j]);
 			i++;
 		}
-		j++;
 	}
 	new_env[i] = NULL;
 	free(shell->env);
 	shell->env = malloc(sizeof(char *) * (ft_tablen(new_env) + 1));
 	if (!shell->env)
 		return ;
-	i = -1;
-	while (new_env[++i])
-		shell->env[i] = new_env[i];
-	shell->env[i] = NULL;
+	set_new_env(shell, new_env);
 	free(new_env);
 }
 
