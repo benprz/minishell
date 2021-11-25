@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 09:43:46 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 10:26:39 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void	do_cd_else(t_shell *shell, char **split_path, char *pwd)
 		pwd = cd_back(shell, pwd);
 		i++;
 	}
-	if (split_path[i] && i != 0)
+	if (split_path[i] && i == 0 && shell->command_list->argv[1][0] != '/')
 	{
 		free(shell->command_list->argv[1]);
 		pwd = ft_strjoin(pwd, "/");
