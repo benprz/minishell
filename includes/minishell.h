@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 11:03:20 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 13:10:55 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_shell
 # define REDIRECTION_DINPUT 3
 # define REDIRECTION_DOUTPUT 4
 # define SPLIT_DELIMITER 1
+# define ERRNO_DEFAULT_VALUE 256
 
 // ***** Variable global *****
 

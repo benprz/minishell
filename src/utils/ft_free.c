@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 14:11:14 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 12:20:37 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 12:59:07 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,14 @@ void	ft_error_fork(t_shell *shell, char *str)
 		exit(126);
 	if (errno == 14)
 		exit(127);
+	printf("errno=%d\n", errno);
 	exit(128 + errno);
 }
 
 int	ft_error(char *str, int wich_one)
 {
 	perror(str);
+	printf("errno=%d\n", errno);
 	return (wich_one);
 }
 
