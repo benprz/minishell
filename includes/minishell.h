@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 16:07:27 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 14:20:48 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 14:51:43 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void		rm_quotes_on_cmd(t_shell *shell);
 
 // ***** Execution *****
 void		execute_command(t_shell *shell);
+void		do_after_cmd(t_shell *shell);
 void		exec_cmd_for_rdi(t_shell *shell);
 void		free_prompt(t_shell *shell, char *prompt);
 void		close_pipe_rdi(t_shell *shell);

@@ -25,6 +25,7 @@ SRC =	main.c \
 		expand_variables.c \
 		utils.c \
 		execute_command.c \
+		execute_command_2.c \
 		exec_cmd_for_rdi.c \
 		ft_parse.c \
 		ft_echo.c \

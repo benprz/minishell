@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 12:24:48 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 12:05:31 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 14:44:58 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ int	ft_echo(t_shell *shell)
 	int	i;
 	int	check;
 
-	i = 1;
+	i = 0;
 	check = 0;
 	do_redirection(shell);
-	while (shell->command_list->argv[i])
+	while (shell->command_list->argv[++i])
 	{
 		if (!ft_strcmp(shell->command_list->argv[i], "-n"))
 			check++;
@@ -52,7 +52,6 @@ int	ft_echo(t_shell *shell)
 			write(shell->pipe_fd[shell->index][1], shell->command_list->argv[i],
 				ft_strlen(shell->command_list->argv[i]));
 		}
-		i++;
 	}
 	if (check == 0)
 		write(shell->pipe_fd[shell->index][1], "\n", 1);

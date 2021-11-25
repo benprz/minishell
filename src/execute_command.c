@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 14:38:55 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 14:58:50 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,41 +61,6 @@ static void	get_env_export(t_shell *shell)
 	shell->env = ft_split(str, '\n');
 }
 
-static void	do_after_cmd(t_shell *shell)
-{
-	care_pipe(shell);
-	if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
-		close_pipe_rdi(shell);
-	if (!ft_strcmp(shell->command_list->argv[0], "export"))
-		get_env_export(shell);
-	if (shell->command_list->next)
-	{
-		shell->command_list = shell->command_list->next;
-		if (!shell->command_list->next)
-		{
-			if (shell->index == 2)
-			{
-				if (shell->pipe_fd[0][0])
-					close(shell->pipe_fd[0][0]);
-				if (shell->pipe_fd[0][1])
-					close(shell->pipe_fd[0][1]);
-			}
-			else
-			{
-				if (shell->pipe_fd[shell->index + 1][0])
-					close(shell->pipe_fd[shell->index + 1][0]);
-				if (shell->pipe_fd[shell->index + 1][1])
-					close(shell->pipe_fd[shell->index + 1][1]);
-			}
-			if (shell->pipe_fd[shell->index][0])
-				close(shell->pipe_fd[shell->index][0]);
-			if (shell->pipe_fd[shell->index][1])
-				close(shell->pipe_fd[shell->index][1]);
-		}
-		execute_command(shell);
-	}
-}
-
 static void	close_pipe_after_cmd(t_shell *shell)
 {
 	if (shell->index == 0)
@@ -112,6 +77,21 @@ static void	close_pipe_after_cmd(t_shell *shell)
 		if (shell->pipe_fd[shell->index - 1][1])
 			close(shell->pipe_fd[shell->index - 1][1]);
 	}
+}
+
+static void	check_exit_siganls(t_shell *shell, int status)
+{
+	if (status == EXIT_CMD * ERRNO_DEFAULT_VALUE)
+		status = ERRNO_DEFAULT_VALUE;
+	if (WIFSIGNALED(status) == 1)
+		shell->last_exit_status = status + 128;
+	else
+		shell->last_exit_status = status / ERRNO_DEFAULT_VALUE;
+	check_exit_siganls(shell, status);
+	g_process_section = 0;
+	care_pipe(shell);
+	if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
+		close_pipe_rdi(shell);
 }
 
 void	execute_command(t_shell *shell)
@@ -133,18 +113,11 @@ void	execute_command(t_shell *shell)
 		else
 		{
 			close_pipe_after_cmd(shell);
-			wait(&status);
-			shell->last_exit_status = status / 256;
 			waitpid(-1, &status, 0);
-				
+			shell->last_exit_status = status / 256;
 		}
 	}
-	if (status == EXIT_CMD * ERRNO_DEFAULT_VALUE)
-		status = ERRNO_DEFAULT_VALUE;
-	if (WIFSIGNALED(status) == 1)
-		shell->last_exit_status = status + 128;
-	else
-		shell->last_exit_status = status / ERRNO_DEFAULT_VALUE;
-	g_process_section = 0;
+	if (!ft_strcmp(shell->command_list->argv[0], "export"))
+		get_env_export(shell);
 	do_after_cmd(shell);
 }
