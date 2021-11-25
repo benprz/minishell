@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 17:42:29 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/24 17:47:39 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 12:06:09 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	do_redirection_out(t_shell *shell)
 {
-	close(shell->pipe_fd[shell->index][0]);
+	if (shell->pipe_fd[shell->index][0])
+		close(shell->pipe_fd[shell->index][0]);
 	if (shell->command_list->redirection_out == REDIRECTION_OUTPUT
 		|| shell->command_list->redirection_out == REDIRECTION_DOUTPUT)
 	{

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:20:40 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/22 12:32:31 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 12:00:31 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,12 @@ static void	get_std_in(t_shell *shell)
 		}
 		i++;
 	}
-	close(shell->pipe_fd_redi_din[0]);
+	if (shell->pipe_fd_redi_din[0])
+		close(shell->pipe_fd_redi_din[0]);
 	if (str)
 		write(shell->pipe_fd_redi_din[1], str, ft_strlen(str));
-	close(shell->pipe_fd_redi_din[1]);
+	if (shell->pipe_fd_redi_din[1])
+		close(shell->pipe_fd_redi_din[1]);
 	free(str);
 	exit(EXIT_SUCCESS);
 }
@@ -71,13 +73,16 @@ void	exec_cmd_for_rdi(t_shell *shell)
 	else
 	{
 		wait(&status);
-		close(shell->pipe_fd_redi_din[1]);
+		if (shell->pipe_fd_redi_din[1])
+			close(shell->pipe_fd_redi_din[1]);
 	}
 	printf("execcommand rdi wait()=%d\n", status);
 }
 
 void	close_pipe_rdi(t_shell *shell)
 {
-	close(shell->pipe_fd_redi_din[0]);
-	close(shell->pipe_fd_redi_din[1]);
+	if (shell->pipe_fd_redi_din[0])
+		close(shell->pipe_fd_redi_din[0]);
+	if (shell->pipe_fd_redi_din[1])
+		close(shell->pipe_fd_redi_din[1]);
 }

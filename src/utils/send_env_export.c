@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 17:09:12 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 09:45:38 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 12:06:35 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ void	send_env(t_shell *shell)
 		chaine_env = ft_strjoin(chaine_env, "\n");
 	}
 	chaine_env[size] = '\0';
-	close(shell->pipe_export[0]);
+	if (shell->pipe_export[0])
+		close(shell->pipe_export[0]);
 	write(shell->pipe_export[1], chaine_env, size);
-	close(shell->pipe_export[1]);
+	if (shell->pipe_export[1])
+		close(shell->pipe_export[1]);
 }
