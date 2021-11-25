@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 10:27:29 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 10:53:50 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,10 @@ int	read_prompt(t_shell *shell, char *prompt)
 			shell->command_list = goto_first_command(shell->command_list);
 			execute_command(shell);
 		}
+		printf("exit=%d\n", shell->last_exit_status);
 		free_prompt(shell, prompt);
-	}
-	return (0);
+	}	
+	return (0);	
 }
 
 int	main(int argc, char **argv, char **env)
@@ -99,9 +100,13 @@ int	main(int argc, char **argv, char **env)
 	{
 		prompt = readline("minishell> ");
 		if (prompt == NULL)
-			exit_shell();
+		{
+			write(1, "exit\n", 6);
+			break ;
+		}
 		else
 			read_prompt(&shell, prompt);
 	}
-	return (0);
+	printf("errno=%d exit=%d\n", errno, shell.last_exit_status);
+	return (errno + shell.last_exit_status);
 }

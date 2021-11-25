@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 14:11:14 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 07:22:53 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 10:32:34 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	ft_error_fork(t_shell *shell, char *str)
 {
 	perror(str);
-	shell->last_exit_status = 1;
 	exit(EXIT_FAILURE);
 }
 

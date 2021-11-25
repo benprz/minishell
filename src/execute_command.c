@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/24 17:47:23 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 10:34:46 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ void	execute_command(t_shell *shell)
 		{
 			close_pipe_after_cmd(shell);
 			wait(&status);
+			shell->last_exit_status = status;
 		}
 	}
 	g_process_section = 0;
