@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 09:05:52 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 09:54:16 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,24 @@ void	free_prompt(t_shell *shell, char *prompt)
 	close_pipe(shell);
 }
 
+int	read_prompt(t_shell *shell, char *prompt)
+{
+	prompt = ft_tmp(prompt, ft_strtrim(prompt));
+	if (prompt)
+	{
+		add_history(prompt);
+		if (parse_prompt(shell, prompt) == SUCCESS)
+		{
+			if (init_pipe(shell) == ERROR)
+				ft_error("Error pipe creation", ERROR);
+			shell->command_list = goto_first_command(shell->command_list);
+			execute_command(shell);
+		}
+		free_prompt(shell, prompt);
+	}
+	
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_shell	shell;
@@ -79,20 +97,10 @@ int	main(int argc, char **argv, char **env)
 	init_shell(&shell, env);
 	while (1)
 	{
-		printf("process_section=%d\n", g_process_section);
 		prompt = readline("minishell> ");
 		if (prompt == NULL)
 			exit_shell();
 		else
-		{
-			prompt = ft_tmp(prompt, ft_strtrim(prompt));
-			if (prompt)
-			{
-				add_history(prompt);
-				if (parse_prompt(&shell, prompt) == SUCCESS)
-					execute_command(&shell);
-				free_prompt(&shell, prompt);
-			}
-		}
+			read_prompt(&shell, prompt);
 	}
 }
