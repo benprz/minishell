@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 17:59:52 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 18:21:16 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,10 @@ void	execute_command(t_shell *shell)
 		else
 		{
 			close_pipe_after_cmd(shell);
-			waitpid(-1, &status, 0);
+			if (shell->command_list->next)
+				waitpid(-1, &status, 0);
+			else
+				waitpid(-1, &status, WNOHANG);
 			shell->last_exit_status = status / 256;
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:11:30 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 17:06:35 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 18:11:11 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,9 @@ static int	check_value(char *value)
 	int	i;
 
 	i = 0;
-	while (value[i])
+	while (value[i] && value[i] != '=')
 	{
-		if (!ft_isalnum(value[i]) && value[i] != '_' && value[i] != '='
-			&& value[i] != '+')
+		if (!ft_isalnum(value[i]) && value[i] != '_' && value[i] != '+')
 			return (0);
 		i++;
 	}
