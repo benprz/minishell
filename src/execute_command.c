@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 17:02:13 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 17:59:52 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,8 @@ void	execute_command(t_shell *shell)
 		}
 	}
 	check_exit_siganls(shell, status);
-	if (!ft_strcmp(shell->command_list->argv[0], "export"))
-		get_env_export(shell);
+	if (shell->command_list->argv[0])
+		if (!ft_strcmp(shell->command_list->argv[0], "export"))
+			get_env_export(shell);
 	do_after_cmd(shell);
 }

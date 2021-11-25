@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:20:40 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 14:49:21 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 18:00:40 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ void	exec_cmd_for_rdi(t_shell *shell)
 		if (shell->pipe_fd_redi_din[1])
 			close(shell->pipe_fd_redi_din[1]);
 	}
-	printf("execcommand rdi wait()=%d\n", status);
 }
 
 void	close_pipe_rdi(t_shell *shell)
