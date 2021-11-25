@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 12:24:48 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 17:09:40 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 19:06:28 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,13 @@ int	ft_echo(t_shell *shell)
 	i = 0;
 	check = 0;
 	do_redirection(shell);
-	if (!ft_strcmp(shell->command_list->argv[1], "-n"))
+	if (shell->command_list->argv[1])
 	{
-		i++;
-		check++;
+		if (!ft_strcmp(shell->command_list->argv[1], "-n"))
+		{
+			i++;
+			check++;
+		}
 	}
 	while (shell->command_list->argv[++i])
 	{

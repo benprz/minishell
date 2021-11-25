@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 18:42:27 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 19:32:59 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,9 @@ void	execute_command(t_shell *shell)
 	status = check_commad_1(shell) * ERRNO_DEFAULT_VALUE;
 	if (status == ERROR * ERRNO_DEFAULT_VALUE)
 	{
+		g_process_section = 1;
 		if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
 			exec_cmd_for_rdi(shell);
-		g_process_section = 1;
 		pid = fork();
 		if (pid == -1)
 			ft_error_fork(shell, "Error fork() execute_command");
