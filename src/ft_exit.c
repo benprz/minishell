@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:03:31 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 09:08:28 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 09:13:11 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,20 @@ int	ft_exit(t_shell *shell)
 		{
 			write(1, "exit\n", 6);
 			printf("bash : exit: numeric argument required\n");
-			exit(EXIT_FAILURE);
+			exit(255);
 		}
 		else if (ft_tablen(shell->command_list->argv) > 2)
 			printf("bash : exit: too many arguments\n");
 		else
 		{
 			write(1, "exit\n", 6);
-			exit(EXIT_FAILURE);
+			exit(nbr_exit);
 		}
 	}
 	else
 	{
 		write(1, "exit\n", 6);
-		exit(EXIT_FAILURE);
+		exit(EXIT_SUCCESS);
 	}
 	return (SUCCESS);
 }
