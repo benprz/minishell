@@ -6,7 +6,7 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 09:56:03 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 15:14:12 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ char	*get_program_path(t_shell *shell, t_command *command)
 
 int	is_program_builtin(char *program)
 {
+	if (!program)
+		return (1);
 	if (!ft_strcmp(program, "cd"))
 		return (1);
 	if (!ft_strcmp(program, "export"))

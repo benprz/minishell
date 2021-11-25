@@ -6,7 +6,7 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:19:57 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 15:00:24 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 15:03:56 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,20 @@ int	parse_redirection_argument(int type, t_command *cmd, char **split_cmd)
 	return (ERROR);
 }
 
+int	are_there_redirections_in_argument(char *arg)
+{
+	int	i;
+
+	i = 0;
+	while (arg[i])
+	{
+		if (arg[i] == '>' || arg[i] == '<')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 int	parse_redirection(t_command *command, char **split_command)
 {
 	int		current_type;
@@ -111,8 +125,7 @@ int	parse_redirection(t_command *command, char **split_command)
 	ret = ERROR;
 	current_type = get_redirection_type(command, *split_command);
 	if (*(split_command + 1) && \
-		!ft_strchr(*(split_command + 1), '<') &&\
-		!ft_strchr(*(split_command + 1), '>') &&\
+		!are_there_redirections_in_argument(*(split_command + 1)) && \
 		parse_redirection_argument(current_type, command, \
 		split_command + 1) == SUCCESS)
 	{
