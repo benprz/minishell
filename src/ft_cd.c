@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 10:26:39 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 15:52:50 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,13 @@ int	check_dir_base(t_shell *shell)
 
 	check = 0;
 	i = 0;
+	if (shell->command_list->argv[1] == NULL
+		|| ft_strlen(shell->command_list->argv[1]) == 0)
+	{
+		if (shell->command_list->argv[1])
+			free(shell->command_list->argv[1]);
+		shell->command_list->argv[1] = ft_strdup("/Users/ngeschwi");
+	}
 	while (shell->command_list->argv[1][i])
 	{
 		if (shell->command_list->argv[1][i] != '/')
@@ -107,8 +114,6 @@ int	ft_cd(t_shell *shell)
 
 	if (shell->command_list->next)
 		return (EXIT_CMD);
-	if (shell->command_list->argv[1] == NULL)
-		shell->command_list->argv[1] = ft_strdup("/Users/ngeschwi");
 	if (check_dir_base(shell) == SUCCESS)
 		return (EXIT_CMD);
 	split_path = ft_split(shell->command_list->argv[1], '/');

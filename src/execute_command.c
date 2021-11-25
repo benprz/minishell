@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 14:58:50 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 16:07:38 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ static void	check_exit_siganls(t_shell *shell, int status)
 		shell->last_exit_status = status + 128;
 	else
 		shell->last_exit_status = status / ERRNO_DEFAULT_VALUE;
-	check_exit_siganls(shell, status);
 	g_process_section = 0;
 	care_pipe(shell);
 	if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
@@ -117,6 +116,7 @@ void	execute_command(t_shell *shell)
 			shell->last_exit_status = status / 256;
 		}
 	}
+	check_exit_siganls(shell, status);
 	if (!ft_strcmp(shell->command_list->argv[0], "export"))
 		get_env_export(shell);
 	do_after_cmd(shell);
