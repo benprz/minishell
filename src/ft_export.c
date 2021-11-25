@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:11:30 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 10:00:33 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/25 12:04:54 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,14 +85,16 @@ static void	do_redirection(t_shell *shell)
 {
 	if (shell->command_list->redirection_out == 2)
 	{
-		close(shell->pipe_fd[shell->index][0]);
+		if (shell->pipe_fd[shell->index][0])
+			close(shell->pipe_fd[shell->index][0]);
 		if (dup2(shell->command_list->fd_out,
 				shell->pipe_fd[shell->index][1]) == -1)
 			ft_error_fork(shell, "Error, dup2");
 	}
 	else if (!shell->command_list->next)
 	{
-		close(shell->pipe_fd[shell->index][0]);
+		if (shell->pipe_fd[shell->index][0])
+			close(shell->pipe_fd[shell->index][0]);
 		if (dup2(1, shell->pipe_fd[shell->index][1]) == -1)
 			ft_error_fork(shell, "Error dup2 cmd");
 	}

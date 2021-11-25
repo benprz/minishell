@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 17:39:09 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 12:00:03 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 12:08:42 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,13 @@ void	do_redirection_in(t_shell *shell)
 {
 	g_process_section = 2;
 	if (shell->index == 0)
-		close(shell->pipe_fd[2][1]);
+	{
+		if (shell->pipe_fd[2][1])
+			close(shell->pipe_fd[2][1]);
+	}
 	else
-		close(shell->pipe_fd[shell->index - 1][1]);
+		if (shell->pipe_fd[shell->index - 1][1])
+			close(shell->pipe_fd[shell->index - 1][1]);
 	if (shell->command_list->redirection_in == REDIRECTION_INPUT)
 	{
 		if (dup2(shell->command_list->fd_in, STDIN_FILENO) == -1)

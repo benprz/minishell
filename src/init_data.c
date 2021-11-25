@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:51:17 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 12:02:05 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 12:09:06 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	handle_signals(int signo)
 			rl_redisplay();
 		}
 		else if (g_process_section == 1)
-			g_process_section = 0;
+		 	g_process_section = 0;
 		else if (g_process_section == 2)
 			exit(130);
 	}
