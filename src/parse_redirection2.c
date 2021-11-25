@@ -6,7 +6,7 @@
 /*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:22:24 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 14:35:20 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 15:16:34 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	open_redirection_file(t_command *command, char *arg, int type)
 	if (type == REDIRECTION_INPUT)
 		command->fd_in = open(arg, O_RDWR);
 	else if (command->redirection_out == REDIRECTION_DOUTPUT)
-		command->fd_out = open(arg, O_CREAT | O_RDWR, O_APPEND, S_IRWXU);
+		command->fd_out = open(arg, O_CREAT | O_RDWR, S_IRWXU);
 	else if (command->redirection_out == REDIRECTION_OUTPUT)
 	{
 		stat(arg, &sct_stat);

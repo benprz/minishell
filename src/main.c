@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 14:47:39 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 15:15:21 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ int	read_prompt(t_shell *shell, char *prompt)
 			if (init_pipe(shell) == ERROR)
 				ft_error("Error pipe creation", ERROR);
 			shell->command_list = goto_first_command(shell->command_list);
-			execute_command(shell);
+			if (shell->command_list->argv[0])
+				execute_command(shell);
 		}
 		else
 			handle_parse_errors(shell);
