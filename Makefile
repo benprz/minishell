@@ -19,6 +19,10 @@ SRC_DIR = src/
 SRC =	main.c \
 		init_data.c \
 		parse_prompt.c \
+		parse_argv.c \
+		parse_redirection.c \
+		parse_redirection2.c \
+		expand_variables.c \
 		execute_command.c \
 		exec_cmd_for_rdi.c \
 		ft_parse.c \
@@ -56,7 +60,8 @@ SRC =	main.c \
 		utils/ft_itoa.c \
 		utils/ft_atoi.c \
 		utils/do_redirection_in.c \
-		utils/do_redirection_out.c
+		utils/do_redirection_out.c \
+		utils/ft_strchr.c
 
 OBJ_DIR = .obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
