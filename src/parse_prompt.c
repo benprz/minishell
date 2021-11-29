@@ -6,7 +6,7 @@
 /*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/29 13:26:30 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/29 14:02:06 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	parse_command(t_shell *shell, t_command *current_command, char **command)
 					current_command->program_path = get_program_path(shell, \
 													current_command);
 					if (current_command->program_path == NULL)
-						return (ft_error("No such file or directory", ERROR));
+						return (ft_error("Error, command not found", ERROR));
 				}
 				return (SUCCESS);
 			}

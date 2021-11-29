@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/29 13:21:00 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/29 14:26:39 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,7 @@ void	handle_parse_errors(t_shell *shell)
 		shell->last_exit_status = 258;
 	}
 	else
-	{
-		printf("hi\n");
-		shell->last_exit_status = 1;
-	}
+		shell->last_exit_status = 127;
 }
 
 int	read_prompt(t_shell *shell, char *prompt)
@@ -90,6 +87,7 @@ int	read_prompt(t_shell *shell, char *prompt)
 		add_history(prompt);
 		shell->all_path = ft_tmp(shell->all_path, \
 							ft_split(get_current_env(shell, "PATH"), ':'));
+		shell->parsing_error = 0;
 		parse_ret = parse_prompt(shell, prompt);
 		if (parse_ret == SUCCESS)
 		{
