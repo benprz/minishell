@@ -6,7 +6,7 @@
 /*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 12:24:48 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/29 12:03:49 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/29 13:21:49 by neben            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	ft_echo(t_shell *shell)
 				= ft_strjoin(shell->command_list->argv[i], " ");
 		write(shell->pipe_fd[shell->index][1], shell->command_list->argv[i],
 			ft_strlen(shell->command_list->argv[i]));
-			i++;
+		i++;
 	}
 	if (check == 0)
 		write(shell->pipe_fd[shell->index][1], "\n", 1);

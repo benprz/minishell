@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_prompt.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bperez <bperez@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 23:00:13 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/25 18:19:08 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/29 13:26:30 by neben            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,37 +112,6 @@ int	add_command(t_shell *shell, char *command)
 	return (ERROR);
 }
 
-void    print_commands(t_shell *shell)
-{
-	t_command       *current;
-	int                     i;
-
-	current = goto_first_command(shell->command_list);
-	while (current)
-	{
-		printf("\ncurrent = %p\ncurrent->prev = %p\ncurrent->next = %p\n", current, current->prev, current->next);
-		printf("program_path = %s\nargc = %d\ntype_in = %d\ntype_out = %d\nfd_in = %d\nfd_out = %d\n", current->program_path, current->argc, current->redirection_in, current->redirection_out, current->fd_in, current->fd_out);
-		i = 0;
-		if (current->delimiters)
-		{
-			while (current->delimiters[i])
-			{
-				printf("current->delimiters[%d] = %s\n", i, current->delimiters[i]);
-				i++;
-			}
-		}
-		printf("\n");
-		i = 0;
-		while (current->argv[i])
-		{
-			printf("current->argv[%d] = %s\n", i, current->argv[i]);
-			i++;
-		}
-		printf("current->argv[%d] = %s\n", i, current->argv[i]);
-		current = current->next;
-	}
-}
-
 int	parse_prompt(t_shell *shell, char *prompt)
 {
 	int	i;
@@ -168,7 +137,6 @@ int	parse_prompt(t_shell *shell, char *prompt)
 			}
 			i++;
 		}
-		//print_commands(shell);
 	}
 	return (SUCCESS);
 }

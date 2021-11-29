@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 19:41:31 by bperez            #+#    #+#             */
-/*   Updated: 2021/11/29 11:24:33 by bperez           ###   ########lyon.fr   */
+/*   Updated: 2021/11/29 13:21:00 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,10 @@ void	handle_parse_errors(t_shell *shell)
 		shell->last_exit_status = 258;
 	}
 	else
+	{
+		printf("hi\n");
 		shell->last_exit_status = 1;
+	}
 }
 
 int	read_prompt(t_shell *shell, char *prompt)

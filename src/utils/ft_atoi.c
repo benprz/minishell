@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <ngeschwi@stutent.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 08:44:11 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/29 10:43:34 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/29 13:20:44 by neben            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int		ft_white_space(char str)
+static int	ft_white_space(char str)
 {
 	if (str == '\t' || str == '\n'
-			|| str == '\v' || str == '\f'
-			|| str == '\r' || str == ' ')
+		|| str == '\v' || str == '\f'
+		|| str == '\r' || str == ' ')
 		return (1);
 	else
 		return (0);

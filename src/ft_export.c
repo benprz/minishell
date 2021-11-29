@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <ngeschwi@stutent.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:11:30 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/29 10:59:58 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/29 13:34:57 by neben            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static int	check_value(char *value)
 	return (1);
 }
 
-static void	do_redirection(t_shell *shell)
+static int	do_redirection(t_shell *shell)
 {
 	if (shell->command_list->redirection_out == 2)
 	{
@@ -97,14 +97,14 @@ static void	do_redirection(t_shell *shell)
 		if (dup2(1, shell->pipe_fd[shell->index][1]) == -1)
 			ft_error_fork(shell, "Error dup2 cmd");
 	}
+	return (-1);
 }
 
 int	ft_export(t_shell *shell)
 {
 	int	i;
 
-	i = -1;
-	do_redirection(shell);
+	i = do_redirection(shell);
 	if (shell->command_list->argv[1] == NULL
 		|| ft_strlen(shell->command_list->argv[1]) == 0)
 		while (shell->env[++i])

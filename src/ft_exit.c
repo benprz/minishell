@@ -6,7 +6,7 @@
 /*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:03:31 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/29 12:44:34 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/29 13:24:48 by neben            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include <limits.h>
 
-static void exit_else(t_shell *shell)
+static void	exit_else(t_shell *shell)
 {
 	write(1, "exit\n", 6);
 	exit(shell->last_exit_status);
@@ -27,30 +27,30 @@ static int	ft_isspace(const int c)
 
 static unsigned long long	ft_atoull(char *str)
 {
-	unsigned long long     val;
-	int     				neg;
+	unsigned long long	val;
+	int					neg;
 
 	val = 0;
 	neg = 0;
 	while (ft_isspace(*str))
-			str++;
+		str++;
 	if (*str == '-')
-			neg = 1;
+		neg = 1;
 	if (neg || *str == '+')
-			str++;
+		str++;
 	while (ft_isdigit(*str))
-			val = val * 10 + (*str++ - '0');
+		val = val * 10 + (*str++ - '0');
 	if (neg)
-			return (-val);
+		return (-val);
 	return (val);
 }
 
 static int	check_number_range(char *str, unsigned long long num)
 {
-	unsigned long long neg_num;
-	unsigned long long llong_max;
+	unsigned long long	neg_num;
+	unsigned long long	llong_max;
 
-	if (str[0] == '-') 
+	if (str[0] == '-')
 	{
 		llong_max = LLONG_MAX;
 		neg_num = ft_atoull(str + 1);

@@ -6,7 +6,7 @@
 /*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:06:03 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/29 13:05:37 by neben            ###   ########lyon.fr   */
+/*   Updated: 2021/11/29 13:22:45 by neben            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,8 @@ int	check_dir_base(t_shell *shell)
 	{
 		if (shell->command_list->argv[1])
 			free(shell->command_list->argv[1]);
-		shell->command_list->argv[1] = ft_strdup(get_current_env(shell, "HOME"));
+		shell->command_list->argv[1]
+			= ft_strdup(get_current_env(shell, "HOME"));
 	}
 	while (shell->command_list->argv[1][i])
 	{

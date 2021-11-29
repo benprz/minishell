@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 18:27:34 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 19:32:59 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/29 13:33:26 by neben            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,9 @@ static void	check_exit_siganls(t_shell *shell, int status)
 	care_pipe(shell);
 	if (shell->command_list->redirection_in == REDIRECTION_DINPUT)
 		close_pipe_rdi(shell);
+	if (shell->command_list->argv[0])
+		if (!ft_strcmp(shell->command_list->argv[0], "export"))
+			get_env_export(shell);
 }
 
 void	execute_command(t_shell *shell)
@@ -117,8 +120,5 @@ void	execute_command(t_shell *shell)
 		}
 	}
 	check_exit_siganls(shell, status);
-	if (shell->command_list->argv[0])
-		if (!ft_strcmp(shell->command_list->argv[0], "export"))
-			get_env_export(shell);
 	do_after_cmd(shell);
 }
