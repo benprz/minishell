@@ -2,7 +2,7 @@
 
 NAME = minishell
 CC = gcc
-CFLAGS = -g3 -fsanitize=address -include stdio.h -I${includedir} #-Wextra -Wall #-Werror
+CFLAGS = -g3 -fsanitize=address -include stdio.h -I${includedir} -Wextra -Wall #-Werror
 INC_DIR = includes/
 INC =	minishell.h
 

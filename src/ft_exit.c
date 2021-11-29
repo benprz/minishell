@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <ngeschwi@stutent.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: neben <neben@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:03:31 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/29 10:59:34 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/29 12:44:34 by neben            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+#include <limits.h>
 
 static void exit_else(t_shell *shell)
 {
@@ -18,16 +20,61 @@ static void exit_else(t_shell *shell)
 	exit(shell->last_exit_status);
 }
 
+static int	ft_isspace(const int c)
+{
+	return ((c >= 9 && c <= 13) || c == ' ');
+}
+
+static unsigned long long	ft_atoull(char *str)
+{
+	unsigned long long     val;
+	int     				neg;
+
+	val = 0;
+	neg = 0;
+	while (ft_isspace(*str))
+			str++;
+	if (*str == '-')
+			neg = 1;
+	if (neg || *str == '+')
+			str++;
+	while (ft_isdigit(*str))
+			val = val * 10 + (*str++ - '0');
+	if (neg)
+			return (-val);
+	return (val);
+}
+
+static int	check_number_range(char *str, unsigned long long num)
+{
+	unsigned long long neg_num;
+	unsigned long long llong_max;
+
+	if (str[0] == '-') 
+	{
+		llong_max = LLONG_MAX;
+		neg_num = ft_atoull(str + 1);
+		if (neg_num > llong_max + 1)
+			return (1);
+	}
+	else
+	{
+		if (num > LLONG_MAX)
+			return (1);
+	}
+	return (0);
+}
+
 int	ft_exit(t_shell *shell)
 {
-	int		nbr_exit;
+	unsigned long long		nbr_exit;
 
 	if (shell->command_list->argv[1]
-		|| ft_strlen(shell->command_list->argv[1]) == 0)
+		|| ft_strlen(shell->command_list->argv[1]) > 0)
 	{
-		nbr_exit = ft_atoi(shell->command_list->argv[1]);
+		nbr_exit = ft_atoull(shell->command_list->argv[1]);
 		if ((nbr_exit == 0 && ft_strlen(shell->command_list->argv[1]) != 1)
-			|| (nbr_exit > 2147483647 || nbr_exit < -2147483648))
+			|| check_number_range(shell->command_list->argv[1], nbr_exit))
 		{
 			write(1, "exit\n", 6);
 			printf("bash : exit: numeric argument required\n");

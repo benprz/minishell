@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:20:40 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 19:16:06 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/29 11:25:26 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static int	check_same_delimiter(char *delimiter, char *buf)
 {
 	int	i;
 
+	i = 0;
 	while (buf[i] && buf[i] != '\n')
 	{
 		if (buf[i] != delimiter[i])

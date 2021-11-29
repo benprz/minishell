@@ -6,7 +6,7 @@
 /*   By: ngeschwi <ngeschwi@stutent.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:12:00 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/29 11:13:07 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/29 11:38:08 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,16 @@ int	ft_unset(t_shell *shell)
 	int		index;
 
 	i = 1;
-	while (shell->command_list->argv[i]
-		&& ft_strlen(shell->command_list->argv[1]) == 0)
+	while (shell->command_list->argv[i])
 	{
-		if (!check_value(shell->command_list->argv[i]))
-			printf("Error export not a valid identifier\n");
-		index = check_where(shell, shell->command_list->argv[i]);
-		if (index != -1)
-			remove_line_in_env(shell, index);
+		if (ft_strlen(shell->command_list->argv[i]) > 0)
+		{
+			if (!check_value(shell->command_list->argv[i]))
+				printf("Error export not a valid identifier\n");
+			index = check_where(shell, shell->command_list->argv[i]);
+			if (index != -1)
+				remove_line_in_env(shell, index);
+		}
 		i++;
 	}
 	return (SUCCESS);

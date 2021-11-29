@@ -6,7 +6,7 @@
 /*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 18:01:39 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 18:18:21 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/29 11:27:51 by bperez           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ char	*get_pwd(t_shell *shell)
 {
 	char	*pwd;
 
+	(void)shell;
 	pwd = NULL;
 	pwd = getcwd(pwd, 0);
 	return (pwd);
