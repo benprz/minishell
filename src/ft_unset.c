@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ngeschwi <ngeschwi@stutent.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:12:00 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 21:41:28 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/29 11:13:07 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,11 @@ int	ft_unset(t_shell *shell)
 {
 	int		i;
 	int		index;
-	char	*value;
 
 	i = 1;
-	// shell->command_list->argv[i] = NULL;
-	while (shell->command_list->argv[i])
+	while (shell->command_list->argv[i]
+		&& ft_strlen(shell->command_list->argv[1]) == 0)
 	{
-		value = shell->command_list->argv[i];
 		if (!check_value(shell->command_list->argv[i]))
 			printf("Error export not a valid identifier\n");
 		index = check_where(shell, shell->command_list->argv[i]);

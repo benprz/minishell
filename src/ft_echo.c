@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ngeschwi <ngeschwi@stutent.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 12:24:48 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 19:06:28 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/29 10:56:56 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	ft_echo(t_shell *shell)
 	i = 0;
 	check = 0;
 	do_redirection(shell);
-	if (shell->command_list->argv[1])
+	if (shell->command_list->argv[1]
+		|| ft_strlen(shell->command_list->argv[1]) == 0)
 	{
 		if (!ft_strcmp(shell->command_list->argv[1], "-n"))
 		{

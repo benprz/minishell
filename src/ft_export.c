@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngeschwi <nathan.geschwind@gmail.com>      +#+  +:+       +#+        */
+/*   By: ngeschwi <ngeschwi@stutent.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:11:30 by ngeschwi          #+#    #+#             */
-/*   Updated: 2021/11/25 18:11:11 by ngeschwi         ###   ########.fr       */
+/*   Updated: 2021/11/29 10:59:58 by ngeschwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,8 @@ int	ft_export(t_shell *shell)
 
 	i = -1;
 	do_redirection(shell);
-	if (shell->command_list->argv[1] == NULL)
+	if (shell->command_list->argv[1] == NULL
+		|| ft_strlen(shell->command_list->argv[1]) == 0)
 		while (shell->env[++i])
 			printf("declare -x %s\n", shell->env[i]);
 	else
